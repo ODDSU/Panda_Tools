@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liga Commander</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+    <div class="bg-auras">
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+        <div class="aura aura-3"></div>
+    </div>
+
+    <h1>✨ LIGA COMMANDER ✨</h1>
+
+   <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-clasificacion')">🏆 Clasificación</button>
+        <button class="tab-btn" onclick="switchTab('tab-generador')">🎲 Generador</button>
+        <button class="tab-btn" onclick="switchTab('tab-jugadores')">👥 Jugadores</button>
+        <button class="tab-btn" onclick="switchTab('tab-historial')">📜 Registro</button>
+        <button class="tab-btn" onclick="switchTab('tab-datos')">💾 Sistema</button>
+        
+        <button class="tab-btn" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; margin-left: 15px;" onclick="window.open('timer.html', '_blank')">⏱️ Abrir Timer</button>
+    </div>
+
+    <div class="card tab-content active" id="tab-clasificacion">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <h2 style="margin: 0;">🏆 CLASIFICACIÓN</h2>
+            <button id="btn-fullscreen" class="btn-header" onclick="toggleFullscreen()">🔲 Pantalla Completa</button>
+        </div>
+        
+        <select id="modo-clasificacion" onchange="renderizarClasificacion()">
+            <option value="general">🌟 Clasificación General</option>
+        </select>
+
+        <div id="excel-controls" style="display: none; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button class="btn-primary btn-success-alt" style="flex: 1;" onclick="guardarEdicionExcel()">💾 GUARDAR CAMBIOS</button>
+            <button class="btn-secondary" style="flex: 1;" onclick="cancelarEdicionExcel()">❌ CANCELAR</button>
+        </div>
+        
+        <div style="overflow-x: auto; padding-bottom: 10px;">
+            <table id="tabla-clasificacion" class="responsive-table" style="min-width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Jugador</th>
+                        <th>Puntos</th>
+                        <th>Partidas</th>
+                    </tr>
+                </thead>
+                <tbody id="body-clasificacion"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card tab-content" id="tab-generador" style="display: none;">
+        <h2>🎲 GENERADOR DE JORNADAS</h2>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
+            <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); padding: 15px; border-radius: 16px; flex: 1; min-width: 200px;">
+                <label style="font-size: 11px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px;">🏷️ Jornada Actual:</label>
+                <div class="jornada-counter">
+                    <button class="btn-counter" onclick="cambiarJornada(-1)">-</button>
+                    <span id="display-jornada" style="font-size: 1.5rem; font-weight: 900; color: var(--accent); min-width: 60px; text-align: center; letter-spacing: 1px;">J1</span>
+                    <button class="btn-counter" onclick="cambiarJornada(1)">+</button>
+                </div>
+            </div>
+
+            <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); padding: 15px; border-radius: 16px; flex: 1; min-width: 200px;">
+                <label style="font-size: 11px; color: var(--danger); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px;">⏱️ Ronda Actual:</label>
+                <div class="jornada-counter" style="border-color: rgba(239, 68, 68, 0.3);">
+                    <button class="btn-counter" style="background: rgba(239, 68, 68, 0.2);" onclick="cambiarRonda(-1)">-</button>
+                    <span id="display-ronda" style="font-size: 1.5rem; font-weight: 900; color: #fca5a5; min-width: 60px; text-align: center;">1</span>
+                    <button class="btn-counter" style="background: rgba(239, 68, 68, 0.2);" onclick="cambiarRonda(1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="header-asistencia" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;"></div>
+        
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="buscador-checkin" 
+                   placeholder="🔍 Escribe un nombre para buscar en el Check-In..." 
+                   oninput="filtrarCheckin()" 
+                   style="width: 100%; box-sizing: border-box; background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3);">
+        </div>
+        
+        <div id="jugadores-presentes" class="checkbox-container"></div>
+        
+        <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+            <button class="btn-primary btn-purple" onclick="generarMesas('aleatorio')">🔮 Generar Aleatorio</button>
+            <button class="btn-primary btn-blue" onclick="generarMesas('suizo')">🏆 Generar Suizo</button>
+            <button class="btn-secondary" onclick="crearMesaManual()">✍️ Añadir Manual</button>
+        </div>
+        
+        <div id="mesas-generadas"></div>
+    </div>
+
+    <div class="card tab-content" id="tab-jugadores" style="display: none;">
+        <h2>👥 GESTIONAR JUGADORES</h2>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+            <textarea id="nuevos-jugadores" 
+                      placeholder="Pega una lista de nombres de WhatsApp o Excel (separados por comas o saltos de línea)..." 
+                      rows="3" 
+                      style="width: 100%; padding: 14px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: inherit; resize: vertical;"></textarea>
+            <button class="btn-primary btn-green" onclick="agregarJugadoresLote()">+ Registrar Lista de Jugadores</button>
+        </div>
+        
+        <button class="btn-secondary" style="width: 100%; margin-top: 15px; font-size: 13px; padding: 12px;" onclick="activarEdicionExcel()">
+            📊 MODO EXCEL: EDITAR CUADRÍCULA ENTERA
+        </button>
+
+        <ul id="lista-jugadores"></ul>
+    </div>
+
+    <div class="card tab-content" id="tab-historial" style="display: none;">
+        <h2>📜 REGISTRO DE BATALLAS</h2>
+        <p class="subtitle">Historial organizado por jornadas. Puedes anular una partida si hubo un error en la mesa.</p>
+        <div id="lista-historial"></div>
+    </div>
+
+    <div class="card tab-content" id="tab-datos" style="display: none;">
+        <h2>💾 SISTEMA DE DATOS</h2>
+        <p class="subtitle">Exporta un archivo de respaldo para no perder jamás el progreso de tu liga.</p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button class="btn-secondary" style="flex: 1;" onclick="exportarDatos()">📥 Descargar Copia</button>
+            <button class="btn-secondary" style="flex: 1;" onclick="document.getElementById('file-import').click()">📤 Cargar Copia</button>
+        </div>
+        <input type="file" id="file-import" accept=".json" style="display: none;" onchange="importarDatos(event)">
+        <hr>
+        <button class="btn-primary btn-danger" onclick="solicitarReiniciarApp()">⚠️ Borrar Base de Datos Entera</button>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <h3 id="modal-title" style="margin-top: 0; color: #f8fafc;">Título del Modal</h3>
+            <div id="modal-body" style="margin-bottom: 25px;"></div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-primary btn-purple" id="modal-submit-btn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-credits">
+        Made by Alabaster <a href="musica.html" target="_blank" class="easter-egg" title="Mi rincón secreto...">🧙‍♂️</a>
+    </div>
+
+</body>
+</html>
