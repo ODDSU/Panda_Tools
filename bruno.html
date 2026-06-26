@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panda Tools - BrunoConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body { max-width: 1250px !important; margin: 0 auto; }
+
+        .layout-grid { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 20px; align-items: flex-start; }
+        .panel-controles { flex: 1; min-width: 300px; max-width: 380px; display: flex; flex-direction: column; gap: 15px; } /* Lo he hecho un pelín más ancho para los nuevos controles */
+        .panel-preview { flex: 2.5; min-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* Controles */
+        .control-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+        .control-row label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .flex-row { display: flex; gap: 15px; align-items: center; }
+        
+        input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; background: transparent; padding: 0; }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; }
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: #ec4899; height: 6px; background: rgba(255,255,255,0.1); border-radius: 5px; border: none; padding: 0; }
+
+        select { width: 100%; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; outline: none; }
+
+        /* MODO EN VIVO SWITCH */
+        .live-toggle { display: flex; align-items: center; gap: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 8px; cursor: pointer; }
+        .live-toggle.active { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .live-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; transition: 0.3s; }
+        .live-toggle.active .live-dot { background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: parpadeo 1s infinite alternate; }
+        @keyframes parpadeo { from { opacity: 1; } to { opacity: 0.5; } }
+
+        /* --- PANTALLA --- */
+        .pantalla-tv { 
+            width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; border: 2px solid rgba(255,255,255,0.1); 
+            overflow: hidden; position: relative; background: #09090e; transition: background 0.3s;
+            container-type: size; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Drag & Drop */
+        #posicionador-texto {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            cursor: grab; display: inline-block; padding: 10px; z-index: 10;
+        }
+        #posicionador-texto:active { cursor: grabbing; }
+
+        #posicionador-texto:hover { background: rgba(255, 255, 255, 0.03); outline: 1px dashed rgba(236, 72, 153, 0.4); border-radius: 8px; }
+        html.arrastrando #texto-render, body.arrastrando #texto-render { animation: none !important; transform: none !important; transition: none !important; }
+        body.arrastrando #posicionador-texto { outline: 2px dashed #ec4899 !important; background: rgba(236, 72, 153, 0.1) !important; border-radius: 8px; }
+
+        #texto-render { font-family: 'Poppins', sans-serif; text-align: center; font-weight: 900; white-space: pre-wrap; transition: color 0.3s, text-shadow 0.3s; line-height: 1.2; pointer-events: none; }
+
+        /* Animaciones */
+        .anim-estatico { animation: none; }
+        .anim-flotar { animation: flotar 4s ease-in-out infinite; }
+        .anim-latido { animation: latido 1.5s infinite; }
+        .anim-desliz { animation: desliz 15s linear infinite; white-space: nowrap !important; }
+        .anim-temblor { animation: temblor 0.1s infinite; }
+        .anim-girar { animation: girar 8s linear infinite; }
+
+        @keyframes flotar { 0%, 100% { transform: translateY(0) rotate(var(--angulo)); } 50% { transform: translateY(-3cqi) rotate(var(--angulo)); } }
+        @keyframes latido { 0%, 100% { transform: scale(1) rotate(var(--angulo)); } 50% { transform: scale(1.1) rotate(var(--angulo)); } }
+        @keyframes desliz { 0% { transform: translateX(100cqi) rotate(var(--angulo)); } 100% { transform: translateX(-100cqi) rotate(var(--angulo)); } }
+        @keyframes temblor { 0% { transform: translate(2px, 1px) rotate(var(--angulo)); } 50% { transform: translate(-1px, -2px) rotate(var(--angulo)); } 100% { transform: translate(1px, -1px) rotate(var(--angulo)); } }
+        @keyframes girar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Fondos */
+        .bg-panda { background: #09090e; }
+        .bg-captura { background: #000; } 
+        .bg-chroma { background: #00ff00 !important; } 
+        .bg-magenta { background: #ff00ff !important; } 
+        .bg-transparente { background: transparent !important; }
+
+        /* MODO TV */
+        html.modo-tv, body.modo-tv { margin: 0 !important; padding: 0 !important; width: 100vw !important; max-width: 100vw !important; height: 100vh !important; background-color: transparent !important; overflow: hidden !important; }
+        body.modo-tv .tabs-nav, body.modo-tv h1, body.modo-tv .panel-controles, body.modo-tv .bg-auras, body.modo-tv #titulo-preview { display: none !important; }
+        body.modo-tv .layout-grid { margin: 0 !important; padding: 0 !important; height: 100vh !important; max-width: 100% !important; display: block !important; }
+        body.modo-tv .panel-preview { display: block !important; margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; max-width: 100% !important; border-radius: 0 !important; }
+        body.modo-tv .pantalla-tv { height: 100vh !important; width: 100vw !important; border: none !important; border-radius: 0 !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; aspect-ratio: auto; }
+        body.modo-tv #posicionador-texto { cursor: default; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-auras"><div class="aura aura-1" style="background: #ec4899;"></div><div class="aura aura-2"></div></div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn" onclick="window.close()">⬅️ Volver al Hub</button>
+        <button class="tab-btn active" style="border-color: #ec4899; color: #ec4899;">💬 BrunoConnect</button>
+    </div>
+
+    <h1>BRUNO<span>CONNECT</span></h1>
+
+    <div class="card layout-grid" style="border: none; background: transparent; padding: 0; box-shadow: none;">
+        
+        <!-- CONTROLES -->
+        <div class="panel-controles card" style="margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="color: #ec4899; margin: 0;">✍️ Editor</h2>
+                
+                <!-- NUEVO: INTERRUPTOR MODO EN VIVO -->
+                <label class="live-toggle" id="btn-live">
+                    <input type="checkbox" id="bc-live" style="display: none;" onchange="toggleLive()">
+                    <div class="live-dot"></div>
+                    <span style="font-size: 11px; font-weight: bold; color: white;">EN VIVO</span>
+                </label>
+            </div>
+            
+            <textarea id="bc-texto" placeholder="Escribe tu mensaje aquí..." rows="4" style="width: 100%; box-sizing: border-box; padding: 14px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: inherit; resize: vertical; margin-bottom: 10px;" oninput="actualizarPreview()"></textarea>
+
+            <!-- NUEVAS OPCIONES DE TEXTO -->
+            <div class="flex-row">
+                <div class="control-row" style="flex: 2;">
+                    <label>Tipografía:</label>
+                    <select id="bc-font" onchange="actualizarPreview()">
+                        <option value="'Poppins', sans-serif">Poppins</option>
+                        <option value="'Impact', sans-serif">Impact </option>
+                        <option value="'Courier New', monospace">Courier</option>
+                        <option value="'Press Start 2P', cursive">Pixel Art</option>
+                    </select>
+                </div>
+                <div class="control-row" style="flex: 1;">
+                    <label>Alineación:</label>
+                    <select id="bc-align" onchange="actualizarPreview()">
+                        <option value="center">Centro</option>
+                        <option value="left">Izquierda</option>
+                        <option value="right">Derecha</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex-row">
+                <div class="control-row" style="flex: 1;">
+                    <label>Color:</label>
+                    <input type="color" id="bc-color" value="#ffffff" oninput="actualizarPreview()">
+                </div>
+                <div class="control-row" style="flex: 1;">
+                    <label>Resplandor:</label>
+                    <input type="color" id="bc-glow" value="#ec4899" oninput="actualizarPreview()">
+                </div>
+                <div class="control-row" style="flex: 1;">
+                    <label>Grosor:</label>
+                    <input type="range" id="bc-glow-size" min="0" max="100" value="30" oninput="actualizarPreview()">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <label>Tamaño de Letra: <span id="val-size">10</span></label>
+                <input type="range" id="bc-size" min="2" max="60" value="10" step="0.5" oninput="actualizarPreview()">
+            </div>
+
+            <div class="control-row">
+                <label>Inclinación: <span id="val-angle">0</span>º</label>
+                <input type="range" id="bc-angle" min="-180" max="180" value="0" oninput="actualizarPreview()">
+            </div>
+
+            <div class="flex-row">
+                <div class="control-row" style="flex: 1;">
+                    <label>Animación:</label>
+                    <select id="bc-anim" onchange="actualizarPreview()">
+                        <option value="anim-estatico">🛑 Estático</option>
+                        <option value="anim-flotar">🎈 Flotar Suave</option>
+                        <option value="anim-latido">💓 Latido</option>
+                        <option value="anim-desliz">⬅️ Marquesina</option>
+                        <option value="anim-temblor">⚡ Temblor</option>
+                        <option value="anim-girar">🌀 Girar 360º</option>
+                    </select>
+                </div>
+                <div class="control-row" style="flex: 1;">
+                    <label>Fondo TV:</label>
+                    <select id="bc-bg" onchange="actualizarPreview()">
+                        <option value="bg-panda">🌌 Panda Tools</option>
+                        <option value="bg-captura">🎥 Capturar PC</option>
+                        <option value="bg-chroma">🟩 Verde Chroma</option>
+                        <option value="bg-transparente">🔲 Transparente</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+                <button class="btn-primary" style="background: linear-gradient(135deg, #ec4899, #be185d); color: white; padding: 15px; font-size: 1.2rem; border-radius: 12px; border: none; font-weight: bold; cursor: pointer;" onclick="enviarATV()">
+                    🚀 ENVIAR A LA TV
+                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-secondary" style="flex: 1; color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); background: transparent; padding: 10px; border-radius: 8px; cursor: pointer;" onclick="limpiarTV()">🗑️ Limpiar TV</button>
+                    <button class="btn-secondary" style="flex: 1; border: 1px solid rgba(236, 72, 153, 0.4); color: #f472b6; background: transparent; padding: 10px; border-radius: 8px; cursor: pointer;" onclick="abrirTV()">📺 Abrir TV</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="panel-preview card" style="margin-bottom: 0; padding: 15px;">
+            <h2 id="titulo-preview" style="color: var(--text-muted); margin-top: 0; font-size: 1rem; text-align: center; text-transform: uppercase; letter-spacing: 1px;">👁️ Vista Previa</h2>
+            
+            <div id="pantalla-tv" class="pantalla-tv bg-panda">
+                
+                <video id="video-fondo" autoplay muted style="position: absolute; width: 100%; height: 100%; object-fit: contain; z-index: 1; display: none; background: #000;"></video>
+                
+                <button id="btn-iniciar-captura" style="position: absolute; z-index: 50; display: none; padding: 20px 40px; font-size: 1.2rem; cursor: pointer; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #3b82f6; color: white; border: 2px solid rgba(255,255,255,0.2); font-weight: bold; font-family: inherit;" onclick="iniciarCapturaPantalla()">
+                    🎬 Clic aquí para seleccionar pantalla
+                </button>
+
+                <div id="tv-auras" style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 0;">
+                    <div class="aura" style="width: 50cqi; height: 50cqi; background: #8b5cf6; top: -10%; left: -10%; filter: blur(80px); opacity: 0.3;"></div>
+                    <div class="aura" style="width: 40cqi; height: 40cqi; background: #ec4899; bottom: -10%; right: -10%; filter: blur(80px); opacity: 0.3;"></div>
+                </div>
+
+                <div id="posicionador-texto" style="z-index: 10;">
+                    <div id="texto-render" class="anim-estatico" style="--angulo: 0deg;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const isTV = new URLSearchParams(window.location.search).get('tv') === 'true';
+
+        const inputTexto = document.getElementById('bc-texto');
+        const inputFont = document.getElementById('bc-font');
+        const inputAlign = document.getElementById('bc-align');
+        const inputColor = document.getElementById('bc-color');
+        const inputGlow = document.getElementById('bc-glow');
+        const inputGlowSize = document.getElementById('bc-glow-size');
+        const inputSize = document.getElementById('bc-size');
+        const inputAngle = document.getElementById('bc-angle');
+        const inputAnim = document.getElementById('bc-anim');
+        const inputBg = document.getElementById('bc-bg');
+        const inputLive = document.getElementById('bc-live');
+
+        const pantallaTV = document.getElementById('pantalla-tv');
+        const tvAuras = document.getElementById('tv-auras');
+        const posicionador = document.getElementById('posicionador-texto');
+        const textoRender = document.getElementById('texto-render');
+        
+        const videoFondo = document.getElementById('video-fondo');
+        const btnCaptura = document.getElementById('btn-iniciar-captura');
+
+        let posXPct = 50, posYPct = 50, isDragging = false;
+
+        // INICIALIZACIÓN MODO TV
+        if (isTV) {
+            document.documentElement.classList.add('modo-tv'); 
+            document.body.classList.add('modo-tv'); 
+            document.title = "Pantalla TV - BrunoConnect";
+            cargarDatosEnTV(); 
+
+            document.addEventListener('fullscreenchange', () => {
+                if (document.fullscreenElement && videoFondo.srcObject) {
+                    videoFondo.play().catch(e => console.warn("Esperando auto-play", e));
+                }
+            });
+        }
+
+        // --- SISTEMA DE CAPTURA DE PANTALLA ---
+        async function iniciarCapturaPantalla() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "never" }, audio: false });
+                videoFondo.srcObject = stream;
+                btnCaptura.style.display = 'none';
+                await videoFondo.play(); 
+            } catch (err) { console.error("Captura cancelada: ", err); }
+        }
+
+        // --- ARRASTRAR Y SINCRONIZACIÓN EN VIVO ---
+        if (!isTV) {
+            posicionador.addEventListener('mousedown', () => { isDragging = true; document.body.classList.add('arrastrando'); });
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = pantallaTV.getBoundingClientRect();
+                posXPct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                posYPct = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+                
+                actualizarPreview(); // Actualiza preview (y si está En Vivo, actualiza TV)
+            });
+            window.addEventListener('mouseup', () => { if(isDragging) { isDragging = false; document.body.classList.remove('arrastrando'); } });
+        }
+
+        function toggleLive() {
+            const label = document.getElementById('btn-live');
+            if (inputLive.checked) {
+                label.classList.add('active');
+                enviarSilenciosoATV(); // Sincroniza al instante de encenderlo
+            } else {
+                label.classList.remove('active');
+            }
+        }
+
+        // --- FUNCIONES CONTROL ---
+        function actualizarPreview() {
+            if (isTV) return; 
+            document.getElementById('val-size').innerText = inputSize.value;
+            document.getElementById('val-angle').innerText = inputAngle.value;
+            
+            const configActual = {
+                texto: inputTexto.value, font: inputFont.value, align: inputAlign.value, 
+                color: inputColor.value, glow: inputGlow.value, glowSize: inputGlowSize.value,
+                size: inputSize.value, angle: inputAngle.value, anim: inputAnim.value, bg: inputBg.value,
+                posX: posXPct, posY: posYPct
+            };
+
+            aplicarEstilosRender(configActual);
+
+            // Si el MODO EN VIVO está activado, sincronizamos automáticamente con la TV
+            if (inputLive.checked) {
+                enviarSilenciosoATV(configActual);
+            }
+        }
+
+        function enviarSilenciosoATV(config) {
+            if (!config) {
+                config = {
+                    texto: inputTexto.value, font: inputFont.value, align: inputAlign.value, 
+                    color: inputColor.value, glow: inputGlow.value, glowSize: inputGlowSize.value,
+                    size: inputSize.value, angle: inputAngle.value, anim: inputAnim.value, bg: inputBg.value,
+                    posX: posXPct, posY: posYPct
+                };
+            }
+            config.timestamp = Date.now(); // Fuerza update
+            localStorage.setItem('panda_brunoconnect', JSON.stringify(config));
+        }
+
+        function enviarATV() {
+            enviarSilenciosoATV(); // Usa la misma lógica de guardar
+            
+            // Animación del botón manual
+            const btn = document.querySelector('button[onclick="enviarATV()"]');
+            const txtOrig = btn.innerHTML;
+            btn.innerHTML = `✅ ¡ENVIADO!`; btn.style.background = 'var(--success)';
+            setTimeout(() => { btn.innerHTML = txtOrig; btn.style.background = 'linear-gradient(135deg, #ec4899, #be185d)'; }, 1000);
+        }
+
+        function limpiarTV() { inputTexto.value = ""; posXPct = 50; posYPct = 50; actualizarPreview(); if(!inputLive.checked) enviarATV(); }
+        function abrirTV() { window.open('bruno.html?tv=true', 'BrunoTV', 'width=1280,height=720'); }
+
+        // --- RENDERIZADO ---
+        function aplicarEstilosRender(config) {
+            textoRender.innerText = config.texto;
+            textoRender.style.fontFamily = config.font || "'Poppins', sans-serif";
+            textoRender.style.textAlign = config.align || "center";
+            textoRender.style.color = config.color;
+            textoRender.style.textShadow = config.glowSize > 0 ? `0 0 ${config.glowSize * 0.05}cqh ${config.glow}, 0 0 ${config.glowSize * 0.15}cqh ${config.glow}` : 'none';
+            textoRender.style.fontSize = `${config.size}cqh`;
+            posicionador.style.left = `${config.posX}%`; posicionador.style.top = `${config.posY}%`;
+            textoRender.style.setProperty('--angulo', `${config.angle}deg`);
+            textoRender.style.transform = config.anim === 'anim-estatico' ? `rotate(${config.angle}deg)` : `none`;
+            textoRender.className = config.anim;
+
+            pantallaTV.className = `pantalla-tv ${config.bg}`;
+            tvAuras.style.display = config.bg === 'bg-panda' ? 'block' : 'none';
+            
+            if (config.bg === 'bg-captura') {
+                videoFondo.style.display = 'block';
+                if (isTV && (!videoFondo.srcObject || !videoFondo.srcObject.active)) {
+                    btnCaptura.style.display = 'block';
+                } else {
+                    btnCaptura.style.display = 'none';
+                }
+            } else {
+                videoFondo.style.display = 'none';
+                btnCaptura.style.display = 'none';
+                if (videoFondo.srcObject) {
+                    videoFondo.srcObject.getTracks().forEach(track => track.stop());
+                    videoFondo.srcObject = null;
+                }
+            }
+        }
+        
+        function cargarDatosEnTV() {
+            const guardado = localStorage.getItem('panda_brunoconnect');
+            if (guardado) aplicarEstilosRender(JSON.parse(guardado));
+        }
+
+        window.addEventListener('storage', (e) => { if (e.key === 'panda_brunoconnect' && isTV) cargarDatosEnTV(); });
+        if (!isTV) actualizarPreview();
+
+    </script>
+</body>
+</html>
