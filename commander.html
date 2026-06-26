@@ -3,38 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liga Commander</title>
+    <title>Panda Tools - Liga Commander</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="app.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        /* =========================================
+           OVERHAUL ESTÉTICO COMMANDER
+           ========================================= */
+        .title-gradient { background: linear-gradient(to right, #c084fc, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .tabs-nav { 
+            display: flex; gap: 8px; background: rgba(0,0,0,0.3); padding: 10px; 
+            border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; 
+            width: 100%; box-sizing: border-box; flex-wrap: nowrap !important; overflow-x: auto; align-items: center;
+        }
+        .tabs-nav::-webkit-scrollbar { height: 6px; }
+        .tabs-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .tab-btn { flex: 1 1 auto; padding: 10px 14px !important; font-size: 13px !important; text-align: center; white-space: nowrap; margin: 0 !important; }
+
+        .checkbox-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 15px; }
+        .checkbox-container label { display: flex; align-items: center; justify-content: flex-start; text-align: left; padding: 8px 12px; font-weight: 600; font-size: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .checkbox-container label:hover { background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.4); }
+        .check-jugador { margin-right: 8px !important; transform: scale(0.9); }
+
+        #lista-jugadores { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+        #lista-jugadores li { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .jugador-info { display: flex; flex-direction: column; max-width: 120px; }
+        .jugador-info strong { font-size: 13px !important; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .jugador-saldo { font-size: 11px; color: #fbbf24; font-weight: 700; margin-top: 2px; }
+        .btn-group { display: flex; gap: 5px; }
+        .btn-action { padding: 6px 8px; font-size: 10px; margin: 0; border-radius: 6px; cursor: pointer; border: none; font-weight: bold; transition: 0.2s; }
+        .btn-saldo { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .btn-saldo:hover { background: rgba(59, 130, 246, 0.4); }
+        .btn-eliminar-jugador { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .btn-eliminar-jugador:hover { background: rgba(239, 68, 68, 0.4); }
+
+        .omw-toggle-container { display: flex; justify-content: center; margin: 25px 0 10px 0; }
+        .omw-label { display: flex; align-items: center; gap: 12px; cursor: pointer; background: rgba(0,0,0,0.4); padding: 12px 25px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); transition: 0.3s; }
+        .omw-label:hover { background: rgba(255,255,255,0.05); }
+        .omw-checkbox { display: none; }
+        .omw-switch { width: 44px; height: 22px; background: #475569; border-radius: 22px; position: relative; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        .omw-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .omw-checkbox:checked + .omw-switch { background: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .omw-checkbox:checked + .omw-switch::after { transform: translateX(22px); }
+        .omw-text { font-size: 13px; font-weight: 600; color: #f8fafc; }
+
+        .pod { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: all 0.3s ease; position: relative; overflow: hidden; margin-top: 25px; }
+        .pod.suizo::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--danger); box-shadow: 0 0 15px var(--danger); }
+        .pod.aleatorio::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); box-shadow: 0 0 15px var(--primary); }
+        .nombres-mesa { margin-bottom: 20px; line-height: 2.2; }
+        .jugador-pill { display: inline-flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 10px; cursor: pointer; transition: 0.2s; margin-right: 5px; margin-bottom: 5px; font-weight: 600; color: white; font-size: 13px; }
+        .jugador-pill:hover { background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); }
+
+        .historial-jornada { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .modal-card.wide { max-width: 800px !important; width: 95%; }
+    </style>
 </head>
 <body>
 
-    <div class="bg-auras">
-        <div class="aura aura-1"></div>
-        <div class="aura aura-2"></div>
-        <div class="aura aura-3"></div>
-    </div>
+    <div class="bg-auras"><div class="aura aura-1"></div><div class="aura aura-2"></div><div class="aura aura-3"></div></div>
+    <h1 style="margin-bottom: 0;">LIGA <span class="title-gradient">COMMANDER</span></h1>
 
-    <h1>✨ LIGA COMMANDER ✨</h1>
-
-   <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('tab-clasificacion')">🏆 Clasificación</button>
-        <button class="tab-btn" onclick="switchTab('tab-generador')">🎲 Generador</button>
-        <button class="tab-btn" onclick="switchTab('tab-jugadores')">👥 Jugadores</button>
-        <button class="tab-btn" onclick="switchTab('tab-historial')">📜 Registro</button>
+    <!-- BARRA SUPERIOR PERFECTA -->
+    <div class="tabs-nav">
+        <button class="tab-btn" onclick="window.close() || (window.location.href='index.html')">⬅️ Volver</button>
+        <button class="tab-btn active" onclick="switchTab('tab-clasificacion')">🏆 Ranking</button>
+        <button class="tab-btn" onclick="switchTab('tab-generador')">🎲 Mesas</button>
+        <button class="tab-btn" onclick="switchTab('tab-jugadores')">👥 Lista</button>
+        <button class="tab-btn" onclick="switchTab('tab-historial')">📜 Historial</button>
         <button class="tab-btn" onclick="switchTab('tab-datos')">💾 Sistema</button>
-        
-        <button class="tab-btn" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; margin-left: 15px;" onclick="window.open('timer.html', '_blank')">⏱️ Abrir Timer</button>
+        <button class="tab-btn" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; margin-left: auto;" onclick="window.open('timer.html', '_blank')">⏱️ Timer</button>
     </div>
 
+    <!-- CLASIFICACIÓN -->
     <div class="card tab-content active" id="tab-clasificacion">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
             <h2 style="margin: 0;">🏆 CLASIFICACIÓN</h2>
-            <button id="btn-fullscreen" class="btn-header" onclick="toggleFullscreen()">🔲 Pantalla Completa</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-header" onclick="abrirCalculadoraPremios()" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.5); color: #fbbf24;">💰 Reparto Premios</button>
+                <button id="btn-compact" class="btn-header" onclick="toggleCompactMode()" style="display: none; background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); color: #60a5fa;">🔍 Vista Multicolumna</button>
+                <button id="btn-fullscreen" class="btn-header" onclick="toggleFullscreen()">🔲 Pantalla Completa</button>
+            </div>
         </div>
         
-        <select id="modo-clasificacion" onchange="renderizarClasificacion()">
+        <select id="modo-clasificacion" onchange="renderizarClasificacion()" style="font-size: 14px;">
             <option value="general">🌟 Clasificación General</option>
         </select>
 
@@ -46,18 +100,14 @@
         <div style="overflow-x: auto; padding-bottom: 10px;">
             <table id="tabla-clasificacion" class="responsive-table" style="min-width: 100%;">
                 <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Jugador</th>
-                        <th>Puntos</th>
-                        <th>Partidas</th>
-                    </tr>
+                    <tr><th>Pos</th><th>Jugador</th><th>Puntos</th><th>Partidas</th><th style="color: var(--accent);">OMW%</th></tr>
                 </thead>
                 <tbody id="body-clasificacion"></tbody>
             </table>
         </div>
     </div>
 
+    <!-- GENERADOR -->
     <div class="card tab-content" id="tab-generador" style="display: none;">
         <h2>🎲 GENERADOR DE JORNADAS</h2>
         
@@ -74,67 +124,88 @@
             <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); padding: 15px; border-radius: 16px; flex: 1; min-width: 200px;">
                 <label style="font-size: 11px; color: var(--danger); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px;">⏱️ Ronda Actual:</label>
                 <div class="jornada-counter" style="border-color: rgba(239, 68, 68, 0.3);">
-                    <button class="btn-counter" style="background: rgba(239, 68, 68, 0.2);" onclick="cambiarRonda(-1)">-</button>
+                    <button class="btn-counter" style="background: rgba(239, 68, 68, 0.2);" onclick="document.getElementById('display-ronda').innerText = Math.max(1, parseInt(document.getElementById('display-ronda').innerText) - 1)">-</button>
                     <span id="display-ronda" style="font-size: 1.5rem; font-weight: 900; color: #fca5a5; min-width: 60px; text-align: center;">1</span>
-                    <button class="btn-counter" style="background: rgba(239, 68, 68, 0.2);" onclick="cambiarRonda(1)">+</button>
+                    <button class="btn-counter" style="background: rgba(239, 68, 68, 0.2);" onclick="document.getElementById('display-ronda').innerText = parseInt(document.getElementById('display-ronda').innerText) + 1">+</button>
                 </div>
             </div>
         </div>
-
-        <div id="header-asistencia" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;"></div>
         
-        <div style="margin-bottom: 20px;">
-            <input type="text" id="buscador-checkin" 
-                   placeholder="🔍 Escribe un nombre para buscar en el Check-In..." 
-                   oninput="filtrarCheckin()" 
-                   style="width: 100%; box-sizing: border-box; background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3);">
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="buscador-checkin" placeholder="🔍 Escribe un nombre para buscar en el Check-In..." oninput="filtrarCheckin()" style="width: 100%; box-sizing: border-box; background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); font-size: 14px; padding: 12px;">
         </div>
         
         <div id="jugadores-presentes" class="checkbox-container"></div>
         
-        <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
-            <button class="btn-primary btn-purple" onclick="generarMesas('aleatorio')">🔮 Generar Aleatorio</button>
-            <button class="btn-primary btn-blue" onclick="generarMesas('suizo')">🏆 Generar Suizo</button>
-            <button class="btn-secondary" onclick="crearMesaManual()">✍️ Añadir Manual</button>
+        <div class="omw-toggle-container">
+            <label class="omw-label">
+                <input type="checkbox" id="toggle-omw" class="omw-checkbox" onchange="toggleOMW()">
+                <div class="omw-switch"></div>
+                <span class="omw-text">🏆 Usar OMW% en desempates (Fuerza de Calendario)</span>
+            </label>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+            <button class="btn-primary btn-purple" onclick="generarMesas('aleatorio')" style="flex: 1; font-size: 14px; padding: 16px;">🔮 Generar Aleatorio</button>
+            <button class="btn-primary btn-danger" onclick="generarMesas('suizo')" style="flex: 1; font-size: 14px; padding: 16px;">🏆 Generar Suizo</button>
         </div>
         
         <div id="mesas-generadas"></div>
     </div>
 
+    <!-- GESTIONAR LISTA Y BILLETERAS -->
     <div class="card tab-content" id="tab-jugadores" style="display: none;">
-        <h2>👥 GESTIONAR JUGADORES</h2>
-        
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
-            <textarea id="nuevos-jugadores" 
-                      placeholder="Pega una lista de nombres de WhatsApp o Excel (separados por comas o saltos de línea)..." 
-                      rows="3" 
-                      style="width: 100%; padding: 14px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: inherit; resize: vertical;"></textarea>
-            <button class="btn-primary btn-green" onclick="agregarJugadoresLote()">+ Registrar Lista de Jugadores</button>
+        <h2>👥 GESTIONAR JUGADORES Y PREMIOS</h2>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+            <textarea id="nuevos-jugadores" placeholder="Pega una lista de nombres de WhatsApp o Excel..." rows="3" style="width: 100%; padding: 14px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: inherit; resize: vertical; outline: none; font-size: 14px;"></textarea>
+            <button class="btn-primary btn-green" onclick="agregarJugadoresLote()" style="font-size: 14px; padding: 14px;">+ Registrar Lista de Jugadores</button>
         </div>
+        <button class="btn-secondary" style="width: 100%; margin-top: 15px; margin-bottom: 25px; font-size: 13px; padding: 14px;" onclick="activarEdicionExcel()">📊 MODO EXCEL: EDITAR CUADRÍCULA ENTERA</button>
         
-        <button class="btn-secondary" style="width: 100%; margin-top: 15px; font-size: 13px; padding: 12px;" onclick="activarEdicionExcel()">
-            📊 MODO EXCEL: EDITAR CUADRÍCULA ENTERA
-        </button>
-
         <ul id="lista-jugadores"></ul>
     </div>
 
+    <!-- HISTORIAL -->
     <div class="card tab-content" id="tab-historial" style="display: none;">
         <h2>📜 REGISTRO DE BATALLAS</h2>
         <p class="subtitle">Historial organizado por jornadas. Puedes anular una partida si hubo un error en la mesa.</p>
         <div id="lista-historial"></div>
     </div>
 
+    <!-- SISTEMA (CONTABILIDAD Y EXPORTACIÓN) -->
     <div class="card tab-content" id="tab-datos" style="display: none;">
         <h2>💾 SISTEMA DE DATOS</h2>
         <p class="subtitle">Exporta un archivo de respaldo para no perder jamás el progreso de tu liga.</p>
         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-            <button class="btn-secondary" style="flex: 1;" onclick="exportarDatos()">📥 Descargar Copia</button>
-            <button class="btn-secondary" style="flex: 1;" onclick="document.getElementById('file-import').click()">📤 Cargar Copia</button>
+            <button class="btn-secondary" style="flex: 1; padding: 14px;" onclick="exportarDatos()">📥 Descargar Copia JSON</button>
+            <button class="btn-secondary" style="flex: 1; padding: 14px;" onclick="document.getElementById('file-import').click()">📤 Cargar Copia JSON</button>
         </div>
         <input type="file" id="file-import" accept=".json" style="display: none;" onchange="importarDatos(event)">
-        <hr>
-        <button class="btn-primary btn-danger" onclick="solicitarReiniciarApp()">⚠️ Borrar Base de Datos Entera</button>
+        
+        <!-- EXPORTACIÓN EXCEL AVANZADA -->
+        <hr style="border-color: rgba(255,255,255,0.05); margin: 30px 0;">
+        <h2>📊 EXPORTACIÓN A EXCEL</h2>
+        <p class="subtitle">Descarga reportes globales o filtrados por jornadas específicas.</p>
+        <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+            <label style="font-size: 11px; color: #60a5fa; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px;">📅 Seleccionar Jornada a Exportar:</label>
+            <select id="export-jornada-select" style="width: 100%; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px; border-radius: 6px; outline: none; font-size: 13px; margin-bottom: 15px;">
+                <option value="global">🌍 Reporte Global (Toda la Liga)</option>
+                <!-- JS inyectará aquí las jornadas -->
+            </select>
+            <button class="btn-secondary" style="width: 100%; padding: 14px; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa; font-weight: bold; font-size: 13px;" onclick="exportarExcelInteligente()">📑 DESCARGAR REPORTE EXCEL</button>
+        </div>
+
+        <!-- CONTABILIDAD DE LA TIENDA -->
+        <hr style="border-color: rgba(255,255,255,0.05); margin: 30px 0;">
+        <h2>💼 CONTABILIDAD DE LA TIENDA</h2>
+        <p class="subtitle">Registro privado de recaudación y saldo de jugadores.</p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button class="btn-primary btn-green" style="flex: 1; padding: 14px; font-size: 13px;" onclick="verRegistroFinanzas()">📊 Caja de Tienda</button>
+            <button class="btn-primary btn-purple" style="flex: 1; padding: 14px; font-size: 13px;" onclick="verPremiosJugadores()">🏆 Saldos de Jugadores</button>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.05); margin: 30px 0;">
+        <button class="btn-primary btn-danger" style="width: 100%; padding: 14px;" onclick="solicitarReiniciarApp()">⚠️ Borrar Base de Datos Entera</button>
     </div>
 
     <div id="toast-container" class="toast-container"></div>
