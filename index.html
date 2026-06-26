@@ -3,62 +3,414 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐼 Panda Tools - Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>🐼 Panda Tools - Hub Central</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
+        /* =========================================
+           ESTILOS ESPECÍFICOS DEL HUB
+           ========================================= */
         body {
-            margin: 0; padding: 0; background-color: #09090e; font-family: 'Poppins', sans-serif;
-            height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; margin: 0; padding: 0; max-width: 100%; 
+            overflow-x: hidden; overflow-y: auto; 
+            background-color: var(--bg-dark);
+        }
+
+        .hub-header {
+            text-align: center; margin-bottom: 20px; animation: fadeDown 0.8s ease-out backwards;
+            margin-top: 15px; 
+        }
+
+        .hub-title {
+            font-size: 4.5rem; font-weight: 900; margin: 0; line-height: 1.1;
+            letter-spacing: 2px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: none !important;
+            -webkit-text-fill-color: white !important;
+            color: white; 
+        }
+
+        .title-gradient {
+            background: linear-gradient(to right, #c084fc, #60a5fa) !important;
+            -webkit-background-clip: text !important; 
+            -webkit-text-fill-color: transparent !important;
+        }
+
+        .hub-subtitle {
+            color: var(--text-muted); font-size: 1.1rem; font-weight: 600; letter-spacing: 5px;
+            text-transform: uppercase; margin-top: 5px;
         }
         
-        /* Efecto de fondo sutil para mantener tu estética */
-        .bg-auras { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
-        .aura { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.4; }
-        .aura-1 { width: 40vw; height: 40vw; background: #8b5cf6; top: -10%; left: -10%; }
-        .aura-2 { width: 35vw; height: 35vw; background: #10b981; bottom: -10%; right: -10%; }
+        /* WIDGET RELOJ EN DIRECTO */
+        .live-clock {
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05);
+            padding: 10px 25px; border-radius: 30px; font-size: 1.2rem; font-weight: 600;
+            color: #e2e8f0; margin: 0 auto 25px auto; width: max-content;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); backdrop-filter: blur(10px);
+            display: flex; gap: 15px; align-items: center;
+            animation: fadeDown 0.8s ease-out 0.2s backwards;
+        }
+        
+        .clock-time { color: var(--primary); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 1px;}
+        .clock-date { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
 
-        h1 { font-size: 4rem; margin-bottom: 50px; letter-spacing: 2px; text-align: center; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 span { background: linear-gradient(to right, #ffffff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .hub-grid { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; max-width: 900px; }
-
-        /* Tarjetas de los botones */
-        .tool-card {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px); border-radius: 24px; padding: 40px; text-decoration: none;
-            color: white; display: flex; flex-direction: column; align-items: center; width: 280px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        /* CUADRÍCULA DE HERRAMIENTAS */
+        .hub-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px; width: 100%; max-width: 950px; padding: 0 20px; box-sizing: border-box;
+            animation: fadeUp 0.8s ease-out 0.4s backwards;
         }
 
-        .tool-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.08); }
-        .tool-card.commander:hover { border-color: #8b5cf6; box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3); }
-        .tool-card.timer:hover { border-color: #10b981; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3); }
+        .tool-card {
+            background: rgba(15, 15, 20, 0.4); border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px); border-radius: 24px; padding: 25px 20px;
+            text-decoration: none; color: white; display: flex; flex-direction: column;
+            align-items: center; text-align: center; position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        
+        .tool-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--card-color, #fff); opacity: 0.8; transition: height 0.3s;
+        }
 
-        .tool-icon { font-size: 5rem; margin-bottom: 20px; }
-        .tool-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 10px 0; text-transform: uppercase; }
-        .tool-desc { color: #94a3b8; text-align: center; font-size: 0.95rem; line-height: 1.5; margin: 0; }
+        .tool-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,255,255,0.02);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .tool-card:hover::before { height: 100%; opacity: 0.05; }
+
+        .tool-icon {
+            font-size: 3.5rem; margin-bottom: 10px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .tool-card:hover .tool-icon { transform: scale(1.15) rotate(8deg); }
+        
+        .tool-title { font-size: 1.3rem; font-weight: 800; margin: 0 0 8px 0; text-transform: uppercase; color: var(--card-color, #fff); transition: 0.3s;}
+        .tool-desc { color: #94a3b8; font-size: 0.85rem; line-height: 1.5; margin: 0 0 20px 0; flex-grow: 1; }
+        
+        .tool-action {
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+            color: #cbd5e1; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s;
+            width: 80%;
+        }
+        
+        .tool-card:hover .tool-action { 
+            background: var(--card-color); border-color: var(--card-color); 
+            color: white; box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+            transform: translateY(-3px);
+        }
+
+        .card-commander { --card-color: #8b5cf6; }
+        .card-bruno { --card-color: #ec4899; }
+        .card-timer { --card-color: #10b981; }
+        .card-sorteos { --card-color: #f59e0b; }
+
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           PÍLDORA MARQUESINA Y MENÚ SECRETO
+           ========================================= */
+        .quote-pill-container {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(192, 132, 252, 0.25);
+            backdrop-filter: blur(15px);
+            padding: 8px 25px;
+            border-radius: 50px;
+            width: 80%;
+            max-width: 500px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.8s ease; 
+        }
+
+        .quote-scroll {
+            display: inline-block;
+            white-space: nowrap;
+            color: #c084fc;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif;
+            padding-left: 100%; 
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-100% - 30px)); }
+        }
+
+        .footer-credits { 
+            margin-top: 25px; margin-bottom: 15px; width: 100%; text-align: center; 
+            color: #64748b; font-size: 12px; font-family: 'Poppins', sans-serif;
+        }
+
+        .secret-trigger {
+            cursor: pointer;
+            user-select: none;
+            display: inline-block;
+            transition: transform 0.2s;
+            margin: 0 5px;
+        }
+        .secret-trigger:active { transform: scale(0.8); }
+
+        .btn-frase-add { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-frase-add:hover { background: rgba(16, 185, 129, 0.4); }
+        .btn-frase-del { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+        .btn-frase-del:hover { background: rgba(239, 68, 68, 0.4); }
+
+        .toast-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 999999; font-family: 'Poppins', sans-serif;}
+        .toast { background: rgba(0, 0, 0, 0.85); border-left: 4px solid #10b981; color: white; padding: 15px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideIn 0.3s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
+    
+    <div class="bg-auras">
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+        <div class="aura aura-3"></div> 
+    </div>
 
-    <div class="bg-auras"><div class="aura aura-1"></div><div class="aura aura-2"></div></div>
+    <div class="hub-header">
+        <h1 class="hub-title">
+            <span class="secret-trigger" onclick="triggerSecretMenu()">🐼</span> PANDA <span class="title-gradient">TOOLS</span>
+        </h1>
+        <div class="hub-subtitle">Store Dashboard System</div>
+    </div>
 
-    <h1>🐼 PANDA <span>TOOLS</span></h1>
+    <div class="live-clock">
+        <span class="clock-time" id="clock-time">00:00:00</span>
+        <span style="color: rgba(255,255,255,0.2);">|</span>
+        <span class="clock-date" id="clock-date">Cargando...</span>
+    </div>
 
-   <div class="hub-grid">
-        <a href="commander.html" target="_blank" class="tool-card commander">
+    <div class="hub-grid">
+        <a href="commander.html" target="_blank" class="tool-card card-commander">
             <div class="tool-icon">🐉</div>
             <h2 class="tool-title">Liga MTG</h2>
-            <p class="tool-desc">Gestión integral de jugadores, emparejamientos Suizos y clasificaciones en vivo.</p>
+            <p class="tool-desc">Gestión integral de jugadores, emparejamientos Suizos y clasificaciones.</p>
+            <div class="tool-action">Abrir Gestor</div>
+        </a>
+        
+        <a href="bruno.html" target="_blank" class="tool-card card-bruno">
+            <div class="tool-icon">💬</div>
+            <h2 class="tool-title">BrunoConnect</h2>
+            <p class="tool-desc">Sistema de mensajería en vivo para la TV. Anuncios personalizados con cromas.</p>
+            <div class="tool-action">Transmitir</div>
         </a>
 
-        <a href="timer.html" target="_blank" class="tool-card timer">
+        <a href="timer.html" target="_blank" class="tool-card card-timer">
             <div class="tool-icon">⏱️</div>
             <h2 class="tool-title">Timer Pro</h2>
-            <p class="tool-desc">Reloj de torneos de TCG con alertas de tiempo, atajos de teclado y fondos animados.</p>
+            <p class="tool-desc">Relojes de torneo simultáneos con alertas, atajos de teclado y fondos animados.</p>
+            <div class="tool-action">Iniciar Relojes</div>
+        </a>
+
+        <a href="sorteos.html" target="_blank" class="tool-card card-sorteos">
+            <div class="tool-icon">🎁</div>
+            <h2 class="tool-title">Sorteos</h2>
+            <p class="tool-desc">Ruleta para premios totalmente integrada con los datos de asistencia.</p>
+            <div class="tool-action">Tirar Ruleta</div>
         </a>
     </div>
 
+    <div class="quote-pill-container" id="quote-pill">
+        <div class="quote-scroll" id="quote-text">Cargando la sabiduría del panda...</div>
+    </div>
+
+    <div class="footer-credits">
+        Made by Alabaster <a href="musica.html" class="easter-egg" title="Mi rincón secreto..." style="text-decoration:none;">🧙‍♂️</a>
+    </div>
+
+    <div id="modal-frases" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; z-index: 99999; font-family: 'Poppins', sans-serif;">
+        <div style="background: #111118; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; width: 90%; max-width: 500px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
+            <h3 style="color: #8b5cf6; margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
+                🤫 Menú Secreto de Frases <span style="font-size: 1.5rem;">🔮</span>
+            </h3>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="nueva-frase" placeholder="Escribe una frase random..." style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 8px; font-family: inherit; font-size: 13px; outline: none;">
+                <button class="btn-frase-add" onclick="añadirFrase()">Añadir</button>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                <label style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: bold; margin-bottom: 10px; display: block;">📜 Frases Activas en la Marquesina:</label>
+                <ul id="lista-frases" style="list-style: none; padding: 0; margin: 0; max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                    </ul>
+            </div>
+
+            <button style="background: transparent; color: #94a3b8; border: 1px solid rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold; font-family: inherit;" onclick="document.getElementById('modal-frases').style.display='none'">Cerrar Bóveda</button>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script>
+        // Lógica del Reloj del Hub
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateStr = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+            
+            document.getElementById('clock-time').textContent = timeStr;
+            document.getElementById('clock-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); 
+
+        // ==========================================
+        // LÓGICA DE LA MARQUESINA 
+        // ==========================================
+        let frasesGuardadas = JSON.parse(localStorage.getItem('panda_quotes')) || [
+            "Doesn't take a telepath to know what you're thinkin",
+            "All your base are belong to us",
+            "Gaslight Gatekeep Girlboss",
+            "Skill Issue",
+            "Rock and Stone",
+            "Griffith did nothing wrong",
+            "YOU SM3LL L1K3 OR4NG3 CR34MS1CL3S",
+            "Gotta catch 'em all",
+            "Venta de Funkos aumentando 📈",
+            "Matthew",
+            "Previously on LOST",
+            "Pero el monopoly lo teneis??",
+            "Bruno, si estas leyendo esto significa que no estás trabajando",
+            "Wololoo",
+            "Im stuck in here tighter than a frogs butt in a watermelon seed fight",
+            "Pablo Motos",
+            "Busco un juego que pueda jugar con mi abuela de 100 años y mi sobrino que tiene 5 meses",
+            "Pero... Y la tienda de comics??",
+            "Colonos de catán, muy poco woke por tu parte",
+            "Allé Voy",
+            "Piti and Porro´s Adventure",
+            "Carne y Sangre juego de cartas coleccionable",
+            "This Happened to my buddy Eric",
+            "Agua, Tierra, Fuego, Aire. Hace mucho tiempo, las cuatro Naciones vivían juntas en armonía.",
+            "Shrek Is Love",
+            "Shrek Is life",
+            "The cake is a lie",
+            "YOU MUST CONSTRUCT ADDITIONAL PYLONS",
+            "Praise the sun",
+            "¿Qué es un hombre? Una miserable pila de secretos.",
+            "Fireball",
+            "Sa´ matao´ Paco",
+            "Soy el guardián de las estrellas y el rey es mi padre"
+        ];
+
+        const quotePill = document.getElementById('quote-pill');
+        const quoteText = document.getElementById('quote-text');
+        let fraseAnteriorIndex = -1;
+
+        function cargarSiguienteFrase() {
+            if (frasesGuardadas.length === 0) {
+                quotePill.style.opacity = '0'; 
+                return;
+            }
+            
+            quotePill.style.opacity = '1';
+            
+            let randomIndex;
+            if (frasesGuardadas.length > 1) {
+                do { randomIndex = Math.floor(Math.random() * frasesGuardadas.length); } 
+                while (randomIndex === fraseAnteriorIndex);
+            } else {
+                randomIndex = 0;
+            }
+            
+            fraseAnteriorIndex = randomIndex;
+            quoteText.innerText = "✨ " + frasesGuardadas[randomIndex] + " ✨";
+            
+            quoteText.style.animation = 'none';
+            void quoteText.offsetWidth; 
+            quoteText.style.animation = 'scrollText 15s linear forwards';
+        }
+
+        cargarSiguienteFrase();
+
+        quoteText.addEventListener('animationend', () => {
+            setTimeout(cargarSiguienteFrase, 3000); 
+        });
+
+        // ==========================================
+        // LÓGICA DEL MENÚ SECRETO EN EL TÍTULO
+        // ==========================================
+        let secretClickCount = 0;
+        let secretClickTimer;
+
+        function triggerSecretMenu() {
+            secretClickCount++;
+            clearTimeout(secretClickTimer);
+            
+            if (secretClickCount >= 3) {
+                document.getElementById('modal-frases').style.display = 'flex';
+                renderizarListaFrases();
+                mostrarToast("¡Bóveda secreta desbloqueada!");
+                secretClickCount = 0;
+            } else {
+                secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 1500);
+            }
+        }
+
+        function renderizarListaFrases() {
+            const ul = document.getElementById('lista-frases');
+            if (frasesGuardadas.length === 0) {
+                ul.innerHTML = '<li style="font-size: 12px; color: #64748b; text-align: center; padding: 10px;">No hay frases.</li>';
+                return;
+            }
+
+            ul.innerHTML = frasesGuardadas.map((frase, index) => `
+                <li style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; font-size: 12px;">
+                    <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; color: white;">"${frase}"</span>
+                    <button class="btn-frase-del" onclick="borrarFrase(${index})">Eliminar</button>
+                </li>
+            `).join('');
+        }
+
+        function añadirFrase() {
+            const input = document.getElementById('nueva-frase');
+            const texto = input.value.trim();
+            if (texto !== "") {
+                frasesGuardadas.push(texto);
+                localStorage.setItem('panda_quotes', JSON.stringify(frasesGuardadas));
+                input.value = "";
+                renderizarListaFrases();
+                if (frasesGuardadas.length === 1) cargarSiguienteFrase();
+                mostrarToast("Frase añadida al sistema.");
+            }
+        }
+
+        window.borrarFrase = function(index) {
+            frasesGuardadas.splice(index, 1);
+            localStorage.setItem('panda_quotes', JSON.stringify(frasesGuardadas));
+            renderizarListaFrases();
+            mostrarToast("Frase eliminada.");
+        }
+
+        document.getElementById('nueva-frase').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') añadirFrase();
+        });
+
+        function mostrarToast(mensaje) {
+            const contenedor = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast`;
+            toast.innerHTML = `<span>🐼</span> <span>${mensaje}</span>`;
+            contenedor.appendChild(toast);
+            setTimeout(() => { toast.style.transform = 'translateX(100%)'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+    </script>
 </body>
 </html>
