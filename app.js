@@ -374,11 +374,11 @@ window.abrirCalculadoraPremios = function() {
 
         <div style="display:flex; gap:15px; margin-bottom: 20px;">
             <div style="flex:1; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 15px; border-radius: 12px; text-align: center;">
-                <div style="font-size: 12px; color: #10b981; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">🏦 Caja Tienda (60%)</div>
+                <div style="font-size: 12px; color: #10b981; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">🏦 Caja Tienda (40%)</div>
                 <div id="calc-tienda" style="font-size: 1.8rem; font-weight: 900; color: #34d399;">0€</div>
             </div>
             <div style="flex:1; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 15px; border-radius: 12px; text-align: center;">
-                <div style="font-size: 12px; color: #f59e0b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">🏆 Premios (40%)</div>
+                <div style="font-size: 12px; color: #f59e0b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">🏆 Premios (60%)</div>
                 <div id="calc-premios" style="font-size: 1.8rem; font-weight: 900; color: #fbbf24;">0€</div>
             </div>
         </div>
@@ -467,8 +467,8 @@ window.recalcularPremios = function() {
 
     let numJugadores = parseInt(inputJugadores.value) || 0;
     let boteTotal = numJugadores * 5;
-    let boteTienda = boteTotal * 0.60;
-    let botePremios = boteTotal * 0.40;
+    let boteTienda = boteTotal * 0.40; // 40% Tienda
+    let botePremios = boteTotal * 0.60; // 60% Premios
 
     document.getElementById('calc-bote-total').innerText = fEuro(boteTotal);
     document.getElementById('calc-tienda').innerText = fEuro(boteTienda);
@@ -539,8 +539,8 @@ window.ejecutarRepartoAutomatico = function(jornada) {
             });
 
             let boteTotal = numJugadores * 5;
-            let boteTienda = boteTotal * 0.60;
-            let botePremios = boteTotal * 0.40;
+            let boteTienda = boteTotal * 0.40; // 40% Tienda
+            let botePremios = boteTotal * 0.60; // 60% Premios
             let fechaCajaStr = `${jornada} - ${new Date().toLocaleDateString()}`;
 
             finanzas.unshift({ 
@@ -566,8 +566,8 @@ window.guardarRegistroFinanzas = function() {
     
     let numJugadores = parseInt(inputJugadores.value) || 0;
     let boteTotal = numJugadores * 5;
-    let boteTienda = boteTotal * 0.60;
-    let botePremios = boteTotal * 0.40;
+    let boteTienda = boteTotal * 0.40; // 40% Tienda
+    let botePremios = boteTotal * 0.60; // 60% Premios
     let fechaStr = `Registro Manual - ${new Date().toLocaleDateString()}`;
 
     finanzas.unshift({ 
@@ -687,6 +687,32 @@ function generarMesas(modo = 'aleatorio') {
     if (P < 3) { mostrarToast("Hacen falta al menos 3 jugadores para abrir mesa.", "warning"); return; }
 
     let nombreJornada = jornadasLista[indiceJornadaActual];
+
+    // VERIFICACIÓN DE 24 HORAS
+    // Buscamos la última partida de esta misma jornada
+    let ultimaPartidaJornada = historial.find(h => h.fecha.split(',')[0].trim() === nombreJornada);
+    
+    if (ultimaPartidaJornada && modo === 'suizo') {
+        // Como el ID de historial es un Date.now(), lo usamos para medir la diferencia de tiempo
+        let horasTranscurridas = (Date.now() - ultimaPartidaJornada.id) / (1000 * 60 * 60);
+        
+        if (horasTranscurridas > 24) {
+            abrirModal("⚠️ Advertencia de Jornada Pasada", 
+                `<p>Han pasado más de <b>24 horas</b> desde la última ronda registrada en la jornada <b>${nombreJornada}</b>.</p>
+                 <p style="color:var(--danger); font-size:13px; margin-top:10px;">¿Olvidaste avanzar a la siguiente jornada en el menú? ¿Seguro que quieres seguir jugando la jornada antigua?</p>`,
+                () => { continuarGeneracionMesas(modo, presentes, nombreJornada); return true; }
+            );
+            return; // Detenemos la ejecución esperando a que el usuario confirme en el modal
+        }
+    }
+
+    // Si no han pasado 24h, generamos normal
+    continuarGeneracionMesas(modo, presentes, nombreJornada);
+}
+
+function continuarGeneracionMesas(modo, presentes, nombreJornada) {
+    const P = presentes.length; // 🐛 Aquí está la corrección
+
     let puntosHoy = {}; let partidasHoy = {}; let sumatorioPuntosHoy = 0; 
     
     presentes.forEach(j => { puntosHoy[j.id] = 0; partidasHoy[j.id] = 0; });
@@ -743,7 +769,7 @@ function mostrarMesas(mesas, modo, puntosHoy, rondaActual) {
     if (!contenedor) return;
     contenedor.innerHTML = '';
     
-    if(mesas.length > 0) contenedor.innerHTML += `<button class="btn-tv" onclick="abrirModoTV()">📺 PROYECTAR EN TV DE LA TIENDA</button>`;
+    if(mesas.length > 0) contenedor.innerHTML += `<button class="btn-tv" onclick="abrirModoTV()">📺 PROYECTAR EN TV.</button>`;
 
     let tituloMesa = modo === 'suizo' ? `🏆 Suizo (R${rondaActual})` : `🔮 Aleatorio (R${rondaActual})`;
     let colorTitulo = modo === 'suizo' ? 'var(--danger)' : 'var(--primary)';
@@ -825,9 +851,14 @@ window.gestionarJugadorMesa = function(mesaIndex, jugadorId) {
 window.aplicarDrop = function(mesaIndex, jugadorId) {
     ultimasMesasGeneradas[mesaIndex] = ultimasMesasGeneradas[mesaIndex].filter(j => j.id !== jugadorId);
     ultimasMesasGeneradas = ultimasMesasGeneradas.filter(m => m.length > 0); 
+    
+    // Novedad: Al hacerle drop de la mesa, lo desmarcamos del Check-In para que no salga en la siguiente ronda
+    let checkbox = document.querySelector(`.check-jugador[value="${jugadorId}"]`);
+    if(checkbox) checkbox.checked = false;
+
     cerrarModal();
     mostrarMesas(ultimasMesasGeneradas, ultimoModo, ultimosPuntosHoy, ultimaRonda);
-    mostrarToast("Jugador eliminado de la mesa.", "danger");
+    mostrarToast("Jugador eliminado de la mesa y dropeado de la jornada.", "danger");
 }
 
 window.aplicarMover = function(mesaIndex, jugadorId) {
@@ -846,32 +877,45 @@ window.aplicarMover = function(mesaIndex, jugadorId) {
     mostrarToast("Jugador movido a la mesa " + (destinoIndex+1) + ".");
 }
 
-function forzarJugadorEnMesa(index) {
-    const contenedorSelects = document.getElementById(`selects-pod-${index}`);
-    let numJugadores = contenedorSelects.querySelectorAll('.puesto-row').length;
-    
-    if (numJugadores >= 5) { mostrarToast("Límite crítico: Máximo 5 jugadores.", "warning"); return; }
-    
-    let i = numJugadores; 
-    let puntos = puntosGlobales[i] !== undefined ? puntosGlobales[i] : 0;
+window.forzarJugadorEnMesa = function(index) {
+    if (ultimasMesasGeneradas[index].length >= 5) { 
+        mostrarToast("Límite crítico: Máximo 5 jugadores por mesa.", "warning"); 
+        return; 
+    }
 
-    let htmlNuevoSelect = `
-        <div class="puesto-row" id="pod-${index}-puesto-${i}">
-            <label>${i+1}º PUESTO (+${puntos} PTS):</label>
-            <select id="sel-pod-${index}-pos-${i}" onchange="actualizarDesplegables()">
-                <option value="">-- Elige jugador que llegó tarde --</option>`;
-                
-    jugadores.forEach(jugador => { htmlNuevoSelect += `<option value="${jugador.id}">${jugador.nombre}</option>`; });
-    
-    htmlNuevoSelect += `</select></div>`;
-    contenedorSelects.insertAdjacentHTML('beforeend', htmlNuevoSelect);
-    document.getElementById(`span-count-${index}`).innerText = `(${numJugadores + 1} Jugadores)`;
-    
-    document.getElementById(`btns-pod-${index}`).innerHTML = `
-        <button class="btn-primary btn-green" style="flex: 2; padding: 14px;" onclick="guardarResultadoMesa('pod-${index}', ${numJugadores + 1})">💾 Confirmar Mesa</button>
-        <button class="btn-secondary" style="flex: 1; padding: 14px;" onclick="declararEmpate('pod-${index}', ${numJugadores + 1})">⏱️ Empate</button>
+    let idsEnMesas = ultimasMesasGeneradas.flat().map(j => j.id);
+    let jugadoresDisponibles = jugadores.filter(j => !idsEnMesas.includes(j.id));
+
+    if(jugadoresDisponibles.length === 0) {
+        mostrarToast("No hay jugadores libres en la base de datos para añadir.", "warning"); 
+        return;
+    }
+
+    let opciones = jugadoresDisponibles.map(j => `<option value="${j.id}">${j.nombre}</option>`).join('');
+
+    let html = `
+        <p style="color:var(--text-muted); font-size:13px;">Selecciona al jugador que ha llegado tarde y se unirá a la Mesa ${index + 1}:</p>
+        <select id="select-late-player" style="width: 100%; margin-top: 15px; background:rgba(0,0,0,0.5); color:white; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:6px; outline:none;">
+            ${opciones}
+        </select>
     `;
-    actualizarDesplegables();
+
+    abrirModal("➕ Añadir Jugador Tarde", html, () => {
+        let idElegido = parseInt(document.getElementById('select-late-player').value);
+        let jugadorElegido = jugadores.find(j => j.id === idElegido);
+        
+        if(jugadorElegido) {
+            ultimasMesasGeneradas[index].push(jugadorElegido);
+            
+            // Novedad: Lo marcamos como "presente" automáticamente en el Check-In
+            let checkbox = document.querySelector(`.check-jugador[value="${idElegido}"]`);
+            if(checkbox) checkbox.checked = true;
+            
+            mostrarMesas(ultimasMesasGeneradas, ultimoModo, ultimosPuntosHoy, ultimaRonda);
+            mostrarToast(`⚡ ${jugadorElegido.nombre} ha entrado y está apuntado a las siguientes rondas.`);
+        }
+        return true;
+    }, true);
 }
 
 function guardarResultadoMesa(prefijoMesa, numJugadores) {
