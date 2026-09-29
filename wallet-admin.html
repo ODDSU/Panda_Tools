@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Panda Wallet — Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px 20px 60px;
+            max-width: 100%; overflow-x: hidden;
+            background-color: var(--bg-dark); box-sizing: border-box;
+        }
+
+        .admin-container { width: 100%; max-width: 800px; }
+
+        /* HEADER */
+        .admin-header {
+            text-align: center; margin-bottom: 30px;
+            animation: fadeDown 0.6s ease-out backwards;
+        }
+        .admin-badge {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.12); color: #fbbf24;
+            padding: 5px 16px; border-radius: 20px;
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 12px; border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .admin-header h1 {
+            font-size: 2.2rem; font-weight: 900; margin: 0;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .admin-header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
+
+        /* TABS */
+        .admin-tabs {
+            display: flex; gap: 4px; margin-bottom: 25px;
+            background: rgba(0,0,0,0.4); border-radius: 14px; padding: 5px;
+            animation: fadeDown 0.6s ease-out 0.1s backwards;
+        }
+        .admin-tab {
+            flex: 1; padding: 10px; border: none; border-radius: 10px;
+            background: transparent; color: var(--text-muted);
+            font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; text-align: center;
+        }
+        .admin-tab:hover { color: white; }
+        .admin-tab.active {
+            background: rgba(251, 191, 36, 0.15); color: #fbbf24;
+            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.1);
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeUp 0.4s ease-out; }
+
+        /* CARDS */
+        .card {
+            background: rgba(15, 15, 20, 0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 25px; margin-bottom: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeUp 0.5s ease-out backwards;
+        }
+        .card h2 {
+            font-size: 0.95rem; font-weight: 700; margin: 0 0 18px 0;
+            display: flex; align-items: center; gap: 8px; color: white;
+        }
+
+        /* INPUTS */
+        label {
+            display: block; font-size: 0.75rem; color: var(--text-muted);
+            margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px;
+        }
+        .input-group { margin-bottom: 18px; }
+        .input-group:last-child { margin-bottom: 0; }
+
+        input[type="text"], textarea {
+            width: 100%; padding: 12px 16px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: white;
+            font-family: 'Poppins', sans-serif; font-size: 0.85rem;
+            outline: none; transition: all 0.3s; box-sizing: border-box;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+        textarea { resize: vertical; min-height: 100px; line-height: 1.8; }
+        .input-hint {
+            font-size: 0.68rem; color: rgba(148,163,184,0.6);
+            margin-top: 4px; font-style: italic;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 12px 24px; border: none; border-radius: 12px;
+            font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-generate {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a2e; width: 100%; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25);
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35);
+        }
+        .btn-generate:active { transform: translateY(0); }
+
+        .btn-sm {
+            padding: 7px 14px; font-size: 0.7rem; border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+        .btn-copy {
+            background: rgba(52, 211, 153, 0.12); color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.15);
+        }
+        .btn-copy:hover { background: rgba(52, 211, 153, 0.2); }
+        .btn-copy.copied { background: rgba(52, 211, 153, 0.3); }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1); color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+        .btn-copy-all {
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white; width: 100%; margin-top: 12px;
+        }
+        .btn-copy-all:hover {
+            box-shadow: 0 6px 20px rgba(52, 211, 153, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* RESULTS */
+        .results { display: none; }
+        .results.visible { display: block; }
+
+        .link-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; margin-bottom: 8px;
+            transition: border-color 0.3s;
+        }
+        .link-item:hover { border-color: rgba(251, 191, 36, 0.2); }
+        .link-name {
+            font-weight: 800; font-size: 0.85rem; min-width: 90px;
+            color: #fbbf24; text-transform: capitalize;
+        }
+        .link-url {
+            flex: 1; font-size: 0.65rem; color: var(--text-muted);
+            word-break: break-all; font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+
+        /* COUNTER */
+        .counter {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: rgba(251, 191, 36, 0.15); color: #fbbf24;
+            min-width: 22px; height: 22px; border-radius: 6px;
+            font-size: 0.7rem; font-weight: 800; padding: 0 6px;
+        }
+
+        /* HISTORIAL */
+        .search-box {
+            position: relative; margin-bottom: 16px;
+        }
+        .search-box input {
+            padding-left: 40px;
+        }
+        .search-box::before {
+            content: '🔍'; position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%); font-size: 0.85rem; z-index: 1;
+        }
+
+        .history-item {
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px; padding: 14px 16px; margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        .history-item:hover {
+            background: rgba(0,0,0,0.35);
+            border-color: rgba(255,255,255,0.08);
+        }
+        .history-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 6px;
+        }
+        .history-name {
+            font-weight: 800; font-size: 0.9rem; color: #fbbf24;
+            text-transform: capitalize;
+        }
+        .history-date {
+            font-size: 0.68rem; color: var(--text-muted);
+        }
+        .history-link {
+            font-size: 0.65rem; color: rgba(148,163,184,0.5);
+            font-family: 'Courier New', monospace; word-break: break-all;
+            line-height: 1.4; margin-bottom: 8px;
+        }
+        .history-actions { display: flex; gap: 6px; }
+
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: var(--text-muted);
+        }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.4; }
+        .empty-state p { font-size: 0.8rem; }
+
+        .stats-row {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-mini {
+            background: rgba(0,0,0,0.3); border-radius: 12px; padding: 14px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.04);
+        }
+        .stat-mini-value {
+            font-size: 1.4rem; font-weight: 900; color: #fbbf24;
+        }
+        .stat-mini-label {
+            font-size: 0.65rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+        }
+
+        .preview-box {
+            background: rgba(0,0,0,0.5); border-radius: 12px; padding: 14px 16px;
+            margin-top: 15px; font-size: 0.75rem; font-family: 'Courier New', monospace;
+            color: var(--text-muted); line-height: 1.6;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .preview-box .p-base { color: #94a3b8; }
+        .preview-box .p-jugador { color: #34d399; font-weight: 700; }
+        .preview-box .p-code { color: #8b5cf6; }
+
+        .toast-float {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(52, 211, 153, 0.95); color: #064e3b;
+            padding: 12px 24px; border-radius: 12px; font-weight: 700;
+            font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 100; animation: toastIn 0.3s ease-out;
+            display: none;
+        }
+        .toast-float.show { display: block; }
+
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+        @media (max-width: 500px) {
+            .admin-header h1 { font-size: 1.6rem; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .stat-mini { padding: 10px 6px; }
+            .stat-mini-value { font-size: 1.1rem; }
+            .link-item { flex-wrap: wrap; }
+            .link-name { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- AURAS DE FONDO -->
+<div class="bg-auras">
+    <div class="aura aura-1"></div>
+    <div class="aura aura-2"></div>
+    <div class="aura aura-3"></div>
+</div>
+
+<!-- HEADER -->
+<div class="admin-container">
+    <div class="admin-header">
+        <div class="admin-badge">🔒 Panel Privado</div>
+        <h1>🐼 Wallet Admin</h1>
+        <p>Genera y gestiona los links de tus jugadores</p>
+    </div>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('generar')">⚡ Generar</button>
+        <button class="admin-tab" onclick="switchTab('historial')">📋 Historial <span class="counter" id="histCount">0</span></button>
+    </div>
+
+    <!-- ===================== TAB: GENERAR ===================== -->
+    <div class="tab-panel active" id="tab-generar">
+
+        <!-- CONFIGURACIÓN -->
+        <div class="card" style="animation-delay: 0.15s">
+            <h2>⚙️ Configuración</h2>
+
+            <div class="input-group">
+                <label>URL base del wallet</label>
+                <input type="text" id="baseUrl" placeholder="https://tu-usuario.github.io/wallet/wallet.html">
+                <div class="input-hint">La URL pública donde los jugadores acceden a su wallet</div>
+            </div>
+
+            <div class="input-group">
+                <label>ID de publicación del Google Sheet</label>
+                <input type="text" id="sheetId" placeholder="2PACX-1vQ1kVIOYZ...">
+                <div class="input-hint">El ID largo (2PACX-...) de tu hoja publicada</div>
+            </div>
+
+            <div class="preview-box">
+                <strong style="color: white; font-family: Poppins; font-size: 0.75rem;">Vista previa del link:</strong><br>
+                <span class="p-base" id="previewBase">tu-web.github.io/wallet.html</span>?jugador=<span class="p-jugador">nombre</span>&amp;s=<span class="p-code" id="previewCode">***</span>
+            </div>
+        </div>
+
+        <!-- GENERAR -->
+        <div class="card" style="animation-delay: 0.25s">
+            <h2>🔗 Jugadores</h2>
+
+            <div class="input-group">
+                <label>IDs de los jugadores (uno por línea)</label>
+                <textarea id="jugadores" placeholder="paco&#10;maria&#10;carlos&#10;ana"></textarea>
+                <div class="input-hint">Deben coincidir con la columna jugador_id de tu Google Sheet</div>
+            </div>
+
+            <button class="btn btn-generate" onclick="generar()">⚡ Generar Links</button>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div class="card results" id="resultados" style="animation-delay: 0.35s">
+            <h2>📋 Links Generados</h2>
+            <div id="linksList"></div>
+            <button class="btn btn-copy-all" onclick="copiarTodos()">📋 Copiar todos</button>
+        </div>
+    </div>
+
+    <!-- ===================== TAB: HISTORIAL ===================== -->
+    <div class="tab-panel" id="tab-historial">
+        <div class="card">
+            <div class="stats-row">
+                <div class="stat-mini">
+                    <div class="stat-mini-value" id="statTotal">0</div>
+                    <div class="stat-mini-label">Jugadores</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-value" id="statLinks">0</div>
+                    <div class="stat-mini-label">Links</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-value" id="statLast">—</div>
+                    <div class="stat-mini-label">Último</div>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar jugador..." oninput="filtrarHistorial()">
+            </div>
+
+            <div id="historialList"></div>
+
+            <div style="margin-top: 12px; display: flex; gap: 8px;">
+                <button class="btn btn-sm btn-copy" onclick="exportarHistorial()" style="flex:1">📥 Exportar todo</button>
+                <button class="btn btn-sm btn-danger" onclick="limpiarHistorial()" style="flex:1">🗑️ Borrar todo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-float" id="toast"></div>
+
+<script>
+    // =========================================
+    //  STORAGE
+    // =========================================
+    function getData(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+        catch { return fallback; }
+    }
+    function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+    // Cargar config
+    const cfg = getData('panda_wallet_config', { baseUrl: '', sheetId: '', jugadores: '' });
+    document.getElementById('baseUrl').value = cfg.baseUrl;
+    document.getElementById('sheetId').value = cfg.sheetId;
+    document.getElementById('jugadores').value = cfg.jugadores;
+
+    // Historial: { nombre, url, fecha }
+    let historial = getData('panda_wallet_historial', []);
+
+    // Auto-guardar config
+    ['baseUrl', 'sheetId', 'jugadores'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            cfg[id] = document.getElementById(id).value;
+            setData('panda_wallet_config', cfg);
+            if (id === 'sheetId' || id === 'baseUrl') actualizarPreview();
+        });
+    });
+
+    function actualizarPreview() {
+        const sid = document.getElementById('sheetId').value.trim();
+        const base = document.getElementById('baseUrl').value.trim();
+        if (sid) document.getElementById('previewCode').textContent = btoa(sid).substring(0, 15) + '...';
+        if (base) document.getElementById('previewBase').textContent = base.replace(/^https?:\/\//, '');
+    }
+    actualizarPreview();
+
+    // =========================================
+    //  TABS
+    // =========================================
+    function switchTab(tab) {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        if (tab === 'historial') renderHistorial();
+    }
+
+    // =========================================
+    //  GENERAR LINKS
+    // =========================================
+    let linksGenerados = [];
+
+    function generar() {
+        const base = document.getElementById('baseUrl').value.trim();
+        const sheetId = document.getElementById('sheetId').value.trim();
+        const raw = document.getElementById('jugadores').value.trim();
+
+        if (!base) { toast('⚠️ Falta la URL base'); return; }
+        if (!sheetId) { toast('⚠️ Falta el ID de la hoja'); return; }
+        if (!raw) { toast('⚠️ Añade al menos un jugador'); return; }
+
+        const encoded = btoa(sheetId);
+        const jugadores = raw.split('\n').map(j => j.trim()).filter(j => j);
+        const ahora = new Date().toISOString();
+
+        linksGenerados = [];
+        const container = document.getElementById('linksList');
+        container.innerHTML = '';
+
+        jugadores.forEach(j => {
+            const link = `${base}?jugador=${encodeURIComponent(j)}&s=${encoded}`;
+            linksGenerados.push({ nombre: j, url: link });
+
+            // Guardar en historial (actualizar si ya existe)
+            const idx = historial.findIndex(h => h.nombre.toLowerCase() === j.toLowerCase());
+            if (idx >= 0) {
+                historial[idx].url = link;
+                historial[idx].fecha = ahora;
+            } else {
+                historial.push({ nombre: j, url: link, fecha: ahora });
+            }
+
+            const div = document.createElement('div');
+            div.className = 'link-item';
+            div.innerHTML = `
+                <span class="link-name">${j}</span>
+                <span class="link-url">${link}</span>
+                <button class="btn btn-sm btn-copy" onclick="copiar('${link}', this)">📋</button>
+            `;
+            container.appendChild(div);
+        });
+
+        setData('panda_wallet_historial', historial);
+        actualizarContadores();
+        document.getElementById('resultados').classList.add('visible');
+        toast(`✅ ${jugadores.length} links generados`);
+    }
+
+    function copiar(texto, btn) {
+        navigator.clipboard.writeText(texto).then(() => {
+            if (btn) {
+                btn.textContent = '✓';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1500);
+            }
+        });
+    }
+
+    function copiarTodos() {
+        const texto = linksGenerados.map(l => `${l.nombre}: ${l.url}`).join('\n');
+        navigator.clipboard.writeText(texto).then(() => toast('✅ Todos los links copiados'));
+    }
+
+    // =========================================
+    //  HISTORIAL
+    // =========================================
+    function renderHistorial() {
+        const query = (document.getElementById('searchInput').value || '').toLowerCase();
+        const filtered = query
+            ? historial.filter(h => h.nombre.toLowerCase().includes(query))
+            : historial;
+
+        const container = document.getElementById('historialList');
+
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">${query ? '🔍' : '📭'}</div>
+                    <p>${query ? 'No se encontró ningún jugador' : 'Aún no has generado ningún link'}</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Ordenar por fecha más reciente
+        const sorted = [...filtered].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        container.innerHTML = sorted.map((h, i) => {
+            const fecha = new Date(h.fecha);
+            const fechaStr = fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+                + ' · ' + fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            return `
+                <div class="history-item">
+                    <div class="history-header">
+                        <span class="history-name">${h.nombre}</span>
+                        <span class="history-date">${fechaStr}</span>
+                    </div>
+                    <div class="history-link">${h.url}</div>
+                    <div class="history-actions">
+                        <button class="btn btn-sm btn-copy" onclick="copiar('${h.url}', this)">📋 Copiar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarDelHistorial('${h.nombre}')">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        actualizarContadores();
+    }
+
+    function filtrarHistorial() { renderHistorial(); }
+
+    function eliminarDelHistorial(nombre) {
+        historial = historial.filter(h => h.nombre.toLowerCase() !== nombre.toLowerCase());
+        setData('panda_wallet_historial', historial);
+        renderHistorial();
+        toast(`🗑️ ${nombre} eliminado`);
+    }
+
+    function limpiarHistorial() {
+        if (!confirm('¿Borrar todo el historial de links?')) return;
+        historial = [];
+        setData('panda_wallet_historial', historial);
+        renderHistorial();
+        toast('🗑️ Historial borrado');
+    }
+
+    function exportarHistorial() {
+        if (historial.length === 0) { toast('📭 No hay links que exportar'); return; }
+        const texto = historial
+            .sort((a, b) => a.nombre.localeCompare(b.nombre))
+            .map(h => `${h.nombre}: ${h.url}`)
+            .join('\n');
+        navigator.clipboard.writeText(texto).then(() =>
+            toast(`✅ ${historial.length} links copiados`)
+        );
+    }
+
+    function actualizarContadores() {
+        const nombres = new Set(historial.map(h => h.nombre.toLowerCase()));
+        document.getElementById('histCount').textContent = historial.length;
+        document.getElementById('statTotal').textContent = nombres.size;
+        document.getElementById('statLinks').textContent = historial.length;
+
+        if (historial.length > 0) {
+            const last = historial.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0];
+            const d = new Date(last.fecha);
+            document.getElementById('statLast').textContent =
+                d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+        }
+    }
+    actualizarContadores();
+
+    // =========================================
+    //  TOAST
+    // =========================================
+    function toast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+</script>
+
+</body>
+</html>
