@@ -3,417 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐼 Panda Wallet</title>
+    <title>🐼 Panda Wallet — Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* =========================================
-           ESTILOS PANDA WALLET
-           ========================================= */
         body {
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; margin: 0; padding: 20px; max-width: 100%;
-            overflow-x: hidden; overflow-y: auto;
-            background-color: var(--bg-dark);
-            box-sizing: border-box;
+            min-height: 100vh; margin: 0; padding: 20px 20px 60px;
+            max-width: 100%; overflow-x: hidden;
+            background-color: var(--bg-dark); box-sizing: border-box;
         }
 
-        .wallet-container {
-            width: 100%; max-width: 700px;
-            animation: fadeUp 0.6s ease-out backwards;
-        }
+        .admin-container { width: 100%; max-width: 800px; }
 
-        /* CABECERA */
-        .wallet-header {
+        /* HEADER */
+        .admin-header {
             text-align: center; margin-bottom: 30px;
-            animation: fadeDown 0.8s ease-out backwards;
+            animation: fadeDown 0.6s ease-out backwards;
         }
-        .wallet-header h1 {
-            font-size: 2.5rem; font-weight: 900; margin: 0 0 5px 0;
+        .admin-badge {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.12); color: #fbbf24;
+            padding: 5px 16px; border-radius: 20px;
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 12px; border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .admin-header h1 {
+            font-size: 2.2rem; font-weight: 900; margin: 0;
             background: linear-gradient(to right, #fbbf24, #f59e0b);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
         }
-        .wallet-header .subtitle {
-            color: var(--text-muted); font-size: 0.85rem; font-weight: 600;
-            letter-spacing: 3px; text-transform: uppercase; margin: 0;
+        .admin-header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
+
+        /* TABS */
+        .admin-tabs {
+            display: flex; gap: 4px; margin-bottom: 25px;
+            background: rgba(0,0,0,0.4); border-radius: 14px; padding: 5px;
+            animation: fadeDown 0.6s ease-out 0.1s backwards;
+        }
+        .admin-tab {
+            flex: 1; padding: 10px; border: none; border-radius: 10px;
+            background: transparent; color: var(--text-muted);
+            font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; text-align: center;
+        }
+        .admin-tab:hover { color: white; }
+        .admin-tab.active {
+            background: rgba(251, 191, 36, 0.15); color: #fbbf24;
+            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.1);
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeUp 0.4s ease-out; }
+
+        /* CARDS */
+        .card {
+            background: rgba(15, 15, 20, 0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 25px; margin-bottom: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeUp 0.5s ease-out backwards;
+        }
+        .card h2 {
+            font-size: 0.95rem; font-weight: 700; margin: 0 0 18px 0;
+            display: flex; align-items: center; gap: 8px; color: white;
         }
 
-        /* TARJETA DE SALDO PRINCIPAL */
-        .balance-card {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(139, 92, 246, 0.08));
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            backdrop-filter: blur(25px); border-radius: 24px;
-            padding: 30px; text-align: center; margin-bottom: 25px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            position: relative; overflow: hidden;
+        /* INPUTS */
+        label {
+            display: block; font-size: 0.75rem; color: var(--text-muted);
+            margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px;
         }
-        .balance-card::before {
-            content: ''; position: absolute; top: 0; left: 0;
-            width: 100%; height: 4px;
-            background: linear-gradient(to right, #f59e0b, #8b5cf6);
+        .input-group { margin-bottom: 18px; }
+        .input-group:last-child { margin-bottom: 0; }
+
+        input[type="text"], input[type="password"], textarea {
+            width: 100%; padding: 12px 16px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: white;
+            font-family: 'Poppins', sans-serif; font-size: 0.85rem;
+            outline: none; transition: all 0.3s; box-sizing: border-box;
         }
-        .balance-label {
-            font-size: 0.8rem; color: var(--text-muted); font-weight: 700;
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;
+        input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
         }
-        .balance-amount {
-            font-size: 3.5rem; font-weight: 900; color: #fcd34d;
-            text-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
-            margin: 0; line-height: 1.2;
-        }
-        .balance-name {
-            font-size: 1.1rem; font-weight: 600; color: white; margin-top: 10px;
+        textarea { resize: vertical; min-height: 100px; line-height: 1.8; }
+        .input-hint {
+            font-size: 0.68rem; color: rgba(148,163,184,0.6);
+            margin-top: 4px; font-style: italic;
         }
 
-        /* TARJETAS DE STATS */
-        .stats-row {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;
+        /* BUTTONS */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 12px 24px; border: none; border-radius: 12px;
+            font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .stat-card {
-            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(255,255,255,0.05);
-            backdrop-filter: blur(20px); border-radius: 16px; padding: 20px;
-            text-align: center;
+        .btn-generate {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a2e; width: 100%; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25);
         }
-        .stat-card .stat-icon { font-size: 1.8rem; margin-bottom: 5px; }
-        .stat-card .stat-value {
-            font-size: 1.6rem; font-weight: 900; color: white; margin: 0;
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35);
         }
-        .stat-card .stat-label {
-            font-size: 0.7rem; color: var(--text-muted); font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px;
-        }
-        .stat-card.ingresos { border-left: 3px solid var(--success); }
-        .stat-card.ingresos .stat-value { color: #34d399; }
-        .stat-card.gastos { border-left: 3px solid var(--danger); }
-        .stat-card.gastos .stat-value { color: #fca5a5; }
+        .btn-generate:active { transform: translateY(0); }
 
-        /* HISTORIAL DE MOVIMIENTOS */
-        .history-card {
-            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(255,255,255,0.05);
-            backdrop-filter: blur(20px); border-radius: 24px; padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        .btn-sm {
+            padding: 7px 14px; font-size: 0.7rem; border-radius: 8px;
+            letter-spacing: 0.5px;
         }
-        .history-card h2 {
-            font-size: 1.1rem; margin: 0 0 20px 0; color: white;
+        .btn-copy {
+            background: rgba(52, 211, 153, 0.12); color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.15);
+        }
+        .btn-copy:hover { background: rgba(52, 211, 153, 0.2); }
+        .btn-copy.copied { background: rgba(52, 211, 153, 0.3); }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1); color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+        .btn-copy-all {
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white; width: 100%; margin-top: 12px;
+        }
+        .btn-copy-all:hover {
+            box-shadow: 0 6px 20px rgba(52, 211, 153, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* RESULTS */
+        .results { display: none; }
+        .results.visible { display: block; }
+
+        .link-item {
             display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; margin-bottom: 8px;
+            transition: border-color 0.3s;
+        }
+        .link-item:hover { border-color: rgba(251, 191, 36, 0.2); }
+        .link-name {
+            font-weight: 800; font-size: 0.85rem; min-width: 90px;
+            color: #fbbf24; text-transform: capitalize;
+        }
+        .link-url {
+            flex: 1; font-size: 0.65rem; color: var(--text-muted);
+            word-break: break-all; font-family: 'Courier New', monospace;
+            line-height: 1.4;
         }
 
-        .movement {
-            display: flex; align-items: center; gap: 15px;
-            padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-            transition: background 0.2s;
-        }
-        .movement:last-child { border-bottom: none; }
-        .movement:hover { background: rgba(255,255,255,0.02); border-radius: 12px; padding: 14px 10px; margin: 0 -10px; }
-
-        .mov-icon {
-            width: 42px; height: 42px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; flex-shrink: 0;
-        }
-        .mov-icon.ingreso { background: rgba(16, 185, 129, 0.15); }
-        .mov-icon.gasto { background: rgba(239, 68, 68, 0.15); }
-
-        .mov-info { flex: 1; min-width: 0; }
-        .mov-concepto {
-            font-size: 0.9rem; font-weight: 600; color: white;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .mov-fecha {
-            font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;
-            font-weight: 600; letter-spacing: 0.5px;
+        /* COUNTER */
+        .counter {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: rgba(251, 191, 36, 0.15); color: #fbbf24;
+            min-width: 22px; height: 22px; border-radius: 6px;
+            font-size: 0.7rem; font-weight: 800; padding: 0 6px;
         }
 
-        .mov-monto { font-weight: 800; font-size: 1rem; flex-shrink: 0; }
-        .mov-monto.positivo { color: #34d399; }
-        .mov-monto.negativo { color: #fca5a5; }
-
-        /* ESTADO VACÍO / ERROR / CARGA */
-        .state-message {
-            text-align: center; padding: 60px 20px;
-            animation: fadeUp 0.5s ease-out;
+        /* HISTORIAL */
+        .search-box {
+            position: relative; margin-bottom: 16px;
         }
-        .state-message .state-icon { font-size: 4rem; margin-bottom: 15px; }
-        .state-message h2 {
-            color: white; font-size: 1.3rem; margin: 0 0 10px 0;
-            justify-content: center;
+        .search-box input {
+            padding-left: 40px;
         }
-        .state-message p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0; }
-
-        .loading-spinner {
-            width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1);
-            border-top-color: var(--primary); border-radius: 50%;
-            animation: spin 0.8s linear infinite; margin: 0 auto 20px auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* BOTÓN VOLVER */
-        .back-link {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: var(--text-muted); text-decoration: none; font-weight: 600;
-            font-size: 0.85rem; margin-bottom: 20px; padding: 8px 16px;
-            background: rgba(0,0,0,0.3); border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
-        }
-        .back-link:hover { color: white; background: rgba(255,255,255,0.05); transform: translateX(-3px); }
-
-        /* FILTRO */
-        .filter-row {
-            display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
-        }
-        .filter-btn {
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);
-            color: var(--text-muted); padding: 8px 16px; border-radius: 10px;
-            font-weight: 600; font-size: 0.75rem; cursor: pointer; font-family: inherit;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;
-        }
-        .filter-btn:hover { background: rgba(255,255,255,0.05); color: white; }
-        .filter-btn.active {
-            background: rgba(139, 92, 246, 0.2); color: white;
-            border-color: rgba(139, 92, 246, 0.4);
+        .search-box::before {
+            content: '🔍'; position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%); font-size: 0.85rem; z-index: 1;
         }
 
-        /* FOOTER */
-        .wallet-footer {
-            text-align: center; margin-top: 30px; padding: 15px;
-            color: #475569; font-size: 0.75rem; font-weight: 600;
+        .history-item {
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px; padding: 14px 16px; margin-bottom: 8px;
+            transition: all 0.3s;
         }
-        .wallet-footer a { color: var(--primary); text-decoration: none; }
+        .history-item:hover {
+            background: rgba(0,0,0,0.35);
+            border-color: rgba(255,255,255,0.08);
+        }
+        .history-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 6px;
+        }
+        .history-name {
+            font-weight: 800; font-size: 0.9rem; color: #fbbf24;
+            text-transform: capitalize;
+        }
+        .history-date {
+            font-size: 0.68rem; color: var(--text-muted);
+        }
+        .history-link {
+            font-size: 0.65rem; color: rgba(148,163,184,0.5);
+            font-family: 'Courier New', monospace; word-break: break-all;
+            line-height: 1.4; margin-bottom: 8px;
+        }
+        .history-actions { display: flex; gap: 6px; }
 
-        /* RESPONSIVE */
-        @media (max-width: 500px) {
-            .balance-amount { font-size: 2.5rem; }
-            .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .stat-card { padding: 15px; }
-            .stat-card .stat-value { font-size: 1.3rem; }
-            .wallet-header h1 { font-size: 2rem; }
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: var(--text-muted);
         }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.4; }
+        .empty-state p { font-size: 0.8rem; }
+
+        .stats-row {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-mini {
+            background: rgba(0,0,0,0.3); border-radius: 12px; padding: 14px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.04);
+        }
+        .stat-mini-value {
+            font-size: 1.4rem; font-weight: 900; color: #fbbf24;
+        }
+        .stat-mini-label {
+            font-size: 0.65rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+        }
+
+        .preview-box {
+            background: rgba(0,0,0,0.5); border-radius: 12px; padding: 14px 16px;
+            margin-top: 15px; font-size: 0.75rem; font-family: 'Courier New', monospace;
+            color: var(--text-muted); line-height: 1.6;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .preview-box .p-base { color: #94a3b8; }
+        .preview-box .p-jugador { color: #34d399; font-weight: 700; }
+        .preview-box .p-code { color: #8b5cf6; }
+
+        .toast-float {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(52, 211, 153, 0.95); color: #064e3b;
+            padding: 12px 24px; border-radius: 12px; font-weight: 700;
+            font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 100; animation: toastIn 0.3s ease-out;
+            display: none;
+        }
+        .toast-float.show { display: block; }
 
         @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
-        /* CONFIGURACIÓN INICIAL (sin sheet conectado) */
-        .setup-card {
-            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(139, 92, 246, 0.2);
-            backdrop-filter: blur(20px); border-radius: 24px; padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin-bottom: 25px;
+        @media (max-width: 500px) {
+            .admin-header h1 { font-size: 1.6rem; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .stat-mini { padding: 10px 6px; }
+            .stat-mini-value { font-size: 1.1rem; }
+            .link-item { flex-wrap: wrap; }
+            .link-name { min-width: 100%; }
         }
-        .setup-card h2 { color: var(--primary); justify-content: center; }
-        .setup-card code {
-            background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 6px;
-            font-size: 0.85rem; color: #fbbf24; word-break: break-all;
-        }
-        .setup-card .step {
-            background: rgba(0,0,0,0.3); border-left: 3px solid var(--primary);
-            padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 12px;
-        }
-        .setup-card .step-number {
-            color: var(--primary); font-weight: 900; font-size: 0.8rem;
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;
-        }
-        .setup-card .step p { color: #cbd5e1; font-size: 0.85rem; margin: 0; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div class="bg-auras">
-        <div class="aura aura-1"></div>
-        <div class="aura aura-2"></div>
-        <div class="aura aura-3"></div>
+<!-- AURAS DE FONDO -->
+<div class="bg-auras">
+    <div class="aura aura-1"></div>
+    <div class="aura aura-2"></div>
+    <div class="aura aura-3"></div>
+</div>
+
+<!-- HEADER -->
+<div class="admin-container">
+    <div class="admin-header">
+        <div class="admin-badge">🔒 Panel Privado</div>
+        <h1>🐼 Wallet Admin</h1>
+        <p>Genera y gestiona los links de tus jugadores</p>
     </div>
 
-    <div class="wallet-container">
-        <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
+    <!-- TABS -->
+    <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('generar')">⚡ Generar</button>
+        <button class="admin-tab" onclick="switchTab('historial')">📋 Historial <span class="counter" id="histCount">0</span></button>
+    </div>
 
-        <div class="wallet-header">
-            <h1>💰 PANDA WALLET</h1>
-            <p class="subtitle">Pool de Premios Commander</p>
-        </div>
+    <!-- ===================== TAB: GENERAR ===================== -->
+    <div class="tab-panel active" id="tab-generar">
 
-        <div id="wallet-content">
-            <!-- El contenido se inyecta dinámicamente -->
-            <div class="state-message">
-                <div class="loading-spinner"></div>
-                <h2>Cargando tu wallet...</h2>
-                <p>Conectando con la base de datos de premios</p>
+        <!-- CONFIGURACIÓN -->
+        <div class="card" style="animation-delay: 0.15s">
+            <h2>⚙️ Configuración</h2>
+
+            <div class="input-group">
+                <label>URL base del wallet</label>
+                <input type="text" id="baseUrl" placeholder="https://tu-usuario.github.io/wallet/wallet.html">
+                <div class="input-hint">La URL pública donde los jugadores acceden a su wallet</div>
+            </div>
+
+            <div class="input-group">
+                <label>URL del Apps Script</label>
+                <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+                <div class="input-hint">La URL de la implementación (App web) de tu script</div>
+            </div>
+
+            <div class="input-group">
+                <label>Clave de admin</label>
+                <input type="password" id="adminKey" placeholder="••••••••">
+                <div class="input-hint">La que pusiste en la hoja con 🐼 Wallet → Configurar clave de admin. Solo se guarda en este navegador.</div>
+            </div>
+
+            <div class="preview-box">
+                <strong style="color: white; font-family: Poppins; font-size: 0.75rem;">Vista previa del link:</strong><br>
+                <span class="p-base" id="previewBase">tu-web.github.io/wallet.html</span>?t=<span class="p-code">token_secreto</span>
             </div>
         </div>
 
-        <div class="wallet-footer">
-            🐼 Panda Tools — <a href="index.html">Volver al Hub</a>
+        <!-- GENERAR -->
+        <div class="card" style="animation-delay: 0.25s">
+            <h2>🔗 Jugadores</h2>
+            <p class="input-hint" style="font-style: normal; margin: 0 0 6px;">
+                Se cargan desde la hoja <strong>Jugadores</strong>. A los que no tengan token se les genera uno automáticamente.
+            </p>
+            <button class="btn btn-generate" id="btnGenerar" onclick="generar()">⚡ Cargar jugadores y generar links</button>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div class="card results" id="resultados" style="animation-delay: 0.35s">
+            <h2>📋 Links Generados</h2>
+            <div id="linksList"></div>
+            <button class="btn btn-copy-all" onclick="copiarTodos()">📋 Copiar todos</button>
         </div>
     </div>
 
-    <div id="toast-container" class="toast-container"></div>
+    <!-- ===================== TAB: HISTORIAL ===================== -->
+    <div class="tab-panel" id="tab-historial">
+        <div class="card">
+            <div class="stats-row">
+                <div class="stat-mini">
+                    <div class="stat-mini-value" id="statTotal">0</div>
+                    <div class="stat-mini-label">Jugadores</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-value" id="statLinks">0</div>
+                    <div class="stat-mini-label">Links</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-value" id="statLast">—</div>
+                    <div class="stat-mini-label">Último</div>
+                </div>
+            </div>
 
-    <script>
-    // URL de la implementación de Apps Script (termina en /exec)
-    const SCRIPT_URL = '';
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar jugador..." oninput="filtrarHistorial()">
+            </div>
 
+            <div id="historialList"></div>
+
+            <div style="margin-top: 12px; display: flex; gap: 8px;">
+                <button class="btn btn-sm btn-copy" onclick="exportarHistorial()" style="flex:1">📥 Exportar todo</button>
+                <button class="btn btn-sm btn-danger" onclick="limpiarHistorial()" style="flex:1">🗑️ Borrar todo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-float" id="toast"></div>
+
+<script>
     // =========================================
-    //  LÓGICA PRINCIPAL
+    //  STORAGE
     // =========================================
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('t');
+    function getData(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+        catch { return fallback; }
+    }
+    function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        if (!SCRIPT_URL) {
-            mostrarSetup();
-            return;
-        }
+    // Cargar config
+    const CAMPOS_CONFIG = ['baseUrl', 'scriptUrl', 'adminKey'];
+    const cfg = getData('panda_wallet_config', {});
+    CAMPOS_CONFIG.forEach(id => { document.getElementById(id).value = cfg[id] || ''; });
 
-        if (!token) {
-            mostrarErrorNoJugador();
-            return;
-        }
+    // Historial: { nombre, url, fecha }
+    let historial = getData('panda_wallet_historial', []);
 
-        cargarDatos();
+    // Auto-guardar config
+    CAMPOS_CONFIG.forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            cfg[id] = document.getElementById(id).value;
+            setData('panda_wallet_config', cfg);
+            if (id === 'baseUrl') actualizarPreview();
+        });
     });
 
-    async function cargarDatos() {
-        try {
-            const response = await fetch(`${SCRIPT_URL}?t=${encodeURIComponent(token)}`);
-            if (!response.ok) throw new Error('No se pudo conectar con el servidor.');
-            const data = await response.json();
+    function actualizarPreview() {
+        const base = document.getElementById('baseUrl').value.trim();
+        if (base) document.getElementById('previewBase').textContent = base.replace(/^https?:\/\//, '');
+    }
+    actualizarPreview();
 
-            if (data.error === 'no_encontrado') { mostrarJugadorNoEncontrado(); return; }
-            if (data.error === 'link_incompleto') { mostrarErrorNoJugador(); return; }
-            if (data.error) throw new Error('El servidor no pudo leer los datos.');
-
-            renderWallet(data.movimientos || [], data.nombre);
-
-        } catch (error) {
-            console.error('Error cargando datos:', error);
-            mostrarError(error.message);
-        }
+    // =========================================
+    //  TABS
+    // =========================================
+    function switchTab(tab) {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        if (tab === 'historial') renderHistorial();
     }
 
-    function renderWallet(movimientos, nombre) {
+    // =========================================
+    //  GENERAR LINKS
+    // =========================================
+    let linksGenerados = [];
 
-        // Calcular totales
-        let totalIngresos = 0;
-        let totalGastos = 0;
+    async function generar() {
+        const base = document.getElementById('baseUrl').value.trim();
+        const scriptUrl = document.getElementById('scriptUrl').value.trim();
+        const adminKey = document.getElementById('adminKey').value.trim();
 
-        movimientos.forEach(m => {
-            if (m.tipo === 'ingreso' || m.tipo === 'premio') {
-                totalIngresos += m.monto;
-            } else if (m.tipo === 'gasto' || m.tipo === 'canje' || m.tipo === 'canjeo') {
-                totalGastos += m.monto;
+        if (!base) { toast('⚠️ Falta la URL base'); return; }
+        if (!scriptUrl) { toast('⚠️ Falta la URL del Apps Script'); return; }
+        if (!adminKey) { toast('⚠️ Falta la clave de admin'); return; }
+
+        const btn = document.getElementById('btnGenerar');
+        btn.disabled = true;
+        btn.textContent = '⏳ Cargando...';
+
+        let jugadores;
+        try {
+            const res = await fetch(`${scriptUrl}?admin=${encodeURIComponent(adminKey)}`);
+            const data = await res.json();
+            if (data.error === 'no_autorizado') { toast('⛔ Clave de admin incorrecta'); return; }
+            if (data.error) { toast('⚠️ Error en el script: ' + data.error); return; }
+            jugadores = data.jugadores || [];
+        } catch (e) {
+            console.error(e);
+            toast('⚠️ No se pudo conectar con el Apps Script');
+            return;
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '⚡ Cargar jugadores y generar links';
+        }
+
+        if (jugadores.length === 0) { toast('📭 No hay jugadores en la hoja'); return; }
+
+        const ahora = new Date().toISOString();
+        linksGenerados = [];
+        const container = document.getElementById('linksList');
+        container.innerHTML = '';
+
+        jugadores.forEach(j => {
+            const nombre = j.nombre || j.jugador_id;
+            const link = `${base}?t=${encodeURIComponent(j.token)}`;
+            linksGenerados.push({ nombre, url: link });
+
+            // Guardar en historial (actualizar si ya existe)
+            const idx = historial.findIndex(h => h.nombre.toLowerCase() === nombre.toLowerCase());
+            if (idx >= 0) {
+                historial[idx].url = link;
+                historial[idx].fecha = ahora;
+            } else {
+                historial.push({ nombre, url: link, fecha: ahora });
             }
+
+            const div = document.createElement('div');
+            div.className = 'link-item';
+            div.innerHTML = `
+                <span class="link-name">${escapeHTML(nombre)}</span>
+                <span class="link-url">${escapeHTML(link)}</span>
+                <button class="btn btn-sm btn-copy">📋</button>
+            `;
+            div.querySelector('button').onclick = e => copiar(link, e.currentTarget);
+            container.appendChild(div);
         });
 
-        const saldo = totalIngresos - totalGastos;
-
-        // Ordenar por fecha (más reciente primero)
-        movimientos.sort((a, b) => {
-            const dateA = new Date(a.fecha);
-            const dateB = new Date(b.fecha);
-            return dateB - dateA;
-        });
-
-        const content = document.getElementById('wallet-content');
-        content.innerHTML = `
-            <!-- TARJETA DE SALDO -->
-            <div class="balance-card">
-                <div class="balance-label">Saldo disponible</div>
-                <div class="balance-amount">${saldo.toFixed(2)}€</div>
-                <div class="balance-name">👤 ${escapeHTML(nombre)}</div>
-            </div>
-
-            <!-- STATS -->
-            <div class="stats-row">
-                <div class="stat-card ingresos">
-                    <div class="stat-icon">📈</div>
-                    <div class="stat-value">+${totalIngresos.toFixed(2)}€</div>
-                    <div class="stat-label">Total ganado</div>
-                </div>
-                <div class="stat-card gastos">
-                    <div class="stat-icon">🛒</div>
-                    <div class="stat-value">-${totalGastos.toFixed(2)}€</div>
-                    <div class="stat-label">Total gastado</div>
-                </div>
-            </div>
-
-            <!-- HISTORIAL -->
-            <div class="history-card">
-                <h2>📋 Historial de Movimientos</h2>
-
-                <div class="filter-row">
-                    <button class="filter-btn active" onclick="filtrar('todos', this)">Todos</button>
-                    <button class="filter-btn" onclick="filtrar('ingreso', this)">💰 Ingresos</button>
-                    <button class="filter-btn" onclick="filtrar('gasto', this)">🛒 Gastos</button>
-                </div>
-
-                <div id="movements-list">
-                    ${renderMovimientos(movimientos)}
-                </div>
-            </div>
-        `;
-
-        // Guardar los movimientos para el filtro
-        window._movimientos = movimientos;
-    }
-
-    function renderMovimientos(movimientos, filtro = 'todos') {
-        const filtered = filtro === 'todos'
-            ? movimientos
-            : movimientos.filter(m => {
-                if (filtro === 'ingreso') return m.tipo === 'ingreso' || m.tipo === 'premio';
-                if (filtro === 'gasto') return m.tipo === 'gasto' || m.tipo === 'canje' || m.tipo === 'canjeo';
-                return true;
-            });
-
-        if (filtered.length === 0) {
-            return `
-                <div style="text-align: center; padding: 30px; color: var(--text-muted);">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">🔍</div>
-                    <p style="margin: 0;">No hay movimientos de este tipo</p>
-                </div>
-            `;
-        }
-
-        return filtered.map(m => {
-            const esIngreso = m.tipo === 'ingreso' || m.tipo === 'premio';
-            const iconClass = esIngreso ? 'ingreso' : 'gasto';
-            const icon = esIngreso ? '💰' : '🛒';
-            const montoClass = esIngreso ? 'positivo' : 'negativo';
-            const montoPrefix = esIngreso ? '+' : '-';
-            const fechaFormateada = formatearFecha(m.fecha);
-
-            return `
-                <div class="movement" data-tipo="${m.tipo}">
-                    <div class="mov-icon ${iconClass}">${icon}</div>
-                    <div class="mov-info">
-                        <div class="mov-concepto">${escapeHTML(m.concepto)}</div>
-                        <div class="mov-fecha">${fechaFormateada}</div>
-                    </div>
-                    <div class="mov-monto ${montoClass}">${montoPrefix}${m.monto.toFixed(2)}€</div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function filtrar(tipo, btn) {
-        // Actualizar botón activo
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Re-renderizar
-        const list = document.getElementById('movements-list');
-        list.innerHTML = renderMovimientos(window._movimientos, tipo);
-    }
-
-    function formatearFecha(fechaStr) {
-        try {
-            const date = new Date(fechaStr);
-            if (isNaN(date.getTime())) return fechaStr;
-            return date.toLocaleDateString('es-ES', {
-                day: 'numeric', month: 'short', year: 'numeric'
-            });
-        } catch {
-            return fechaStr;
-        }
+        setData('panda_wallet_historial', historial);
+        actualizarContadores();
+        document.getElementById('resultados').classList.add('visible');
+        toast(`✅ ${jugadores.length} links generados`);
     }
 
     function escapeHTML(str) {
@@ -422,91 +494,128 @@
         return div.innerHTML;
     }
 
+    function copiar(texto, btn) {
+        navigator.clipboard.writeText(texto).then(() => {
+            if (btn) {
+                btn.textContent = '✓';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1500);
+            }
+        });
+    }
+
+    function copiarTodos() {
+        const texto = linksGenerados.map(l => `${l.nombre}: ${l.url}`).join('\n');
+        navigator.clipboard.writeText(texto).then(() => toast('✅ Todos los links copiados'));
+    }
+
     // =========================================
-    //  ESTADOS: SETUP / ERROR / NO ENCONTRADO
+    //  HISTORIAL
     // =========================================
-    function mostrarSetup() {
-        document.getElementById('wallet-content').innerHTML = `
-            <div class="setup-card">
-                <h2>⚙️ Configuración Inicial</h2>
-                <p style="color: var(--text-muted); text-align: center; font-size: 0.85rem; margin-bottom: 25px;">
-                    Configura el Google Apps Script para activar el wallet de forma privada.
-                </p>
+    function renderHistorial() {
+        const query = (document.getElementById('searchInput').value || '').toLowerCase();
+        const filtered = query
+            ? historial.filter(h => h.nombre.toLowerCase().includes(query))
+            : historial;
 
-                <div class="step">
-                    <div class="step-number">Paso 1</div>
-                    <p>En tu Google Sheet, ve a <strong style="color: white;">Extensiones → Apps Script</strong> y pega el código del script (ver guía).</p>
+        const container = document.getElementById('historialList');
+
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">${query ? '🔍' : '📭'}</div>
+                    <p>${query ? 'No se encontró ningún jugador' : 'Aún no has generado ningún link'}</p>
                 </div>
+            `;
+            return;
+        }
 
-                <div class="step">
-                    <div class="step-number">Paso 2</div>
-                    <p>En Apps Script: <strong style="color: white;">Implementar → Nueva implementación → App web</strong>. Acceso: <code>Cualquier persona</code>.</p>
+        // Ordenar por fecha más reciente
+        const sorted = [...filtered].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        container.innerHTML = '';
+        sorted.forEach(h => {
+            const fecha = new Date(h.fecha);
+            const fechaStr = fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+                + ' · ' + fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `
+                <div class="history-header">
+                    <span class="history-name">${escapeHTML(h.nombre)}</span>
+                    <span class="history-date">${fechaStr}</span>
                 </div>
-
-                <div class="step">
-                    <div class="step-number">Paso 3</div>
-                    <p>Copia la <strong style="color: white;">URL</strong> que te da y pégala en <code>wallet.html</code>:<br>
-                    <code>const SCRIPT_URL = '<span style="color: #34d399;">https://script.google.com/macros/s/...</span>';</code></p>
+                <div class="history-link">${escapeHTML(h.url)}</div>
+                <div class="history-actions">
+                    <button class="btn btn-sm btn-copy">📋 Copiar</button>
+                    <button class="btn btn-sm btn-danger">🗑️</button>
                 </div>
+            `;
+            div.querySelector('.btn-copy').onclick = e => copiar(h.url, e.currentTarget);
+            div.querySelector('.btn-danger').onclick = () => eliminarDelHistorial(h.nombre);
+            container.appendChild(div);
+        });
 
-                <div class="step" style="border-color: var(--accent);">
-                    <div class="step-number" style="color: var(--accent);">¡Listo!</div>
-                    <p>Genera los links desde <strong style="color: white;">wallet-admin</strong>. Tendrán este formato:<br>
-                    <code>tu-web.github.io/wallet.html?t=<span style="color: #34d399;">token_secreto</span></code></p>
-                </div>
-            </div>
-        `;
+        actualizarContadores();
     }
 
-    function mostrarErrorNoJugador() {
-        document.getElementById('wallet-content').innerHTML = `
-            <div class="state-message">
-                <div class="state-icon">🔗</div>
-                <h2>Link incompleto</h2>
-                <p>A este link le falta tu código personal.<br>
-                Pide tu link a la tienda.</p>
-            </div>
-        `;
+    function filtrarHistorial() { renderHistorial(); }
+
+    function eliminarDelHistorial(nombre) {
+        historial = historial.filter(h => h.nombre.toLowerCase() !== nombre.toLowerCase());
+        setData('panda_wallet_historial', historial);
+        renderHistorial();
+        toast(`🗑️ ${nombre} eliminado`);
     }
 
-    function mostrarJugadorNoEncontrado() {
-        document.getElementById('wallet-content').innerHTML = `
-            <div class="state-message">
-                <div class="state-icon">🤔</div>
-                <h2>Link no válido</h2>
-                <p>Este link no corresponde a ningún jugador o ha sido renovado.<br>
-                Pide tu link actualizado a la tienda.</p>
-            </div>
-        `;
+    function limpiarHistorial() {
+        if (!confirm('¿Borrar todo el historial de links?')) return;
+        historial = [];
+        setData('panda_wallet_historial', historial);
+        renderHistorial();
+        toast('🗑️ Historial borrado');
     }
 
-    function mostrarError(mensaje) {
-        document.getElementById('wallet-content').innerHTML = `
-            <div class="state-message">
-                <div class="state-icon">⚠️</div>
-                <h2>Error de conexión</h2>
-                <p>${escapeHTML(mensaje)}<br><br>
-                Si el problema persiste, contacta con la tienda.</p>
-            </div>
-        `;
+    function exportarHistorial() {
+        if (historial.length === 0) { toast('📭 No hay links que exportar'); return; }
+        const texto = historial
+            .sort((a, b) => a.nombre.localeCompare(b.nombre))
+            .map(h => `${h.nombre}: ${h.url}`)
+            .join('\n');
+        navigator.clipboard.writeText(texto).then(() =>
+            toast(`✅ ${historial.length} links copiados`)
+        );
     }
 
-    // Toast (reutilizado de tu estilo)
-    function mostrarToast(mensaje) {
-        const contenedor = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `<span>🐼</span> <span>${mensaje}</span>`;
-        contenedor.appendChild(toast);
-        setTimeout(() => {
-            toast.style.transform = 'translateX(100%)';
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+    function actualizarContadores() {
+        const nombres = new Set(historial.map(h => h.nombre.toLowerCase()));
+        document.getElementById('histCount').textContent = historial.length;
+        document.getElementById('statTotal').textContent = nombres.size;
+        document.getElementById('statLinks').textContent = historial.length;
+
+        if (historial.length > 0) {
+            const last = historial.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0];
+            const d = new Date(last.fecha);
+            document.getElementById('statLast').textContent =
+                d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+        }
     }
-    </script>
+    actualizarContadores();
+
+    // =========================================
+    //  TOAST
+    // =========================================
+    function toast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+</script>
 
 </body>
 </html>
+
 
 </html>
