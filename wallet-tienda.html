@@ -1818,8 +1818,9 @@
 
     // Casilla "Imprimir resguardo"; se recuerda en este ordenador
     function checkTicket() {
-        let on = true;
-        try { on = localStorage.getItem('panda_ticket_auto') !== 'no'; } catch {}
+        // Desmarcada por defecto: solo imprime sola si alguien la marca en este ordenador
+        let on = false;
+        try { on = localStorage.getItem('panda_ticket_auto') === 'si'; } catch {}
         return `<label class="ticket-chk"><input type="checkbox" id="tarTicket" ${on ? 'checked' : ''}
             onchange="try { localStorage.setItem('panda_ticket_auto', this.checked ? 'si' : 'no') } catch {}">
             🧾 Imprimir resguardo al guardar</label>`;
