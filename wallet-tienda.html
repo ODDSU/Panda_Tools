@@ -1515,6 +1515,11 @@
     let tarjetas = [];
     let tarjetaActual = null;
 
+    // Tarjeta creada como ticket impreso (no de plástico). Las antiguas se reconocen por el código 88 + 10 cifras.
+    function esTicket(t) {
+        return (t.formato || (/^88\d{10}$/.test(String(t.codigo)) ? 'ticket' : 'fisica')) === 'ticket';
+    }
+
     function normalizarCodigo(c) { return String(c || '').trim().toUpperCase().replace(/\s+/g, ''); }
 
     async function cargarTarjetas() {
@@ -1547,10 +1552,10 @@
         }
         cont.innerHTML = lista.map(t => `
             <div class="prow" data-codigo="${esc(t.codigo)}">
-                <div class="avatar">🎁</div>
+                <div class="avatar">${esTicket(t) ? '🎟️' : '🎁'}</div>
                 <div class="pinfo">
                     <div class="pname mono">${esc(t.codigo)}</div>
-                    <div class="pmeta">${t.comprador ? esc(t.comprador) + ' · ' : ''}${euros(t.cargado)} cargados · ${t.ultimo ? 'último uso ' + fecha(t.ultimo) : 'sin uso'}</div>
+                    <div class="pmeta">${esTicket(t) ? 'En ticket · ' : ''}${t.comprador ? esc(t.comprador) + ' · ' : ''}${euros(t.cargado)} cargados · ${t.ultimo ? 'último uso ' + fecha(t.ultimo) : 'sin uso'}</div>
                 </div>
                 <div class="psaldo ${t.saldo > 0.005 ? '' : 'cero'}">${euros(t.saldo)}</div>
             </div>`).join('');
@@ -1645,7 +1650,7 @@
         const vacia = d.saldo <= 0.005;
         res.innerHTML = `
             <div class="gcard ${vacia ? 'vacia' : ''}">
-                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Tarjeta regalo</span>
+                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · ${esTicket(t) ? '🎟️ Tarjeta en ticket' : 'Tarjeta regalo'}</span>
                     <span class="gcard-pill ${vacia ? '' : 'ok'}">${vacia ? 'Gastada' : 'Activa'}</span></div>
                 <div class="gcard-saldo">${euros(d.saldo)}</div>
                 <div class="gcard-sub">Activada el ${fecha(t.activada)} con ${euros(t.importe_inicial)}${t.comprador ? ' · ' + esc(t.comprador) : ''}</div>
@@ -1799,7 +1804,8 @@
         try {
             const data = await api('tarjeta_activar', {
                 codigo: tarjetaActual.codigo, importe,
-                comprador: document.getElementById('tarComprador').value
+                comprador: document.getElementById('tarComprador').value,
+                formato: tarjetaActual.codigo === tarjetaEnTicket ? 'ticket' : 'fisica'
             });
             if (data.error) throw new Error(errorDe(data));
             toast(`🎁 Tarjeta activada con ${euros(importe)}`, 'success');
