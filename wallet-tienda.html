@@ -358,6 +358,14 @@
             padding: 8px 14px; font-family: inherit; font-size: 0.7rem; font-weight: 700; transition: 0.2s;
         }
         .tar-eliminar:hover { background: rgba(239, 68, 68, 0.12); border-style: solid; }
+        .tar-nueva-ticket, .tar-reimprimir {
+            display: block; width: 100%; max-width: 420px; margin: 12px auto 0; cursor: pointer;
+            background: rgba(192, 132, 252, 0.06); border: 1px dashed rgba(192, 132, 252, 0.35); color: #d8b4fe;
+            border-radius: 12px; padding: 10px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 600; transition: 0.2s;
+        }
+        .tar-nueva-ticket b { color: #e9d5ff; }
+        .tar-nueva-ticket:hover, .tar-reimprimir:hover { background: rgba(192, 132, 252, 0.14); border-style: solid; }
+        .tar-reimprimir { margin: 18px auto 0; font-size: 0.72rem; font-weight: 700; padding: 8px 14px; width: auto; }
         .scan { display: flex; gap: 8px; }
         .scan input.inp { font-size: 1.05rem; font-weight: 700; letter-spacing: 1.5px; font-family: 'Courier New', monospace; }
         .gcard {
@@ -675,6 +683,7 @@
                     <button class="sbtn sbtn-gold" type="submit">Buscar</button>
                 </form>
                 <div class="cfg-hint">Con el lector: toca el campo y escanea la tarjeta. Se busca sola.</div>
+                <button type="button" class="tar-nueva-ticket" onclick="nuevaTarjetaTicket()">🎟️ ¿Sin tarjeta física? <b>Crear tarjeta en ticket</b></button>
                 <div id="tarResultado"></div>
             </div>
 
@@ -1586,11 +1595,12 @@
         const res = document.getElementById('tarResultado');
 
         if (!d.existe) {
+            const enTicket = d.codigo === tarjetaEnTicket;
             res.innerHTML = `
                 <div class="gcard nueva">
-                    <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Tarjeta regalo</span><span class="gcard-pill off">Sin activar</span></div>
+                    <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Tarjeta regalo</span><span class="gcard-pill off">${enTicket ? '🎟️ En ticket' : 'Sin activar'}</span></div>
                     <div class="gcard-saldo" id="tarPreviewImporte">—</div>
-                    <div class="gcard-sub">Elige el importe para activarla</div>
+                    <div class="gcard-sub">${enTicket ? 'Código nuevo. Al activarla se imprime el ticket con el código de barras' : 'Elige el importe para activarla'}</div>
                     <div class="gcard-code">${esc(d.codigo)}</div>
                 </div>
                 <div class="tar-form">
@@ -1608,14 +1618,16 @@
                         <label>Comprador (opcional)</label>
                         <input class="inp" type="text" id="tarComprador" placeholder="Ej: Ana, regalo para su hermano">
                     </div>
-                    ${checkTicket()}
-                    <button class="sbtn sbtn-gold sbtn-full" id="btnTarActivar" onclick="activarTarjeta()">✅ Activar tarjeta</button>
+                    ${enTicket ? '' : checkTicket()}
+                    <button class="sbtn sbtn-gold sbtn-full" id="btnTarActivar" onclick="activarTarjeta()">${enTicket ? '🎟️ Activar e imprimir' : '✅ Activar tarjeta'}</button>
                 </div>`;
             const importe = document.getElementById('tarImporte');
             const actualizar = () => {
                 const v = parseFloat(importe.value) || 0;
                 document.getElementById('tarPreviewImporte').textContent = v > 0 ? euros(v) : '—';
-                document.getElementById('btnTarActivar').textContent = v > 0 ? `✅ Activar tarjeta de ${euros(v)}` : '✅ Activar tarjeta';
+                document.getElementById('btnTarActivar').textContent = enTicket
+                    ? (v > 0 ? `🎟️ Activar e imprimir (${euros(v)})` : '🎟️ Activar e imprimir')
+                    : (v > 0 ? `✅ Activar tarjeta de ${euros(v)}` : '✅ Activar tarjeta');
             };
             importe.addEventListener('input', actualizar);
             document.getElementById('tarImporteChips').addEventListener('click', e => {
@@ -1669,6 +1681,7 @@
             <div class="tar-historial">
                 <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
                 ${movs.map((m, i) => pintarMovTarjeta(m, i, d.esAdmin)).join('')}
+                ${vacia ? '' : '<button class="tar-reimprimir" onclick="imprimirTarjetaTicket()">🎟️ Imprimir tarjeta en ticket (con código de barras)</button>'}
                 ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarTarjeta()">🗑️ Eliminar tarjeta (solo para pruebas o errores)</button>' : ''}
             </div>`;
 
@@ -1790,9 +1803,11 @@
             });
             if (data.error) throw new Error(errorDe(data));
             toast(`🎁 Tarjeta activada con ${euros(importe)}`, 'success');
-            const imprimir = quiereTicket();
-            pintarTarjeta(data, !imprimir);
-            if (imprimir) imprimirResguardo();
+            const enTicket = tarjetaActual.codigo === tarjetaEnTicket;
+            const imprimir = !enTicket && quiereTicket();
+            pintarTarjeta(data, !imprimir && !enTicket);
+            if (enTicket) { tarjetaEnTicket = null; imprimirTarjetaTicket(true); }
+            else if (imprimir) imprimirResguardo();
             listoParaEscanear();
             cargarTarjetas();
         } catch (err) {
@@ -1855,12 +1870,44 @@
                 <div class="nota">${fecha(ult.fecha)}</div>`;
         }
 
-        const proximo = movs.filter(m => m.caduca && m.restante > 0)
-            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
-        const caduca = proximo && d.saldo > 0.005
-            ? `<div class="caduca">${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>` : '';
+        const caduca = caducaTicket(d);
 
-        const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Resguardo</title>
+        imprimirTicket('Resguardo', `
+            ${cabeceraTicket()}
+            <div class="fila"><span>Tarjeta</span><span class="mono">${esc(oculto)}</span></div>
+            <div class="fila"><span>Fecha</span><span>${cuando}</span></div>
+            ${operacion}
+            <div class="sep"></div>
+            <div class="c">
+                <div class="lbl">Saldo disponible</div>
+                <div class="saldo">${euros(d.saldo)}</div>
+                ${caduca}
+            </div>
+            <div class="sep"></div>
+            <div class="c pie">${TICKET.pie}</div>`);
+    }
+
+    function cabeceraTicket() {
+        return `<div class="c">
+                <div class="tienda">${esc(TICKET.tienda)}</div>
+                <div class="sub">${esc(TICKET.sub)}</div>
+            </div>
+            <div class="sep"></div>`;
+    }
+
+    // "12.00€ caducan el 15 mar 2027" para la parte del saldo que caduca antes
+    function caducaTicket(d) {
+        const proximo = d.movimientos.filter(m => m.caduca && m.restante > 0)
+            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
+        if (!proximo || d.saldo <= 0.005) return '';
+        return proximo.restante >= d.saldo - 0.005
+            ? `<div class="caduca">Válida hasta el ${fecha(proximo.caduca)}</div>`
+            : `<div class="caduca">${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>`;
+    }
+
+    // Imprime el HTML del ticket desde un marco invisible, sin tocar la página del panel
+    function imprimirTicket(titulo, cuerpo) {
+        const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
             <style>
                 @page { margin: 0; }
                 * { box-sizing: border-box; }
@@ -1878,26 +1925,12 @@
                 .caduca { font-size: 9pt; font-weight: 700; margin-top: 1mm; }
                 .mono { font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: 1px; }
                 .pie { font-size: 8pt; margin-top: 4mm; line-height: 1.4; }
-            </style></head><body>
-            <div class="c">
-                <div class="tienda">${esc(TICKET.tienda)}</div>
-                <div class="sub">${esc(TICKET.sub)}</div>
-            </div>
-            <div class="sep"></div>
-            <div class="fila"><span>Tarjeta</span><span class="mono">${esc(oculto)}</span></div>
-            <div class="fila"><span>Fecha</span><span>${cuando}</span></div>
-            ${operacion}
-            <div class="sep"></div>
-            <div class="c">
-                <div class="lbl">Saldo disponible</div>
-                <div class="saldo">${euros(d.saldo)}</div>
-                ${caduca}
-            </div>
-            <div class="sep"></div>
-            <div class="c pie">${TICKET.pie}</div>
-        </body></html>`;
+                .barras { margin: 3mm 0 1mm; }
+                .barras svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+                .barras rect { shape-rendering: crispEdges; }
+                .codigo { font-family: 'Courier New', monospace; font-size: 12pt; font-weight: 700; letter-spacing: 2px; }
+            </style></head><body>${cuerpo}</body></html>`;
 
-        // Se imprime desde un marco invisible para no tocar la página del panel
         let marco = document.getElementById('marcoTicket');
         if (marco) marco.remove();
         marco = document.createElement('iframe');
@@ -1920,6 +1953,88 @@
             const btn = document.getElementById('tarCodigo');
             if (btn) btn.focus();
         }, 200);
+    }
+
+    // =========================================
+    //  TARJETAS EN TICKET (sin tarjeta física)
+    // =========================================
+    let tarjetaEnTicket = null;   // código generado que todavía no se ha activado
+    let jsBarcodeCargando = null;
+
+    // El generador de códigos de barras solo se descarga cuando hace falta
+    function cargarJsBarcode() {
+        if (window.JsBarcode) return Promise.resolve();
+        if (!jsBarcodeCargando) jsBarcodeCargando = new Promise((ok, ko) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js';
+            s.onload = ok;
+            s.onerror = () => { jsBarcodeCargando = null; s.remove(); ko(new Error('No se pudo cargar el código de barras. ¿Hay internet?')); };
+            document.head.appendChild(s);
+        });
+        return jsBarcodeCargando;
+    }
+
+    // Solo números (los lectores nunca se lían con ellos) y empiezan por 88 para reconocerlos
+    function generarCodigoTicket() {
+        const n = new Uint32Array(2);
+        crypto.getRandomValues(n);
+        const azar = String(n[0] % 100000).padStart(5, '0') + String(n[1] % 100000).padStart(5, '0');
+        return '88' + azar;
+    }
+
+    async function nuevaTarjetaTicket() {
+        cargarJsBarcode().catch(() => {});   // se va descargando mientras se rellena el importe
+        let codigo;
+        do { codigo = generarCodigoTicket(); } while (tarjetas.some(t => t.codigo === codigo));
+        tarjetaEnTicket = codigo;
+        document.getElementById('tarCodigo').value = codigo;
+        await abrirTarjeta();
+    }
+
+    // primera = recién activada (no pregunta). Si no, es una copia y avisa antes.
+    async function imprimirTarjetaTicket(primera = false) {
+        const d = tarjetaActual;
+        if (!d || !d.existe) return;
+        const t = d.tarjeta;
+        if (!primera) {
+            const ok = await confirmar({
+                titulo: '🎟️ Imprimir tarjeta en ticket',
+                html: `Se imprimirá un ticket con el código de barras de la tarjeta <b class="mono" style="color:white">${esc(t.codigo)}</b>
+                       y su saldo actual (<b style="color:#fcd34d">${euros(d.saldo)}</b>).<br><br>
+                       Quien tenga el ticket puede gastar el saldo: dáselo solo al dueño de la tarjeta.`,
+                ok: 'Imprimir'
+            });
+            if (!ok) return;
+        }
+        try {
+            await cargarJsBarcode();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            return;
+        }
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        try {
+            JsBarcode(svg, t.codigo, { format: 'CODE128', width: 2, height: 70, margin: 0, displayValue: false, background: '#ffffff', lineColor: '#000000' });
+        } catch {
+            toast('⚠️ Este código no se puede convertir en código de barras', 'danger');
+            return;
+        }
+        const legible = String(t.codigo).replace(/(.{4})(?=.)/g, '$1 ');
+
+        imprimirTicket('Tarjeta regalo', `
+            ${cabeceraTicket()}
+            <div class="c">
+                <div class="lbl">Saldo</div>
+                <div class="saldo">${euros(d.saldo)}</div>
+                ${caducaTicket(d)}
+            </div>
+            <div class="c barras">${svg.outerHTML}</div>
+            <div class="c codigo">${esc(legible)}</div>
+            <div class="sep"></div>
+            <div class="fila"><span>Activada</span><span>${fecha(t.activada)}</span></div>
+            ${primera ? '' : `<div class="fila"><span>Impresa</span><span>${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</span></div>`}
+            <div class="sep"></div>
+            <div class="c pie"><b>Este ticket es tu tarjeta regalo.</b><br>Guárdalo bien: quien lo presente puede usar el saldo.<br>¡Gracias por tu visita!</div>`);
     }
 
     // Solo admin: quita la tarjeta y todo su historial de la hoja
