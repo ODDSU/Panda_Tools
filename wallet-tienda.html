@@ -145,6 +145,15 @@
         .tipo-btn:hover { color: white; }
         .tipo-btn.on.premio { background: rgba(16, 185, 129, 0.12); border-color: rgba(52, 211, 153, 0.45); color: #34d399; }
         .tipo-btn.on.canje { background: rgba(239, 68, 68, 0.1); border-color: rgba(252, 165, 165, 0.4); color: #fca5a5; }
+        .tipo-btn.on.diseno { background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.45); color: #d8b4fe; }
+
+        /* Vista previa del ticket (opciones de tickets) */
+        .ticket-muestra {
+            display: flex; justify-content: center; margin: 16px 0 14px; padding: 16px 10px; border-radius: 16px;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+        }
+        .ticket-muestra iframe { width: 80mm; height: 380px; border: 0; background: #fff; flex-shrink: 0; box-shadow: 0 10px 24px rgba(0,0,0,0.45); }
+        @media (max-width: 420px) { .ticket-muestra iframe { zoom: 0.8; } }
 
         .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
         .chip {
@@ -695,6 +704,7 @@
                 </div>
                 <div class="toolbar">
                     <div class="search"><input class="inp" type="text" id="tarBuscar" placeholder="Buscar por código o comprador..." autocomplete="off"></div>
+                    <button class="sbtn sbtn-ghost" onclick="abrirOpcionesTicket()">🧾 Tickets</button>
                     <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('tarjetas')">⏳ Caducidad</button>
                 </div>
                 <div id="listaTarjetas"><div class="spinner"></div></div>
@@ -1911,9 +1921,9 @@
             : `<div class="caduca">${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>`;
     }
 
-    // Imprime el HTML del ticket desde un marco invisible, sin tocar la página del panel
-    function imprimirTicket(titulo, cuerpo) {
-        const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
+    // Documento completo del ticket (80 mm) con todos los estilos de los dos diseños
+    function htmlTicket(titulo, cuerpo) {
+        return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
             <style>
                 @page { margin: 0; }
                 * { box-sizing: border-box; }
@@ -1932,11 +1942,26 @@
                 .mono { font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: 1px; }
                 .pie { font-size: 8pt; margin-top: 4mm; line-height: 1.4; }
                 .barras { margin: 3mm 0 1mm; }
-                .barras svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
-                .barras rect { shape-rendering: crispEdges; }
+                .barras svg, .tj-barras svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+                .barras rect, .tj-barras rect { shape-rendering: crispEdges; }
                 .codigo { font-family: 'Courier New', monospace; font-size: 12pt; font-weight: 700; letter-spacing: 2px; }
-            </style></head><body>${cuerpo}</body></html>`;
 
+                /* Diseño "tarjeta": doble borde redondeado con el logo del panda */
+                .tj { border: 0.5mm solid #000; border-radius: 4mm; padding: 1mm; }
+                .tj-dentro { border: 0.25mm solid #000; border-radius: 3mm; padding: 3mm 3.5mm 2.5mm; }
+                .tj-top { display: flex; justify-content: space-between; align-items: center; }
+                .tj-marca { font-size: 14pt; font-weight: 900; letter-spacing: 3px; line-height: 1; }
+                .tj-tipo { font-size: 6.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1mm; }
+                .tj-logo { width: 16.5mm; height: auto; display: block; }
+                .tj-saldo { font-size: 24pt; font-weight: 900; text-align: center; margin: 2mm 0 1.5mm; line-height: 1; }
+                .tj-caduca { font-size: 7.5pt; font-weight: 700; text-align: center; margin: -0.5mm 0 1.5mm; }
+                .tj-codigo { font-family: 'Courier New', monospace; font-size: 10pt; font-weight: 700; letter-spacing: 2.5px; text-align: center; margin-top: 1mm; }
+            </style></head><body>${cuerpo}</body></html>`;
+    }
+
+    // Imprime el ticket desde un marco invisible, sin tocar la página del panel
+    function imprimirTicket(titulo, cuerpo) {
+        const html = htmlTicket(titulo, cuerpo);
         let marco = document.getElementById('marcoTicket');
         if (marco) marco.remove();
         marco = document.createElement('iframe');
@@ -1967,6 +1992,25 @@
     let tarjetaEnTicket = null;   // código generado que todavía no se ha activado
     let jsBarcodeCargando = null;
 
+    // Logo del panda en blanco y negro (vectorial, para que salga nítido en la impresora)
+    const LOGO_PANDA = `<svg class="tj-logo" viewBox="525 595 870 740" aria-hidden="true">
+        <path fill="#000" d="M612,832 C590,802 584,772 597,745 C614,706 645,692 685,692 C716,692 738,709 753,729 Z"/>
+        <path fill="#000" d="M1085,689 C1105,649 1140,621 1176,612 C1216,602 1262,608 1296,630 C1331,653 1353,692 1360,731 C1367,776 1349,816 1329,829 Z"/>
+        <ellipse cx="960" cy="1000" rx="423" ry="312" transform="rotate(-4 960 1000)" fill="#fff" stroke="#000" stroke-width="22"/>
+        <path fill="#000" d="M786,1021 C810,1015 822,996 820,980 C818,962 805,948 790,938 C770,926 750,928 732,934 C700,944 672,975 662,1010 C652,1045 660,1080 680,1097 C692,1108 704,1110 715,1108 C727,1104 737,1086 738,1076 C742,1045 744,1035 755,1028 C764,1023 776,1023 786,1021 Z"/>
+        <path fill="#000" d="M1020,999 C1050,996 1068,1018 1074,1045 C1080,1075 1082,1095 1100,1104 C1118,1112 1135,1104 1148,1090 C1165,1073 1178,1048 1178,1025 C1176,980 1158,935 1125,905 C1100,883 1070,872 1040,872 C1005,872 980,885 963,908 C945,932 938,952 952,975 C966,998 988,1004 1020,999 Z"/>
+        <path fill="#000" d="M860,1135 C860,1115 875,1111 895,1110 C910,1109 920,1118 927,1130 C935,1145 918,1163 896,1164 C876,1165 860,1155 860,1135 Z"/>
+    </svg>`;
+
+    // Diseño del ticket de las tarjetas: "tarjeta" (con el panda) o "basico" (solo texto). Se guarda en este ordenador.
+    function disenoTicket() {
+        try {
+            const v = localStorage.getItem('panda_ticket_diseno');
+            if (v === 'tarjeta' || v === 'basico') return v;
+        } catch {}
+        return 'tarjeta';
+    }
+
     // El generador de códigos de barras solo se descarga cuando hace falta
     function cargarJsBarcode() {
         if (window.JsBarcode) return Promise.resolve();
@@ -1978,6 +2022,17 @@
             document.head.appendChild(s);
         });
         return jsBarcodeCargando;
+    }
+
+    async function codigoDeBarras(codigo, alto) {
+        await cargarJsBarcode();
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        try {
+            JsBarcode(svg, codigo, { format: 'CODE128', width: 2, height: alto, margin: 0, displayValue: false, background: '#ffffff', lineColor: '#000000' });
+        } catch {
+            throw new Error('Este código no se puede convertir en código de barras');
+        }
+        return svg.outerHTML;
     }
 
     // Solo números (los lectores nunca se lían con ellos) y empiezan por 88 para reconocerlos
@@ -1997,6 +2052,46 @@
         await abrirTarjeta();
     }
 
+    // Contenido del ticket de una tarjeta, en el diseño elegido
+    async function cuerpoTarjetaTicket(d, primera, diseno) {
+        const t = d.tarjeta;
+        const legible = String(t.codigo).replace(/(.{4})(?=.)/g, '$1 ');
+        const copia = primera ? '' : `<div class="fila"><span>Impresa</span><span>${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</span></div>`;
+        const pie = '<div class="c pie"><b>Este ticket es tu tarjeta regalo.</b><br>Guárdalo bien: quien lo presente puede usar el saldo.<br>¡Gracias por tu visita!</div>';
+
+        if (diseno === 'basico') {
+            return `
+                ${cabeceraTicket()}
+                <div class="c">
+                    <div class="lbl">Saldo</div>
+                    <div class="saldo">${euros(d.saldo)}</div>
+                    ${caducaTicket(d)}
+                </div>
+                <div class="c barras">${await codigoDeBarras(t.codigo, 70)}</div>
+                <div class="c codigo">${esc(legible)}</div>
+                <div class="sep"></div>
+                <div class="fila"><span>Activada</span><span>${fecha(t.activada)}</span></div>
+                ${copia}
+                <div class="sep"></div>
+                ${pie}`;
+        }
+        return `
+            <div class="tj"><div class="tj-dentro">
+                <div class="tj-top">
+                    <div><div class="tj-marca">${esc(TICKET.tienda)}</div><div class="tj-tipo">${esc(TICKET.sub)}</div></div>
+                    ${LOGO_PANDA}
+                </div>
+                <div class="tj-saldo">${euros(d.saldo)}</div>
+                ${caducaTicket(d).replace('class="caduca"', 'class="tj-caduca"')}
+                <div class="tj-barras">${await codigoDeBarras(t.codigo, 42)}</div>
+                <div class="tj-codigo">${esc(legible)}</div>
+            </div></div>
+            <div class="fila" style="margin-top: 3mm"><span>Activada</span><span>${fecha(t.activada)}</span></div>
+            ${copia}
+            <div class="sep"></div>
+            ${pie}`;
+    }
+
     // primera = recién activada (no pregunta). Si no, es una copia y avisa antes.
     async function imprimirTarjetaTicket(primera = false) {
         const d = tarjetaActual;
@@ -2013,34 +2108,68 @@
             if (!ok) return;
         }
         try {
-            await cargarJsBarcode();
+            imprimirTicket('Tarjeta regalo', await cuerpoTarjetaTicket(d, primera, disenoTicket()));
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
-            return;
         }
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        try {
-            JsBarcode(svg, t.codigo, { format: 'CODE128', width: 2, height: 70, margin: 0, displayValue: false, background: '#ffffff', lineColor: '#000000' });
-        } catch {
-            toast('⚠️ Este código no se puede convertir en código de barras', 'danger');
-            return;
-        }
-        const legible = String(t.codigo).replace(/(.{4})(?=.)/g, '$1 ');
+    }
 
-        imprimirTicket('Tarjeta regalo', `
-            ${cabeceraTicket()}
-            <div class="c">
-                <div class="lbl">Saldo</div>
-                <div class="saldo">${euros(d.saldo)}</div>
-                ${caducaTicket(d)}
+    // ---- Opciones de los tickets (🧾 Tickets) ----
+    const MUESTRA_TICKET = { existe: true, saldo: 50, movimientos: [], tarjeta: { codigo: '880000000000', activada: hoyISO() } };
+
+    function abrirOpcionesTicket() {
+        ficha = null;
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">🧾</div>
+                <div class="d-name">Diseño de los tickets</div>
+                <div class="d-id" style="margin-top: 4px">Para las tarjetas creadas en ticket.<br>Se guarda en este ordenador.</div>
             </div>
-            <div class="c barras">${svg.outerHTML}</div>
-            <div class="c codigo">${esc(legible)}</div>
-            <div class="sep"></div>
-            <div class="fila"><span>Activada</span><span>${fecha(t.activada)}</span></div>
-            ${primera ? '' : `<div class="fila"><span>Impresa</span><span>${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</span></div>`}
-            <div class="sep"></div>
-            <div class="c pie"><b>Este ticket es tu tarjeta regalo.</b><br>Guárdalo bien: quien lo presente puede usar el saldo.<br>¡Gracias por tu visita!</div>`);
+            <div class="tipo-toggle" id="disenoToggle">
+                <button type="button" class="tipo-btn diseno" data-v="tarjeta"><span class="t-ico">🐼</span>Tarjeta</button>
+                <button type="button" class="tipo-btn diseno" data-v="basico"><span class="t-ico">📝</span>Básico</button>
+            </div>
+            <div class="ticket-muestra"><iframe id="muestraTicket" title="Vista previa del ticket" tabindex="-1" scrolling="no"></iframe></div>
+            <button class="sbtn sbtn-ghost sbtn-full" onclick="imprimirMuestraTicket()">🖨️ Imprimir una prueba</button>
+            <div class="cfg-hint" style="text-align:center">La prueba lleva un código que no es de ninguna tarjeta.</div>`;
+        document.getElementById('sheet').classList.add('open');
+        document.getElementById('disenoToggle').addEventListener('click', e => {
+            const b = e.target.closest('.tipo-btn');
+            if (!b) return;
+            try { localStorage.setItem('panda_ticket_diseno', b.dataset.v); } catch {}
+            pintarMuestraTicket(b.dataset.v);
+        });
+        pintarMuestraTicket(disenoTicket());
+    }
+
+    let disenoElegido = 'tarjeta';   // el que se ve en la vista previa (por si el navegador no deja guardarlo)
+
+    async function pintarMuestraTicket(diseno) {
+        disenoElegido = diseno;
+        document.querySelectorAll('#disenoToggle .tipo-btn').forEach(b => b.classList.toggle('on', b.dataset.v === diseno));
+        const marco = document.getElementById('muestraTicket');
+        if (!marco) return;
+        try {
+            const html = htmlTicket('Muestra', await cuerpoTarjetaTicket(MUESTRA_TICKET, true, diseno));
+            marco.onload = () => {
+                try {
+                    const doc = marco.contentDocument;
+                    doc.documentElement.style.overflow = 'hidden';
+                    marco.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
+                } catch {}
+            };
+            marco.srcdoc = html;
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function imprimirMuestraTicket() {
+        try {
+            imprimirTicket('Muestra', await cuerpoTarjetaTicket(MUESTRA_TICKET, true, disenoElegido));
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
     }
 
     // Solo admin: quita la tarjeta y todo su historial de la hoja
