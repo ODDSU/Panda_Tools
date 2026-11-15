@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Wallet Tienda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px 16px 80px;
+            max-width: 100%; overflow-x: hidden;
+            background-color: var(--bg-dark); box-sizing: border-box;
+        }
+        .shop { width: 100%; max-width: 860px; }
+
+        /* HEADER */
+        .shop-header { text-align: center; margin-bottom: 26px; animation: fadeDown 0.6s ease-out backwards; }
+        .shop-badge {
+            display: inline-block; background: rgba(251, 191, 36, 0.12); color: #fbbf24;
+            padding: 5px 16px; border-radius: 20px; font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .shop-header h1 {
+            font-size: 2.3rem; font-weight: 900; margin: 0; animation: none; letter-spacing: 0;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
+        }
+        .shop-header p { color: var(--text-muted); font-size: 0.85rem; margin: 6px 0 0; }
+        .staff-chip {
+            display: inline-flex; align-items: center; gap: 10px; margin-top: 14px;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
+            padding: 6px 8px 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: #cbd5e1;
+        }
+        .staff-chip button {
+            background: rgba(255,255,255,0.05); border: none; color: var(--text-muted); cursor: pointer;
+            font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px;
+        }
+        .staff-chip button:hover { color: white; background: rgba(255,255,255,0.1); }
+
+        /* PANELES */
+        .panel {
+            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 22px; margin-bottom: 16px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeUp 0.45s ease-out backwards;
+        }
+        .panel h2 { font-size: 0.95rem; font-weight: 700; margin: 0 0 16px; color: white; }
+
+        /* STATS */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; animation: fadeUp 0.45s ease-out backwards; }
+        .stat {
+            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; padding: 16px 10px; text-align: center; backdrop-filter: blur(20px);
+        }
+        .stat-value { font-size: 1.5rem; font-weight: 900; color: #fcd34d; line-height: 1.2; }
+        .stat-label { font-size: 0.62rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1.3px; margin-top: 4px; }
+
+        /* TABS */
+        .shop-tabs {
+            display: flex; gap: 4px; margin-bottom: 16px;
+            background: rgba(0,0,0,0.4); border-radius: 14px; padding: 5px;
+        }
+        .shop-tab {
+            flex: 1; padding: 11px 6px; border: none; border-radius: 10px; background: transparent;
+            color: var(--text-muted); font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .shop-tab:hover { color: white; }
+        .shop-tab.active { background: rgba(251, 191, 36, 0.15); color: #fbbf24; box-shadow: 0 2px 10px rgba(251, 191, 36, 0.1); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* CAMPOS */
+        .field { margin-bottom: 16px; }
+        .field:last-child { margin-bottom: 0; }
+        .field label, .lbl {
+            display: block; font-size: 0.72rem; color: var(--text-muted);
+            margin-bottom: 6px; font-weight: 600; letter-spacing: 0.5px;
+        }
+        input.inp, select.inp {
+            width: 100%; padding: 12px 16px; box-sizing: border-box;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: white; color-scheme: dark;
+            font-family: 'Poppins', sans-serif; font-size: 0.88rem; outline: none; transition: all 0.25s;
+        }
+        input.inp:focus, select.inp:focus {
+            border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1); background: rgba(0,0,0,0.6);
+        }
+        select.inp option { background: var(--bg-dark); }
+        .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* BOTONES */
+        .sbtn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer;
+            font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; transition: all 0.25s; white-space: nowrap;
+        }
+        .sbtn:disabled { opacity: 0.55; cursor: wait; transform: none !important; }
+        .sbtn-gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a2e; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25); }
+        .sbtn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35); }
+        .sbtn-ghost { background: rgba(255,255,255,0.04); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.08); }
+        .sbtn-ghost:hover { background: rgba(255,255,255,0.08); color: white; }
+        .sbtn-ok { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.2); }
+        .sbtn-ok:hover { background: rgba(52, 211, 153, 0.22); }
+        .sbtn-ko { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .sbtn-ko:hover { background: rgba(239, 68, 68, 0.2); }
+        .sbtn-full { width: 100%; }
+        .sbtn-sm { padding: 8px 12px; font-size: 0.68rem; border-radius: 9px; letter-spacing: 0.5px; }
+
+        /* LISTA DE JUGADORES */
+        .toolbar { display: flex; gap: 8px; margin-bottom: 14px; }
+        .toolbar .search { flex: 1; position: relative; }
+        .toolbar .search input { padding-left: 40px; }
+        .toolbar .search::before {
+            content: '🔍'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            font-size: 0.85rem; z-index: 1; pointer-events: none;
+        }
+        .toolbar select.inp { width: auto; padding-right: 10px; }
+
+        .prow {
+            display: flex; align-items: center; gap: 14px; padding: 12px 14px; margin-bottom: 8px;
+            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .prow:hover { background: rgba(0,0,0,0.4); border-color: rgba(251, 191, 36, 0.25); transform: translateX(3px); }
+        .avatar {
+            width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.25));
+            color: #fcd34d; font-weight: 900; font-size: 1.05rem;
+        }
+        .pinfo { flex: 1; min-width: 0; }
+        .pname { font-weight: 700; color: white; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pmeta { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .psaldo { font-weight: 900; font-size: 1.05rem; color: #fcd34d; flex-shrink: 0; }
+        .psaldo.cero { color: #475569; }
+
+        .empty { text-align: center; padding: 34px 10px; color: var(--text-muted); font-size: 0.85rem; }
+        .empty .ico { font-size: 2.4rem; margin-bottom: 8px; opacity: 0.6; }
+
+        /* TIPO (premio / canje) */
+        .tipo-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tipo-btn {
+            padding: 14px; border-radius: 14px; cursor: pointer; text-align: center;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06); color: var(--text-muted);
+            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all 0.2s;
+        }
+        .tipo-btn .t-ico { display: block; font-size: 1.5rem; margin-bottom: 2px; }
+        .tipo-btn:hover { color: white; }
+        .tipo-btn.on.premio { background: rgba(16, 185, 129, 0.12); border-color: rgba(52, 211, 153, 0.45); color: #34d399; }
+        .tipo-btn.on.canje { background: rgba(239, 68, 68, 0.1); border-color: rgba(252, 165, 165, 0.4); color: #fca5a5; }
+
+        .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .chip {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #cbd5e1;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; cursor: pointer;
+            font-family: inherit; transition: 0.2s;
+        }
+        .chip:hover { border-color: rgba(251, 191, 36, 0.4); color: #fbbf24; }
+
+        .saldo-preview {
+            display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px; padding: 14px; margin: 18px 0 14px; font-weight: 700; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .saldo-preview b { color: white; font-size: 1.05rem; }
+        .saldo-preview .up { color: #34d399; }
+        .saldo-preview .down { color: #fca5a5; }
+        .saldo-preview .neg { color: #ef4444; }
+
+        /* SELECTOR DE JUGADOR */
+        .picker { position: relative; }
+        .picker-list {
+            display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30;
+            background: #121218; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); max-height: 270px; overflow-y: auto; padding: 6px;
+        }
+        .picker-list.open { display: block; }
+        .picker-item {
+            display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; cursor: pointer;
+        }
+        .picker-item:hover, .picker-item.hl { background: rgba(251, 191, 36, 0.1); }
+        .picker-item .avatar { width: 32px; height: 32px; border-radius: 9px; font-size: 0.85rem; }
+        .picker-item .pname { font-size: 0.85rem; }
+        .picker-item .psaldo { font-size: 0.85rem; }
+        .picker-empty { padding: 12px; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+
+        /* JORNADA */
+        .jrow { display: grid; grid-template-columns: 1fr 130px 100px 40px; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .jrow .x {
+            height: 44px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.08); color: #fca5a5; cursor: pointer; font-size: 0.85rem;
+        }
+        .jrow .x:hover { background: rgba(239, 68, 68, 0.2); }
+        .jhead { display: grid; grid-template-columns: 1fr 130px 100px 40px; gap: 8px; margin-bottom: 6px; }
+        .jtotal { text-align: right; color: var(--text-muted); font-weight: 700; font-size: 0.85rem; margin: 12px 0; }
+        .jtotal b { color: #34d399; font-size: 1.05rem; }
+
+        /* FICHA DEL JUGADOR (hoja deslizante) */
+        .sheet-overlay {
+            position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet {
+            background: #0f0f15; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px;
+            width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); animation: scaleUp 0.25s ease-out;
+            scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent;
+        }
+        .sheet::-webkit-scrollbar { width: 6px; }
+        .sheet::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        .sheet::before {
+            content: ''; position: sticky; top: 0; display: block; height: 4px; z-index: 2;
+            background: linear-gradient(to right, #f59e0b, #8b5cf6);
+        }
+        .sheet-body { padding: 22px 24px 26px; }
+        .sheet-close {
+            position: absolute; top: 14px; right: 14px; z-index: 3; width: 34px; height: 34px; border-radius: 10px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: var(--text-muted);
+            cursor: pointer; font-size: 1rem;
+        }
+        .sheet-close:hover { color: white; background: rgba(255,255,255,0.1); }
+        .d-head { text-align: center; margin-bottom: 16px; }
+        .d-head .avatar { width: 56px; height: 56px; border-radius: 16px; font-size: 1.4rem; margin: 0 auto 10px; }
+        .d-name { font-size: 1.2rem; font-weight: 800; color: white; }
+        .d-id { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+        .d-saldo-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 16px; }
+        .d-saldo { font-size: 2.8rem; font-weight: 900; color: #fcd34d; text-shadow: 0 0 30px rgba(245, 158, 11, 0.3); line-height: 1.15; }
+        .d-mini { display: flex; justify-content: center; gap: 18px; font-size: 0.78rem; font-weight: 700; margin-top: 4px; }
+        .d-mini .g { color: #34d399; } .d-mini .s { color: #fca5a5; } .d-mini .c { color: var(--text-muted); }
+        .d-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 18px 0; }
+        .qform {
+            display: none; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 16px; margin-bottom: 18px; animation: fadeUp 0.3s ease-out;
+        }
+        .qform.open { display: block; }
+        .qform h3 { margin: 0 0 12px; font-size: 0.85rem; color: white; }
+
+        /* MOVIMIENTOS (mismo estilo que el wallet del jugador) */
+        .mv { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .mv:last-child { border-bottom: none; }
+        .mv-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; }
+        .mv-icon.ingreso { background: rgba(16, 185, 129, 0.15); }
+        .mv-icon.gasto { background: rgba(239, 68, 68, 0.15); }
+        .mv-icon.caducado { background: rgba(148, 163, 184, 0.12); }
+        .mv-info { flex: 1; min-width: 0; }
+        .mv-concepto { font-size: 0.85rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mv-fecha { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 1px; }
+        .mv-monto { font-weight: 800; font-size: 0.92rem; flex-shrink: 0; }
+        .mv-monto.positivo { color: #34d399; } .mv-monto.negativo { color: #fca5a5; } .mv-monto.caducado { color: var(--text-muted); }
+        .mv-del {
+            width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; cursor: pointer; font-size: 0.75rem;
+            background: transparent; border: 1px solid transparent; color: #475569; transition: 0.2s;
+        }
+        .mv-del:hover { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+
+        /* DIÁLOGO (confirmar / nuevo jugador) */
+        .dialog-overlay {
+            position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .dialog-overlay.open { display: flex; }
+        .dialog {
+            background: #0f0f15; border: 1px solid rgba(255,255,255,0.08); padding: 26px; border-radius: 20px;
+            max-width: 420px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.6); animation: scaleUp 0.25s ease-out;
+        }
+        .dialog h3 { margin: 0 0 10px; color: white; font-size: 1.05rem; }
+        .dialog .dmsg { color: #cbd5e1; font-size: 0.85rem; line-height: 1.6; margin-bottom: 20px; }
+        .dialog .dbtns { display: flex; gap: 10px; justify-content: flex-end; }
+        .dialog .resumen-jornada { max-height: 220px; overflow-y: auto; margin-top: 10px; }
+        .dialog .resumen-jornada div { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+        /* LOGIN */
+        .login { max-width: 420px; margin: 20px auto 0; }
+        .login p { color: var(--text-muted); font-size: 0.8rem; margin: 0 0 18px; line-height: 1.6; }
+
+        .spinner {
+            width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #fbbf24;
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin: 30px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none;
+            font-weight: 600; font-size: 0.85rem; margin-bottom: 16px; padding: 8px 16px;
+            background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
+        }
+        .back-link:hover { color: white; background: rgba(255,255,255,0.05); }
+
+        @media (max-width: 600px) {
+            .shop-header h1 { font-size: 1.8rem; }
+            .stat-value { font-size: 1.15rem; }
+            .panel { padding: 16px; }
+            .row2 { grid-template-columns: 1fr; }
+            .toolbar { flex-wrap: wrap; }
+            .toolbar .search { flex-basis: 100%; }
+            .toolbar select.inp, .toolbar .sbtn { flex: 1; }
+            .jhead { display: none; }
+            .jrow {
+                grid-template-columns: 1fr 1fr 40px; padding: 10px; border-radius: 12px;
+                background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.04);
+            }
+            .jrow .picker { grid-column: 1 / -1; }
+            .sheet-overlay { padding: 0; align-items: flex-end; }
+            .sheet { max-height: 92vh; border-radius: 24px 24px 0 0; }
+            .sheet-body { padding: 20px 16px 30px; }
+            .d-saldo { font-size: 2.3rem; }
+            .d-actions .sbtn { padding: 12px 6px; font-size: 0.68rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-auras">
+    <div class="aura aura-1"></div>
+    <div class="aura aura-2"></div>
+    <div class="aura aura-3"></div>
+</div>
+
+<div class="shop">
+    <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
+
+    <div class="shop-header">
+        <div class="shop-badge">🏪 Panel de la tienda</div>
+        <h1>🐼 Wallet Tienda</h1>
+        <p>Consulta saldos y apunta premios y canjes</p>
+        <div class="staff-chip" id="staffChip" style="display:none">
+            <span>👤 <span id="staffName"></span></span>
+            <button onclick="cerrarSesion()">Salir</button>
+        </div>
+    </div>
+
+    <!-- ===================== LOGIN ===================== -->
+    <div id="vistaLogin" class="panel login" style="display:none">
+        <h2>🔒 Entrar</h2>
+        <p>Usa la clave de la tienda. Se guarda en este dispositivo para no tener que ponerla cada vez.</p>
+        <form onsubmit="entrar(event)">
+            <div class="field">
+                <label>Tu nombre</label>
+                <input class="inp" type="text" id="loginNombre" placeholder="Ej: Ana" autocomplete="name" required>
+            </div>
+            <div class="field">
+                <label>Clave de la tienda</label>
+                <input class="inp" type="password" id="loginClave" placeholder="••••••••" required>
+            </div>
+            <button class="sbtn sbtn-gold sbtn-full" id="btnEntrar" type="submit" style="margin-top: 6px">Entrar</button>
+        </form>
+    </div>
+
+    <!-- ===================== APP ===================== -->
+    <div id="vistaApp" style="display:none">
+
+        <div class="stats">
+            <div class="stat"><div class="stat-value" id="stJugadores">—</div><div class="stat-label">Jugadores</div></div>
+            <div class="stat"><div class="stat-value" id="stConSaldo">—</div><div class="stat-label">Con saldo</div></div>
+            <div class="stat"><div class="stat-value" id="stTotal">—</div><div class="stat-label">Saldo total</div></div>
+        </div>
+
+        <div class="shop-tabs">
+            <button class="shop-tab active" data-tab="jugadores">👥 Jugadores</button>
+            <button class="shop-tab" data-tab="movimiento">⚡ Apuntar</button>
+            <button class="shop-tab" data-tab="jornada">🏆 Jornada</button>
+        </div>
+
+        <!-- TAB: JUGADORES -->
+        <div class="tab-panel active" id="tab-jugadores">
+            <div class="panel">
+                <div class="toolbar">
+                    <div class="search"><input class="inp" type="text" id="buscar" placeholder="Buscar jugador..." autocomplete="off"></div>
+                    <select class="inp" id="orden">
+                        <option value="saldo">Más saldo</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="reciente">Recientes</option>
+                    </select>
+                    <button class="sbtn sbtn-gold" onclick="dialogoNuevoJugador()">➕ Nuevo</button>
+                </div>
+                <div id="listaJugadores"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <!-- TAB: APUNTAR MOVIMIENTO -->
+        <div class="tab-panel" id="tab-movimiento">
+            <div class="panel">
+                <h2>⚡ Apuntar premio o canje</h2>
+                <div class="field">
+                    <label>Jugador</label>
+                    <div id="movPicker"></div>
+                </div>
+                <div class="field">
+                    <label>Tipo</label>
+                    <div class="tipo-toggle" id="movTipo">
+                        <button type="button" class="tipo-btn premio on" data-tipo="premio"><span class="t-ico">💰</span>Premio</button>
+                        <button type="button" class="tipo-btn canje" data-tipo="canje"><span class="t-ico">🛒</span>Canje</button>
+                    </div>
+                </div>
+                <div class="row2">
+                    <div class="field">
+                        <label>Cantidad (€)</label>
+                        <input class="inp" type="number" id="movMonto" min="0" step="0.5" inputmode="decimal" placeholder="0">
+                        <div class="chips" id="movChips">
+                            <button type="button" class="chip" data-v="5">5€</button>
+                            <button type="button" class="chip" data-v="10">10€</button>
+                            <button type="button" class="chip" data-v="15">15€</button>
+                            <button type="button" class="chip" data-v="20">20€</button>
+                            <button type="button" class="chip" data-v="todo" id="chipTodo" style="display:none">Todo el saldo</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input class="inp" type="date" id="movFecha">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Concepto</label>
+                    <input class="inp" type="text" id="movConcepto" list="conceptos" placeholder="Ej: 1º puesto Jornada 12 · Sobres Bloomburrow">
+                    <datalist id="conceptos">
+                        <option value="1º puesto Jornada ">
+                        <option value="2º puesto Jornada ">
+                        <option value="3º puesto Jornada ">
+                        <option value="Sobres">
+                        <option value="Fundas">
+                        <option value="Caja de sobres">
+                        <option value="Canje en tienda">
+                    </datalist>
+                </div>
+                <div class="saldo-preview" id="movPreview">Elige un jugador para ver su saldo</div>
+                <button class="sbtn sbtn-gold sbtn-full" id="btnMov" onclick="enviarMovimiento()">💾 Guardar</button>
+            </div>
+        </div>
+
+        <!-- TAB: JORNADA -->
+        <div class="tab-panel" id="tab-jornada">
+            <div class="panel">
+                <h2>🏆 Repartir premios de una jornada</h2>
+                <div class="row2">
+                    <div class="field">
+                        <label>Jornada</label>
+                        <input class="inp" type="text" id="jorConcepto" placeholder="Ej: Jornada 12">
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input class="inp" type="date" id="jorFecha">
+                    </div>
+                </div>
+                <div class="jhead">
+                    <span class="lbl">Jugador</span><span class="lbl">Puesto</span><span class="lbl">€</span><span></span>
+                </div>
+                <div id="jorFilas"></div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top: 6px">
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="anadirFilaJornada()">➕ Añadir jugador</button>
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="podioJornada()">🥇 Podio 1º · 2º · 3º</button>
+                </div>
+                <div class="jtotal">Total a repartir: <b id="jorTotal">0.00€</b></div>
+                <button class="sbtn sbtn-gold sbtn-full" id="btnJor" onclick="enviarJornada()">🏆 Apuntar premios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FICHA DEL JUGADOR -->
+<div class="sheet-overlay" id="sheet" onclick="if (event.target === this) cerrarFicha()">
+    <div class="sheet">
+        <button class="sheet-close" onclick="cerrarFicha()">✕</button>
+        <div class="sheet-body" id="sheetBody"></div>
+    </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="dialog-overlay" id="dialog">
+    <div class="dialog" id="dialogBox"></div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script>
+    // URL de la implementación de Apps Script (la misma que en wallet.html)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywfB7iHCneKZE-_S5TdslmxKPuJm1cVwO_TwXK4vVImd74czpiPj5njWLG8Xftt7yOtA/exec';
+    // Dirección pública del wallet de los jugadores. Vacío = wallet.html en esta misma web.
+    const WALLET_URL = '';
+
+    const MENSAJES = {
+        jugador_no_encontrado: 'Ese jugador no existe en la hoja',
+        tipo_invalido: 'Tipo de movimiento no válido',
+        monto_invalido: 'La cantidad tiene que ser mayor que 0',
+        falta_concepto: 'Ponle nombre a la jornada',
+        sin_premios: 'No hay ningún premio con cantidad',
+        falta_nombre: 'Escribe el nombre del jugador',
+        fila_cambiada: 'La hoja ha cambiado mientras tanto. Recarga e inténtalo otra vez',
+        accion_desconocida: 'El script está desactualizado: despliega una nueva versión',
+        interno: 'Error en el script de Google'
+    };
+
+    // =========================================
+    //  SESIÓN Y API
+    // =========================================
+    function getData(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
+    }
+    function setData(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+
+    let sesion = getData('panda_tienda_sesion', null);
+    let jugadores = [];
+
+    async function api(accion, datos = {}) {
+        // Sin cabeceras: así el navegador no hace la petición previa (CORS) que Apps Script no admite
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ ...datos, accion, clave: sesion.clave, por: sesion.por })
+        });
+        if (!res.ok) throw new Error('No se pudo conectar con Google');
+        const data = await res.json();
+        if (data.error === 'no_autorizado') {
+            cerrarSesion();
+            throw new Error('Clave de la tienda incorrecta');
+        }
+        return data;
+    }
+
+    function errorDe(data) {
+        return MENSAJES[data.error] || data.detalle || data.error;
+    }
+
+    async function entrar(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnEntrar');
+        sesion = {
+            por: document.getElementById('loginNombre').value.trim(),
+            clave: document.getElementById('loginClave').value.trim()
+        };
+        cargando(btn, true, 'Comprobando...');
+        try {
+            const data = await api('resumen');
+            if (data.error) throw new Error(errorDe(data));
+            setData('panda_tienda_sesion', sesion);
+            mostrarApp();
+            aplicarResumen(data);
+            toast(`👋 Hola, ${sesion.por}`, 'success');
+        } catch (err) {
+            toast('⛔ ' + err.message, 'danger');
+        } finally {
+            cargando(btn, false);
+        }
+    }
+
+    function cerrarSesion() {
+        sesion = null;
+        try { localStorage.removeItem('panda_tienda_sesion'); } catch {}
+        document.getElementById('vistaApp').style.display = 'none';
+        document.getElementById('staffChip').style.display = 'none';
+        document.getElementById('vistaLogin').style.display = 'block';
+        cerrarFicha();
+    }
+
+    function mostrarApp() {
+        document.getElementById('vistaLogin').style.display = 'none';
+        document.getElementById('vistaApp').style.display = 'block';
+        document.getElementById('staffChip').style.display = 'inline-flex';
+        document.getElementById('staffName').textContent = sesion.por;
+    }
+
+    // =========================================
+    //  RESUMEN / LISTA DE JUGADORES
+    // =========================================
+    async function cargarResumen() {
+        try {
+            const data = await api('resumen');
+            if (data.error) throw new Error(errorDe(data));
+            aplicarResumen(data);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function aplicarResumen(data) {
+        jugadores = data.jugadores || [];
+        const conSaldo = jugadores.filter(j => j.saldo > 0.005);
+        document.getElementById('stJugadores').textContent = jugadores.length;
+        document.getElementById('stConSaldo').textContent = conSaldo.length;
+        document.getElementById('stTotal').textContent = euros(conSaldo.reduce((s, j) => s + j.saldo, 0));
+        pintarLista();
+        actualizarPreviewMov();
+    }
+
+    function pintarLista() {
+        const q = normalizar(document.getElementById('buscar').value);
+        const orden = document.getElementById('orden').value;
+        const lista = jugadores
+            .filter(j => normalizar(j.nombre + ' ' + j.jugador_id).includes(q))
+            .sort((a, b) => {
+                if (orden === 'nombre') return a.nombre.localeCompare(b.nombre, 'es');
+                if (orden === 'reciente') return (b.ultimo || '').localeCompare(a.ultimo || '');
+                return b.saldo - a.saldo || a.nombre.localeCompare(b.nombre, 'es');
+            });
+
+        const cont = document.getElementById('listaJugadores');
+        if (!lista.length) {
+            cont.innerHTML = `<div class="empty"><div class="ico">${q ? '🔍' : '📭'}</div>
+                ${q ? 'Ningún jugador coincide con la búsqueda' : 'Aún no hay jugadores. Pulsa ➕ Nuevo'}</div>`;
+            return;
+        }
+        cont.innerHTML = lista.map(j => `
+            <div class="prow" data-id="${esc(j.jugador_id)}">
+                <div class="avatar">${esc(inicial(j.nombre))}</div>
+                <div class="pinfo">
+                    <div class="pname">${esc(j.nombre)}</div>
+                    <div class="pmeta">${j.ultimo ? 'Último movimiento: ' + fecha(j.ultimo) : 'Sin movimientos'}</div>
+                </div>
+                <div class="psaldo ${j.saldo > 0.005 ? '' : 'cero'}">${euros(j.saldo)}</div>
+            </div>`).join('');
+    }
+
+    document.getElementById('buscar').addEventListener('input', pintarLista);
+    document.getElementById('orden').addEventListener('change', pintarLista);
+    document.getElementById('listaJugadores').addEventListener('click', e => {
+        const fila = e.target.closest('.prow');
+        if (fila) abrirFicha(fila.dataset.id);
+    });
+
+    // =========================================
+    //  FICHA DEL JUGADOR
+    // =========================================
+    let ficha = null;
+
+    async function abrirFicha(jugadorId) {
+        document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
+        document.getElementById('sheet').classList.add('open');
+        try {
+            const data = await api('jugador', { jugador_id: jugadorId });
+            if (data.error) throw new Error(errorDe(data));
+            pintarFicha(data);
+        } catch (err) {
+            cerrarFicha();
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function cerrarFicha() {
+        document.getElementById('sheet').classList.remove('open');
+        ficha = null;
+    }
+
+    function pintarFicha(data) {
+        ficha = data;
+        const j = data.jugador;
+        const movs = [...data.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">${esc(inicial(j.nombre))}</div>
+                <div class="d-name">${esc(j.nombre)}</div>
+                <div class="d-id">${esc(j.jugador_id)}</div>
+                <div class="d-saldo-label">Saldo disponible</div>
+                <div class="d-saldo">${euros(data.saldo)}</div>
+                <div class="d-mini">
+                    <span class="g">+${euros(data.ganado)} ganado</span>
+                    <span class="s">-${euros(data.gastado)} gastado</span>
+                    ${data.caducado > 0 ? `<span class="c">⏳ ${euros(data.caducado)}</span>` : ''}
+                </div>
+            </div>
+
+            <div class="d-actions">
+                <button class="sbtn sbtn-ok" onclick="abrirQform('premio')">💰 Premio</button>
+                <button class="sbtn sbtn-ko" onclick="abrirQform('canje')">🛒 Canje</button>
+                <button class="sbtn sbtn-ghost" onclick="copiarLink()">🔗 Link</button>
+            </div>
+
+            <div class="qform" id="qform">
+                <h3 id="qTitulo"></h3>
+                <div class="row2">
+                    <div class="field">
+                        <label>Cantidad (€)</label>
+                        <input class="inp" type="number" id="qMonto" min="0" step="0.5" inputmode="decimal" placeholder="0">
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input class="inp" type="date" id="qFecha" value="${hoyISO()}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Concepto</label>
+                    <input class="inp" type="text" id="qConcepto" list="conceptos">
+                </div>
+                <div style="display:flex; gap:8px; margin-top: 14px">
+                    <button class="sbtn sbtn-ghost" onclick="document.getElementById('qform').classList.remove('open')">Cancelar</button>
+                    <button class="sbtn sbtn-gold" style="flex:1" id="btnQ" onclick="enviarQform()">💾 Guardar</button>
+                </div>
+            </div>
+
+            <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
+            ${movs.length ? movs.map(pintarMovimiento).join('') : '<div class="empty"><div class="ico">📭</div>Todavía no tiene movimientos</div>'}
+        `;
+
+        document.getElementById('sheetBody').querySelectorAll('.mv-del').forEach(btn => {
+            btn.onclick = () => anularMovimiento(movs[Number(btn.dataset.i)]);
+        });
+    }
+
+    function pintarMovimiento(m, i) {
+        const ingreso = esIngreso(m.tipo);
+        const caducado = m.tipo === 'caducado';
+        const clase = ingreso ? 'ingreso' : caducado ? 'caducado' : 'gasto';
+        const icono = ingreso ? '💰' : caducado ? '⏳' : '🛒';
+        const monto = ingreso ? 'positivo' : caducado ? 'caducado' : 'negativo';
+        return `
+            <div class="mv">
+                <div class="mv-icon ${clase}">${icono}</div>
+                <div class="mv-info">
+                    <div class="mv-concepto">${esc(m.concepto || '—')}</div>
+                    <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}</div>
+                </div>
+                <div class="mv-monto ${monto}">${ingreso ? '+' : '-'}${euros(m.monto)}</div>
+                ${m.fila ? `<button class="mv-del" title="Borrar este movimiento" data-i="${i}">🗑️</button>` : '<span style="width:30px"></span>'}
+            </div>`;
+    }
+
+    function abrirQform(tipo) {
+        const f = document.getElementById('qform');
+        f.dataset.tipo = tipo;
+        document.getElementById('qTitulo').textContent = tipo === 'premio' ? '💰 Añadir premio' : '🛒 Registrar canje';
+        document.getElementById('qConcepto').placeholder = tipo === 'premio' ? 'Ej: 1º puesto Jornada 12' : 'Ej: Sobres Bloomburrow';
+        document.getElementById('qMonto').value = '';
+        document.getElementById('qConcepto').value = '';
+        f.classList.add('open');
+        document.getElementById('qMonto').focus();
+    }
+
+    async function enviarQform() {
+        const btn = document.getElementById('btnQ');
+        const datos = {
+            jugador_id: ficha.jugador.jugador_id,
+            tipo: document.getElementById('qform').dataset.tipo,
+            monto: document.getElementById('qMonto').value,
+            concepto: document.getElementById('qConcepto').value,
+            fecha: document.getElementById('qFecha').value
+        };
+        cargando(btn, true, 'Guardando...');
+        const data = await registrar(datos, ficha.saldo, ficha.jugador.nombre);
+        cargando(btn, false);
+        if (data) pintarFicha(data);
+    }
+
+    function copiarLink() {
+        const j = ficha.jugador;
+        if (!j.token) { toast('⚠️ Este jugador aún no tiene token. Genera los links desde el admin', 'warning'); return; }
+        const base = WALLET_URL || new URL('wallet.html', location.href).href.split('?')[0];
+        navigator.clipboard.writeText(`${base}?t=${j.token}`)
+            .then(() => toast(`🔗 Link de ${j.nombre} copiado`, 'success'))
+            .catch(() => toast('⚠️ No se pudo copiar', 'danger'));
+    }
+
+    async function anularMovimiento(m) {
+        const ok = await confirmar({
+            titulo: '🗑️ ¿Borrar este movimiento?',
+            html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
+                   Úsalo solo para corregir errores. Se borrará de la hoja.`,
+            ok: 'Borrar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('anular', { fila: m.fila, jugador_id: ficha.jugador.jugador_id, concepto: m.concepto, monto: m.monto });
+            if (data.error) throw new Error(errorDe(data));
+            pintarFicha(data);
+            toast('🗑️ Movimiento borrado', 'warning');
+            cargarResumen();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // Guarda un premio/canje. Si no hay saldo suficiente pregunta antes de forzarlo.
+    async function registrar(datos, saldoActual, nombre) {
+        try {
+            let data = await api('movimiento', datos);
+            if (data.error === 'saldo_insuficiente') {
+                const ok = await confirmar({
+                    titulo: '⚠️ Saldo insuficiente',
+                    html: `${esc(nombre)} solo tiene <b style="color:#fcd34d">${euros(data.saldo)}</b> y el canje es de
+                           <b style="color:#fca5a5">${euros(Number(datos.monto))}</b>.<br><br>Si lo apuntas, su saldo quedará en negativo.`,
+                    ok: 'Apuntar igualmente', peligro: true
+                });
+                if (!ok) return null;
+                data = await api('movimiento', { ...datos, forzar: true });
+            }
+            if (data.error) throw new Error(errorDe(data));
+            const signo = esIngreso(datos.tipo) ? '+' : '-';
+            toast(`✅ ${nombre}: ${signo}${euros(Number(datos.monto))} · saldo ${euros(data.saldo)}`, 'success');
+            cargarResumen();
+            return data;
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            return null;
+        }
+    }
+
+    // =========================================
+    //  NUEVO JUGADOR
+    // =========================================
+    async function dialogoNuevoJugador() {
+        abrirDialogo(`
+            <h3>➕ Nuevo jugador</h3>
+            <div class="dmsg">Se crea en la hoja con su token, listo para copiar su link.</div>
+            <div class="field"><label>Nombre</label><input class="inp" type="text" id="nuevoNombre" placeholder="Ej: Paco García"></div>
+            <div class="dbtns" style="margin-top: 18px">
+                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
+                <button class="sbtn sbtn-gold" id="btnNuevo">Crear</button>
+            </div>`);
+        const input = document.getElementById('nuevoNombre');
+        input.focus();
+        const crear = async () => {
+            const nombre = input.value.trim();
+            if (!nombre) { input.focus(); return; }
+            const parecido = jugadores.find(j => normalizar(j.nombre) === normalizar(nombre));
+            if (parecido) {
+                cerrarDialogo(false);
+                const seguir = await confirmar({
+                    titulo: '🤔 Ya existe alguien así',
+                    html: `Ya hay un jugador llamado <b style="color:white">${esc(parecido.nombre)}</b>. ¿Crear otro igualmente?`,
+                    ok: 'Crear otro'
+                });
+                if (!seguir) return;
+            }
+            const btn = document.getElementById('btnNuevo');
+            if (btn) cargando(btn, true, 'Creando...');
+            try {
+                const data = await api('nuevo_jugador', { nombre });
+                if (data.error) throw new Error(errorDe(data));
+                cerrarDialogo(true);
+                toast(`🎉 ${data.jugador.nombre} creado`, 'success');
+                await cargarResumen();
+                document.getElementById('sheet').classList.add('open');
+                pintarFicha(data);
+            } catch (err) {
+                if (btn) cargando(btn, false);
+                toast('⚠️ ' + err.message, 'danger');
+            }
+        };
+        document.getElementById('btnNuevo').onclick = crear;
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') crear(); });
+    }
+
+    // =========================================
+    //  TAB: APUNTAR
+    // =========================================
+    let movTipo = 'premio';
+    const movPicker = crearPicker(document.getElementById('movPicker'), () => actualizarPreviewMov());
+
+    document.getElementById('movTipo').addEventListener('click', e => {
+        const b = e.target.closest('.tipo-btn');
+        if (!b) return;
+        movTipo = b.dataset.tipo;
+        document.querySelectorAll('#movTipo .tipo-btn').forEach(x => x.classList.toggle('on', x === b));
+        document.getElementById('chipTodo').style.display = movTipo === 'canje' ? '' : 'none';
+        document.getElementById('movConcepto').placeholder = movTipo === 'premio' ? 'Ej: 1º puesto Jornada 12' : 'Ej: Sobres Bloomburrow';
+        actualizarPreviewMov();
+    });
+    document.getElementById('movChips').addEventListener('click', e => {
+        const c = e.target.closest('.chip');
+        if (!c) return;
+        const j = movPicker.get();
+        document.getElementById('movMonto').value = c.dataset.v === 'todo' ? (j ? Math.max(0, j.saldo) : '') : c.dataset.v;
+        actualizarPreviewMov();
+    });
+    document.getElementById('movMonto').addEventListener('input', actualizarPreviewMov);
+
+    function actualizarPreviewMov() {
+        const el = document.getElementById('movPreview');
+        const sel = movPicker.get();
+        const j = sel && jugadores.find(x => x.jugador_id === sel.jugador_id);
+        if (!j) { el.innerHTML = 'Elige un jugador para ver su saldo'; return; }
+        const monto = parseFloat(document.getElementById('movMonto').value) || 0;
+        const despues = movTipo === 'premio' ? j.saldo + monto : j.saldo - monto;
+        const clase = despues < -0.005 ? 'neg' : movTipo === 'premio' ? 'up' : 'down';
+        el.innerHTML = `Saldo de ${esc(j.nombre)}: <b>${euros(j.saldo)}</b>`
+            + (monto > 0 ? ` <span>→</span> <b class="${clase}">${euros(despues)}</b>` : '');
+    }
+
+    async function enviarMovimiento() {
+        const j = movPicker.get();
+        if (!j) { toast('⚠️ Elige un jugador', 'warning'); return; }
+        const monto = document.getElementById('movMonto').value;
+        if (!(parseFloat(monto) > 0)) { toast('⚠️ Pon una cantidad', 'warning'); return; }
+        const btn = document.getElementById('btnMov');
+        cargando(btn, true, 'Guardando...');
+        const data = await registrar({
+            jugador_id: j.jugador_id, tipo: movTipo, monto,
+            concepto: document.getElementById('movConcepto').value,
+            fecha: document.getElementById('movFecha').value
+        }, j.saldo, j.nombre);
+        cargando(btn, false);
+        if (data) {
+            document.getElementById('movMonto').value = '';
+            document.getElementById('movConcepto').value = '';
+            movPicker.limpiar();
+            actualizarPreviewMov();
+        }
+    }
+
+    // =========================================
+    //  TAB: JORNADA
+    // =========================================
+    let filasJornada = [];
+
+    function anadirFilaJornada(detalle = '', monto = '') {
+        const fila = document.createElement('div');
+        fila.className = 'jrow';
+        fila.innerHTML = `
+            <div class="j-picker"></div>
+            <input class="inp j-detalle" type="text" placeholder="Puesto (opcional)" value="${esc(detalle)}">
+            <input class="inp j-monto" type="number" min="0" step="0.5" inputmode="decimal" placeholder="€" value="${esc(monto)}">
+            <button class="x" title="Quitar">✕</button>`;
+        const item = { fila, picker: crearPicker(fila.querySelector('.j-picker'), () => {}) };
+        filasJornada.push(item);
+        fila.querySelector('.j-monto').addEventListener('input', totalJornada);
+        fila.querySelector('.x').onclick = () => {
+            filasJornada = filasJornada.filter(f => f !== item);
+            fila.remove();
+            totalJornada();
+        };
+        document.getElementById('jorFilas').appendChild(fila);
+        totalJornada();
+    }
+
+    function podioJornada() {
+        // Rellena las filas vacías antes de añadir nuevas
+        ['1º puesto', '2º puesto', '3º puesto'].forEach(p => {
+            const libre = filasJornada.find(f => !f.picker.get() && !f.fila.querySelector('.j-detalle').value);
+            if (libre) libre.fila.querySelector('.j-detalle').value = p;
+            else anadirFilaJornada(p);
+        });
+    }
+
+    function totalJornada() {
+        const total = filasJornada.reduce((s, f) => s + (parseFloat(f.fila.querySelector('.j-monto').value) || 0), 0);
+        document.getElementById('jorTotal').textContent = euros(total);
+    }
+
+    async function enviarJornada() {
+        const concepto = document.getElementById('jorConcepto').value.trim();
+        if (!concepto) { toast('⚠️ Ponle nombre a la jornada', 'warning'); document.getElementById('jorConcepto').focus(); return; }
+
+        const premios = [];
+        for (const f of filasJornada) {
+            const j = f.picker.get();
+            const monto = parseFloat(f.fila.querySelector('.j-monto').value) || 0;
+            const detalle = f.fila.querySelector('.j-detalle').value.trim();
+            if (!j && !monto) continue; // fila vacía
+            if (!j) { toast('⚠️ Hay una fila con cantidad pero sin jugador', 'warning'); return; }
+            if (!(monto > 0)) { toast(`⚠️ Falta la cantidad de ${j.nombre}`, 'warning'); return; }
+            premios.push({ jugador_id: j.jugador_id, nombre: j.nombre, monto, detalle });
+        }
+        if (!premios.length) { toast('⚠️ Añade al menos un jugador con premio', 'warning'); return; }
+
+        const total = premios.reduce((s, p) => s + p.monto, 0);
+        const ok = await confirmar({
+            titulo: `🏆 ${esc(concepto)}`,
+            html: `Se apuntarán ${premios.length} premios (${euros(total)}):
+                <div class="resumen-jornada">${premios.map(p => `
+                    <div><span>${esc(p.detalle ? p.detalle + ' · ' : '')}<b style="color:white">${esc(p.nombre)}</b></span>
+                    <b style="color:#34d399">+${euros(p.monto)}</b></div>`).join('')}</div>`,
+            ok: 'Apuntar'
+        });
+        if (!ok) return;
+
+        const btn = document.getElementById('btnJor');
+        cargando(btn, true, 'Apuntando...');
+        try {
+            const data = await api('jornada', { concepto, fecha: document.getElementById('jorFecha').value, premios });
+            if (data.error) throw new Error(errorDe(data) + (data.jugador_id ? ` (${data.jugador_id})` : ''));
+            toast(`🏆 ${data.apuntados} premios apuntados · ${euros(data.total)}`, 'success');
+            filasJornada.forEach(f => f.fila.remove());
+            filasJornada = [];
+            document.getElementById('jorConcepto').value = '';
+            anadirFilaJornada();
+            cargarResumen();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        } finally {
+            cargando(btn, false);
+        }
+    }
+
+    // =========================================
+    //  SELECTOR DE JUGADOR (buscador con sugerencias)
+    // =========================================
+    function crearPicker(cont, onSelect) {
+        cont.classList.add('picker');
+        cont.innerHTML = '<input class="inp" type="text" placeholder="Buscar jugador..." autocomplete="off"><div class="picker-list"></div>';
+        const input = cont.querySelector('input');
+        const lista = cont.querySelector('.picker-list');
+        let seleccionado = null;
+        let resultados = [];
+        let resaltado = 0;
+
+        function pintar() {
+            const q = normalizar(input.value);
+            resultados = jugadores.filter(j => normalizar(j.nombre + ' ' + j.jugador_id).includes(q)).slice(0, 8);
+            resaltado = 0;
+            lista.innerHTML = resultados.length
+                ? resultados.map((j, i) => `
+                    <div class="picker-item ${i === 0 ? 'hl' : ''}" data-i="${i}">
+                        <div class="avatar">${esc(inicial(j.nombre))}</div>
+                        <div class="pinfo"><div class="pname">${esc(j.nombre)}</div></div>
+                        <div class="psaldo ${j.saldo > 0.005 ? '' : 'cero'}">${euros(j.saldo)}</div>
+                    </div>`).join('')
+                : '<div class="picker-empty">Ningún jugador coincide</div>';
+            lista.classList.add('open');
+        }
+
+        function elegir(j) {
+            seleccionado = j;
+            input.value = j.nombre;
+            lista.classList.remove('open');
+            onSelect(j);
+        }
+
+        input.addEventListener('focus', () => { input.select(); pintar(); });
+        input.addEventListener('input', () => {
+            if (seleccionado) { seleccionado = null; onSelect(null); }
+            pintar();
+        });
+        input.addEventListener('blur', () => setTimeout(() => lista.classList.remove('open'), 120));
+        input.addEventListener('keydown', e => {
+            if (!lista.classList.contains('open') || !resultados.length) return;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                resaltado = (resaltado + (e.key === 'ArrowDown' ? 1 : -1) + resultados.length) % resultados.length;
+                lista.querySelectorAll('.picker-item').forEach((el, i) => el.classList.toggle('hl', i === resaltado));
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                elegir(resultados[resaltado]);
+            }
+        });
+        lista.addEventListener('mousedown', e => {
+            const it = e.target.closest('.picker-item');
+            if (!it) return;
+            e.preventDefault();
+            elegir(resultados[Number(it.dataset.i)]);
+        });
+
+        return {
+            get: () => seleccionado,
+            limpiar() { seleccionado = null; input.value = ''; }
+        };
+    }
+
+    // =========================================
+    //  DIÁLOGOS
+    // =========================================
+    let resolverDialogo = null;
+
+    function abrirDialogo(html) {
+        document.getElementById('dialogBox').innerHTML = html;
+        document.getElementById('dialog').classList.add('open');
+    }
+
+    function cerrarDialogo(valor) {
+        document.getElementById('dialog').classList.remove('open');
+        if (resolverDialogo) { resolverDialogo(valor); resolverDialogo = null; }
+    }
+
+    function confirmar({ titulo, html, ok = 'Confirmar', peligro = false }) {
+        abrirDialogo(`
+            <h3>${titulo}</h3>
+            <div class="dmsg">${html}</div>
+            <div class="dbtns">
+                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
+                <button class="sbtn ${peligro ? 'sbtn-ko' : 'sbtn-gold'}" onclick="cerrarDialogo(true)">${ok}</button>
+            </div>`);
+        return new Promise(r => { resolverDialogo = r; });
+    }
+
+    // =========================================
+    //  UTILIDADES
+    // =========================================
+    function esIngreso(tipo) { return tipo === 'ingreso' || tipo === 'premio'; }
+    function euros(n) { return (Number(n) || 0).toFixed(2) + '€'; }
+    function inicial(nombre) { return (String(nombre).trim()[0] || '?').toUpperCase(); }
+    function normalizar(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
+    function esc(s) {
+        return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function hoyISO() {
+        const d = new Date(), p = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    }
+    function fecha(s) {
+        const d = new Date(s);
+        return isNaN(d) ? String(s || '') : d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    function cargando(btn, on, texto) {
+        if (on) { btn.dataset.txt = btn.innerHTML; btn.innerHTML = '⏳ ' + texto; btn.disabled = true; }
+        else if (btn.dataset.txt) { btn.innerHTML = btn.dataset.txt; btn.disabled = false; }
+    }
+    function toast(msg, tipo = '') {
+        const cont = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast ' + tipo;
+        t.textContent = msg;
+        cont.appendChild(t);
+        setTimeout(() => { t.style.transition = '0.3s'; t.style.transform = 'translateX(100%)'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
+    }
+
+    // =========================================
+    //  ARRANQUE
+    // =========================================
+    document.querySelectorAll('.shop-tab').forEach(tab => {
+        tab.onclick = () => {
+            document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t === tab));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab.dataset.tab));
+        };
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        if (document.getElementById('dialog').classList.contains('open')) cerrarDialogo(false);
+        else cerrarFicha();
+    });
+
+    document.getElementById('movFecha').value = hoyISO();
+    document.getElementById('jorFecha').value = hoyISO();
+    anadirFilaJornada();
+
+    if (sesion) {
+        mostrarApp();
+        cargarResumen();
+    } else {
+        document.getElementById('vistaLogin').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
