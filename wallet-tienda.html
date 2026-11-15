@@ -310,7 +310,7 @@
         .tb-user button:hover { color: white; background: rgba(255,255,255,0.1); }
 
         .modos {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px;
             background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.35);
         }
@@ -344,12 +344,6 @@
         }
         .modo.tarjetas.active b { color: #d8b4fe; }
         .modo.tarjetas.active .modo-ico { background: rgba(192, 132, 252, 0.2); }
-        .modo.cashback.active {
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(16, 185, 129, 0.06));
-            border-color: rgba(52, 211, 153, 0.5); box-shadow: 0 6px 24px rgba(16, 185, 129, 0.18);
-        }
-        .modo.cashback.active b { color: #6ee7b7; }
-        .modo.cashback.active .modo-ico { background: rgba(52, 211, 153, 0.18); }
         .modo-vista { animation: fadeUp 0.35s ease-out; }
 
         /* Pestañas de la liga + botón de caducidad */
@@ -365,34 +359,6 @@
         body.modo-tarjetas .stat-value { color: #e9d5ff; }
         body.modo-tarjetas .scan-panel { border-color: rgba(192, 132, 252, 0.25); box-shadow: 0 10px 30px rgba(139, 92, 246, 0.12); }
         body.modo-tarjetas .scan input.inp:focus { border-color: #c084fc; box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.15); }
-
-        /* Modo cashback: acentos verdes */
-        body.modo-cashback .stat-value { color: #a7f3d0; }
-        body.modo-cashback .scan-panel { border-color: rgba(52, 211, 153, 0.25); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.12); }
-        body.modo-cashback .scan input.inp:focus { border-color: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15); }
-        #cliBuscar { font-family: inherit; letter-spacing: 0.3px; }
-        .cli-nuevo {
-            display: block; width: 100%; max-width: 420px; margin: 12px auto 0; cursor: pointer;
-            background: rgba(52, 211, 153, 0.06); border: 1px dashed rgba(52, 211, 153, 0.35); color: #6ee7b7;
-            border-radius: 12px; padding: 10px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 600; transition: 0.2s;
-        }
-        .cli-nuevo b { color: #a7f3d0; }
-        .cli-nuevo:hover { background: rgba(52, 211, 153, 0.14); border-style: solid; }
-        .cli-sug { max-width: 420px; margin: 10px auto 0; background: rgba(0,0,0,0.3); border-radius: 14px; padding: 4px 10px; }
-        .cli-sug:empty { display: none; }
-        .gcard.cli { background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(245, 158, 11, 0.16)); border-color: rgba(52, 211, 153, 0.35); }
-        .gcard.cli::after { background: rgba(52, 211, 153, 0.1); }
-        .gcard.cli .gcard-brand { color: #6ee7b7; }
-        .gcard-nombre { font-size: 1.2rem; font-weight: 800; color: white; margin-top: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .gcard.cli .gcard-saldo { margin-top: 2px; color: #6ee7b7; text-shadow: 0 0 30px rgba(52, 211, 153, 0.3); }
-        .cli-compra {
-            max-width: 420px; margin: 0 auto 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(52, 211, 153, 0.15);
-            border-radius: 16px; padding: 16px;
-        }
-        .cli-compra h3 { margin: 0 0 12px; font-size: 0.9rem; color: white; }
-        .cli-compra .row2 { margin-bottom: 0; }
-        .cb-gana { color: #34d399; }
-        .cli-extra { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 420px; margin: 0 auto 14px; }
 
         /* TARJETAS REGALO */
         .tar-eliminar {
@@ -516,11 +482,10 @@
             .shop-header h1 { font-size: 1.8rem; }
             .shop-tab { font-size: 0.72rem; padding: 10px 2px; }
             .tb-title { font-size: 1rem; }
-            .modos { gap: 4px; padding: 5px; }
-            .modo { flex-direction: column; text-align: center; padding: 8px 4px; gap: 4px; }
+            .modo { padding: 8px 10px; gap: 9px; }
             .modo-ico { width: 36px; height: 36px; font-size: 1.25rem; border-radius: 11px; }
-            .modo-txt b { font-size: 0.85rem; }
-            .modo-txt small { font-size: 0.6rem; white-space: normal; line-height: 1.3; }
+            .modo-txt b { font-size: 0.9rem; }
+            .modo-txt small { font-size: 0.64rem; white-space: normal; line-height: 1.35; }
             .solo-ancho { display: none; }
             .gcard-saldo { font-size: 2.2rem; }
             .stat-value { font-size: 1.15rem; }
@@ -580,10 +545,6 @@
             <button class="modo tarjetas" data-modo="tarjetas">
                 <span class="modo-ico">🎁</span>
                 <span class="modo-txt"><b>Tarjetas<span class="solo-ancho"> regalo</span></b><small id="modoTarInfo">Activar y canjear</small></span>
-            </button>
-            <button class="modo cashback" data-modo="cashback">
-                <span class="modo-ico">💸</span>
-                <span class="modo-txt"><b>Cashback</b><small id="modoCliInfo">Compras de clientes</small></span>
             </button>
         </div>
     </div>
@@ -750,35 +711,6 @@
             </div>
         </div>
       </div>
-
-      <!-- ===================== MODO CASHBACK ===================== -->
-      <div id="modoCashback" class="modo-vista" style="display:none">
-        <div class="panel scan-panel">
-            <h2>💸 Busca al cliente</h2>
-            <form class="scan" onsubmit="event.preventDefault(); buscarClienteCaja()">
-                <input class="inp" type="text" id="cliBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
-                <button class="sbtn sbtn-gold" type="submit">Buscar</button>
-            </form>
-            <div class="cfg-hint">Con el lector: escanea el carné. Sin carné: escribe el nombre y elige de la lista.</div>
-            <div class="cli-sug" id="cliSugerencias"></div>
-            <button type="button" class="cli-nuevo" onclick="dialogoNuevoCliente()">➕ ¿Cliente nuevo? <b>Darlo de alta</b></button>
-            <div id="cliResultado"></div>
-        </div>
-
-        <div class="panel">
-            <div class="stats" style="animation: none">
-                <div class="stat"><div class="stat-value" id="cliTotal">—</div><div class="stat-label">Clientes</div></div>
-                <div class="stat"><div class="stat-value" id="cliPendiente">—</div><div class="stat-label">Saldo pendiente</div></div>
-                <div class="stat"><div class="stat-value" id="cliPct">—</div><div class="stat-label">Cashback</div></div>
-            </div>
-            <div class="toolbar">
-                <div class="search"><input class="inp" type="text" id="cliFiltro" placeholder="Buscar cliente..." autocomplete="off"></div>
-                <button class="sbtn sbtn-ghost" onclick="abrirConfigCashback()">⚙️ Cashback</button>
-                <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('cashback')">⏳ Caducidad</button>
-            </div>
-            <div id="listaClientes"><div class="spinner"></div></div>
-        </div>
-      </div>
     </div>
 </div>
 
@@ -817,11 +749,6 @@
         tarjeta_ya_activa: 'Esta tarjeta ya está activada',
         tarjeta_no_activa: 'Esta tarjeta no está activada',
         saldo_insuficiente: 'La tarjeta no tiene saldo suficiente',
-        cliente_no_encontrado: 'Ese cliente no existe en la hoja',
-        carne_en_uso: 'Ese carné ya es de otro cliente',
-        con_saldo_invalido: 'Lo pagado con saldo no puede ser más que la compra',
-        porcentaje_invalido: 'El cashback tiene que estar entre 0 y 50%',
-        minimo_invalido: 'La compra mínima no es válida',
         meses_invalidos: 'Los meses tienen que estar entre 1 y 36',
         fecha_invalida: 'Elige una fecha de inicio válida',
         permisos_disparador: 'Guardado, pero Google necesita permiso para el repaso nocturno. Abre la hoja y usa 🐼 Wallet → Apuntar caducidades ahora una vez',
@@ -887,7 +814,7 @@
         document.getElementById('barraApp').style.display = 'none';
         document.getElementById('hero').style.display = '';
         document.getElementById('vistaLogin').style.display = 'block';
-        document.body.classList.remove('modo-tarjetas', 'modo-cashback');
+        document.body.classList.remove('modo-tarjetas');
         cerrarFicha();
     }
 
@@ -899,30 +826,22 @@
         document.getElementById('staffName').textContent = sesion.por;
         const modo = getData('panda_tienda_modo', 'liga');
         setModo(modo);
-        // para el resumen de los botones de modo
-        if (modo !== 'tarjetas') cargarTarjetas();
-        if (modo !== 'cashback') cargarClientes(true);
+        if (modo !== 'tarjetas') cargarTarjetas(); // para el resumen del botón de tarjetas
     }
 
     // =========================================
     //  MODOS: LIGA / TARJETAS
     // =========================================
     function setModo(modo) {
-        if (modo !== 'tarjetas' && modo !== 'cashback') modo = 'liga';
+        if (modo !== 'tarjetas') modo = 'liga';
         document.body.classList.toggle('modo-tarjetas', modo === 'tarjetas');
-        document.body.classList.toggle('modo-cashback', modo === 'cashback');
         document.querySelectorAll('.modo').forEach(b => b.classList.toggle('active', b.dataset.modo === modo));
         document.getElementById('modoLiga').style.display = modo === 'liga' ? '' : 'none';
         document.getElementById('modoTarjetas').style.display = modo === 'tarjetas' ? '' : 'none';
-        document.getElementById('modoCashback').style.display = modo === 'cashback' ? '' : 'none';
         setData('panda_tienda_modo', modo);
         if (modo === 'tarjetas') {
             cargarTarjetas();
             setTimeout(() => document.getElementById('tarCodigo').focus(), 50);
-        }
-        if (modo === 'cashback') {
-            cargarClientes();
-            setTimeout(() => document.getElementById('cliBuscar').focus(), 50);
         }
     }
 
@@ -1269,13 +1188,6 @@
             hint: 'Las tarjetas cargadas antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.',
             ejemplo: 'una tarjeta activada hoy',
             quien: n => `${n} tarjeta${n === 1 ? '' : 's'}`
-        },
-        cashback: {
-            titulo: 'Caducidad del cashback',
-            sub: 'Cada cashback caduca unos meses después de ganarlo.<br>Las compras con saldo gastan primero el más antiguo.',
-            hint: 'El cashback ganado antes de esta fecha cuenta sus meses desde aquí, para que nadie pierda saldo de golpe.',
-            ejemplo: 'un cashback ganado hoy',
-            quien: n => `${n} cliente${n === 1 ? '' : 's'}`
         }
     };
 
@@ -1299,7 +1211,7 @@
         const tx = TEXTOS_CADUCIDAD[cadAmbito];
         document.getElementById('sheetBody').innerHTML = `
             <div class="d-head">
-                <div class="avatar">${cadAmbito === 'tarjetas' ? '🎁' : cadAmbito === 'cashback' ? '💸' : '⏳'}</div>
+                <div class="avatar">${cadAmbito === 'tarjetas' ? '🎁' : '⏳'}</div>
                 <div class="d-name">${tx.titulo}</div>
                 <div class="d-id" style="margin-top: 4px">${tx.sub}</div>
             </div>
@@ -1410,9 +1322,7 @@
             else toast(r.config.activa
                 ? `✅ Caducidad activada: ${r.config.meses} meses` + (r.apuntadas ? ` · ${r.apuntadas} caducidades apuntadas` : '')
                 : '✅ Caducidad desactivada', 'success');
-            if (cfg.ambito === 'tarjetas') cargarTarjetas();
-            else if (cfg.ambito === 'cashback') { cargarClientes(); if (clienteActual) abrirCliente({ cliente_id: clienteActual.cliente.cliente_id }); }
-            else cargarResumen();
+            if (cfg.ambito === 'tarjetas') cargarTarjetas(); else cargarResumen();
             if (r.config) pintarCaducidad(r.config, true);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
@@ -2305,460 +2215,6 @@
             toast('⚠️ ' + err.message, 'danger');
         }
     }
-
-    // =========================================
-    //  CASHBACK DE CLIENTES
-    // =========================================
-    let clientes = [];
-    let clienteActual = null;
-    let cashbackCfg = { porcentaje: 4, minimo: 0 };
-    let cashbackAdmin = false;
-
-    // silencioso: al entrar al panel se carga de fondo y no debe dar la lata si algo falla
-    async function cargarClientes(silencioso = false) {
-        try {
-            const data = await api('clientes');
-            if (data.error) throw new Error(errorDe(data));
-            clientes = data.clientes || [];
-            cashbackCfg = data.config || cashbackCfg;
-            cashbackAdmin = !!data.esAdmin;
-            const pendiente = clientes.reduce((s, c) => s + c.saldo, 0);
-            document.getElementById('cliTotal').textContent = clientes.length;
-            document.getElementById('cliPendiente').textContent = euros(pendiente);
-            document.getElementById('cliPct').textContent = pct(cashbackCfg.porcentaje);
-            document.getElementById('modoCliInfo').textContent = `${clientes.length} cliente${clientes.length === 1 ? '' : 's'} · ${pct(cashbackCfg.porcentaje)}`;
-            pintarListaClientes();
-        } catch (err) {
-            if (!silencioso && document.body.classList.contains('modo-cashback')) toast('⚠️ ' + err.message, 'danger');
-            document.getElementById('listaClientes').innerHTML = '';
-        }
-    }
-
-    function pct(n) { return String(Number(n) || 0).replace('.', ',') + '%'; }
-
-    function filaCliente(c) {
-        return `
-            <div class="prow" data-id="${esc(c.cliente_id)}">
-                <div class="avatar">${esc(inicial(c.nombre))}</div>
-                <div class="pinfo">
-                    <div class="pname">${esc(c.nombre)}</div>
-                    <div class="pmeta">${euros(c.ganado)} de cashback · ${c.ultimo ? 'última compra ' + fecha(c.ultimo) : 'sin compras'}</div>
-                </div>
-                <div class="psaldo ${c.saldo > 0.005 ? '' : 'cero'}">${euros(c.saldo)}</div>
-            </div>`;
-    }
-
-    function pintarListaClientes() {
-        const q = normalizar(document.getElementById('cliFiltro').value);
-        const lista = clientes
-            .filter(c => normalizar(c.nombre + ' ' + c.carne).includes(q))
-            .sort((a, b) => String(b.ultimo).localeCompare(String(a.ultimo)) || a.nombre.localeCompare(b.nombre));
-        const cont = document.getElementById('listaClientes');
-        cont.innerHTML = lista.length ? lista.map(filaCliente).join('')
-            : `<div class="empty"><div class="ico">${q ? '🔍' : '💸'}</div>${q ? 'Ningún cliente coincide' : 'Aún no hay clientes. Da de alta el primero'}</div>`;
-    }
-
-    // Sugerencias mientras se escribe un nombre en el buscador de arriba
-    function pintarSugerencias() {
-        const texto = document.getElementById('cliBuscar').value.trim();
-        const cont = document.getElementById('cliSugerencias');
-        if (texto.length < 2 || /^\d+$/.test(texto)) { cont.innerHTML = ''; return; }
-        const q = normalizar(texto);
-        const lista = clientes.filter(c => normalizar(c.nombre).includes(q)).slice(0, 6);
-        cont.innerHTML = lista.length ? lista.map(filaCliente).join('')
-            : `<div class="picker-empty">Nadie se llama así. ¿Es un <a href="#" onclick="event.preventDefault(); dialogoNuevoCliente()" style="color:#6ee7b7">cliente nuevo</a>?</div>`;
-    }
-
-    document.getElementById('cliBuscar').addEventListener('input', pintarSugerencias);
-    document.getElementById('cliFiltro').addEventListener('input', pintarListaClientes);
-    ['cliSugerencias', 'listaClientes'].forEach(id => document.getElementById(id).addEventListener('click', e => {
-        const fila = e.target.closest('.prow');
-        if (!fila) return;
-        abrirCliente({ cliente_id: fila.dataset.id });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }));
-
-    // Enter en el buscador: carné escaneado, o el único cliente que encaja con el nombre
-    function buscarClienteCaja() {
-        const input = document.getElementById('cliBuscar');
-        const texto = input.value.trim();
-        if (!texto) { input.focus(); return; }
-        const codigo = normalizarCodigo(texto);
-        const porCarne = clientes.find(c => c.carne === codigo);
-        if (porCarne) return abrirCliente({ cliente_id: porCarne.cliente_id });
-        const q = normalizar(texto);
-        const exactos = clientes.filter(c => normalizar(c.nombre) === q);
-        const parecidos = clientes.filter(c => normalizar(c.nombre).includes(q));
-        if (exactos.length === 1) return abrirCliente({ cliente_id: exactos[0].cliente_id });
-        if (parecidos.length === 1) return abrirCliente({ cliente_id: parecidos[0].cliente_id });
-        if (/^\d{4,}$/.test(codigo)) return abrirCliente({ carne: codigo }); // carné que aún no está en la lista cargada
-        pintarSugerencias();
-        if (!parecidos.length) toast('🔍 No hay ningún cliente así', 'warning');
-    }
-
-    async function abrirCliente(datos) {
-        const res = document.getElementById('cliResultado');
-        res.innerHTML = '<div class="spinner"></div>';
-        try {
-            const data = await api('cliente', datos);
-            if (data.error) throw new Error(errorDe(data));
-            document.getElementById('cliBuscar').value = '';
-            document.getElementById('cliSugerencias').innerHTML = '';
-            pintarCliente(data);
-        } catch (err) {
-            res.innerHTML = '';
-            toast('⚠️ ' + err.message, 'danger');
-            document.getElementById('cliBuscar').select();
-        }
-    }
-
-    function pintarCliente(d, recien = '') {
-        clienteActual = d;
-        if (d.config) cashbackCfg = d.config;
-        const c = d.cliente;
-        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
-        const res = document.getElementById('cliResultado');
-        res.innerHTML = `
-            <div class="gcard cli">
-                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Cliente</span>
-                    <span class="gcard-pill ok">${pct(cashbackCfg.porcentaje)} cashback</span></div>
-                <div class="gcard-nombre">${esc(c.nombre)}</div>
-                <div class="gcard-saldo">${euros(d.saldo)}</div>
-                <div class="gcard-sub">${euros(d.ganado)} de cashback en total${c.alta ? ' · cliente desde ' + fecha(c.alta) : ''}</div>
-                <div class="gcard-code">${esc(c.carne)}</div>
-            </div>
-            <div style="text-align:center; margin-top:-8px; margin-bottom: 14px">${avisoCaducidad(movs)}</div>
-
-            <div class="cli-compra">
-                <h3>🛒 Apuntar compra</h3>
-                <div class="row2">
-                    <div class="field">
-                        <label>Importe de la compra (€)</label>
-                        <input class="inp" type="number" id="cliImporte" min="0" step="0.01" inputmode="decimal" placeholder="0">
-                    </div>
-                    <div class="field">
-                        <label>Pagado con saldo (€)</label>
-                        <input class="inp" type="number" id="cliConSaldo" min="0" step="0.01" inputmode="decimal" placeholder="0" ${d.saldo > 0.005 ? '' : 'disabled'}>
-                        ${d.saldo > 0.005 ? `<div class="chips"><button type="button" class="chip" id="cliTodoSaldo">Usar todo (${euros(d.saldo)})</button></div>` : ''}
-                    </div>
-                </div>
-                <div class="saldo-preview" id="cliPreview" style="margin: 12px 0"></div>
-                <button class="sbtn sbtn-gold sbtn-full" id="btnCliCompra" onclick="enviarCompraCliente()">💾 Apuntar compra</button>
-            </div>
-
-            <div class="cli-extra">
-                <button class="sbtn sbtn-ghost sbtn-sm ${recien === 'carne' ? 'sbtn-ticket recien' : ''}" onclick="imprimirCarne()">🎫 Imprimir carné</button>
-            </div>
-
-            <div class="tar-historial">
-                <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
-                ${movs.length ? movs.map((m, i) => pintarMovCliente(m, i)).join('') : '<div class="empty" style="padding: 18px 10px">Todavía no tiene compras</div>'}
-                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarCliente()">🗑️ Eliminar cliente (solo para pruebas o errores)</button>' : ''}
-            </div>`;
-
-        const importe = document.getElementById('cliImporte');
-        const conSaldo = document.getElementById('cliConSaldo');
-        importe.addEventListener('input', previewCompraCliente);
-        conSaldo.addEventListener('input', previewCompraCliente);
-        [importe, conSaldo].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') enviarCompraCliente(); }));
-        const todo = document.getElementById('cliTodoSaldo');
-        if (todo) todo.onclick = () => {
-            const imp = parseFloat(importe.value) || 0;
-            conSaldo.value = (imp > 0 ? Math.min(imp, d.saldo) : d.saldo).toFixed(2);
-            previewCompraCliente();
-        };
-        res.querySelectorAll('.mv-del').forEach(btn => { btn.onclick = () => anularMovCliente(movs[Number(btn.dataset.i)]); });
-        previewCompraCliente();
-        importe.focus();
-    }
-
-    function pintarMovCliente(m, i) {
-        const cb = m.tipo === 'cashback';
-        const caducado = m.tipo === 'caducado';
-        let caduca = '';
-        if (m.caduca && m.restante > 0) {
-            const texto = m.restante < m.monto ? `quedan ${euros(m.restante)}, caducan el ${fecha(m.caduca)}` : `caduca el ${fecha(m.caduca)}`;
-            caduca = ` · <span class="mv-caduca ${diasHasta(m.caduca) <= 30 ? 'pronto' : ''}">${texto}</span>`;
-        }
-        return `
-            <div class="mv">
-                <div class="mv-icon ${cb ? 'carga' : caducado ? 'caducado' : 'gasto'}">${cb ? '💸' : caducado ? '⏳' : '🛒'}</div>
-                <div class="mv-info">
-                    <div class="mv-concepto">${esc(m.concepto || '—')}</div>
-                    <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}${caduca}</div>
-                </div>
-                <div class="mv-monto ${cb ? 'positivo' : caducado ? 'caducado' : 'negativo'}">${cb ? '+' : '-'}${euros(m.monto)}</div>
-                ${m.fila ? `<button class="mv-del" title="Borrar este movimiento (por ejemplo, si devuelven la compra)" data-i="${i}">🗑️</button>` : ''}
-            </div>`;
-    }
-
-    // Lo mismo que calcula el script, para enseñarlo antes de guardar
-    function calcularCompra() {
-        const importe = Math.round((parseFloat(document.getElementById('cliImporte').value) || 0) * 100) / 100;
-        const conSaldo = Math.round((parseFloat(document.getElementById('cliConSaldo').value) || 0) * 100) / 100;
-        const base = Math.max(0, Math.round((importe - conSaldo) * 100) / 100);
-        const cashback = base > 0 && base >= cashbackCfg.minimo - 0.005 ? Math.round(base * cashbackCfg.porcentaje) / 100 : 0;
-        return { importe, conSaldo, base, cashback };
-    }
-
-    function previewCompraCliente() {
-        const el = document.getElementById('cliPreview');
-        const saldo = clienteActual.saldo;
-        const { importe, conSaldo, base, cashback } = calcularCompra();
-        if (!(importe > 0)) {
-            el.innerHTML = `Cada compra devuelve un <b class="cb-gana">${pct(cashbackCfg.porcentaje)}</b>`
-                + (cashbackCfg.minimo > 0 ? ` a partir de ${euros(cashbackCfg.minimo)}` : '');
-            return;
-        }
-        if (conSaldo > saldo + 0.005) { el.innerHTML = `<span class="neg">Solo tiene ${euros(saldo)} de saldo</span>`; return; }
-        if (conSaldo > importe + 0.005) { el.innerHTML = '<span class="neg">Pagado con saldo no puede ser más que la compra</span>'; return; }
-        const despues = saldo - conSaldo + cashback;
-        el.innerHTML = (cashback > 0
-                ? `Cashback: <b class="cb-gana">+${euros(cashback)}</b>`
-                : `<span>Sin cashback${base > 0 && cashbackCfg.minimo > 0 ? ` (mínimo ${euros(cashbackCfg.minimo)})` : ''}</span>`)
-            + ` <span>·</span> Saldo: <b>${euros(saldo)}</b> <span>→</span> <b class="${despues >= saldo ? 'up' : 'down'}">${euros(despues)}</b>`;
-    }
-
-    async function enviarCompraCliente() {
-        const { importe, conSaldo, base, cashback } = calcularCompra();
-        if (!(importe > 0)) { toast('⚠️ Pon el importe de la compra', 'warning'); document.getElementById('cliImporte').focus(); return; }
-        if (conSaldo > clienteActual.saldo + 0.005) { toast(`⚠️ Solo tiene ${euros(clienteActual.saldo)} de saldo`, 'warning'); return; }
-        if (conSaldo > importe + 0.005) { toast('⚠️ Pagado con saldo no puede ser más que la compra', 'warning'); return; }
-        if (!(cashback > 0) && !(conSaldo > 0)) {
-            toast(`⚠️ Esta compra no genera cashback${cashbackCfg.minimo > 0 ? ` (mínimo ${euros(cashbackCfg.minimo)})` : ''}`, 'warning');
-            return;
-        }
-        const btn = document.getElementById('btnCliCompra');
-        cargando(btn, true, 'Guardando...');
-        try {
-            const data = await api('cliente_compra', { cliente_id: clienteActual.cliente.cliente_id, importe, con_saldo: conSaldo });
-            if (data.error === 'saldo_insuficiente') throw new Error(`Solo tiene ${euros(data.saldo)} de saldo`);
-            if (data.error === 'bajo_minimo') throw new Error(`Esta compra no genera cashback (mínimo ${euros(data.minimo)})`);
-            if (data.error) throw new Error(errorDe(data));
-            toast((data.cashback > 0 ? `💸 +${euros(data.cashback)} de cashback` : `🛒 ${euros(conSaldo)} pagados con saldo`)
-                + ` · saldo ${euros(data.saldo)}`, 'success');
-            pintarCliente(data);
-            cargarClientes(true);
-            document.getElementById('cliBuscar').focus(); // listo para el siguiente cliente
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-            cargando(btn, false);
-        }
-    }
-
-    async function anularMovCliente(m) {
-        const quedaria = clienteActual.saldo + (m.tipo === 'cashback' ? -m.monto : m.monto);
-        const ok = await confirmar({
-            titulo: '🗑️ ¿Borrar este movimiento?',
-            html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
-                   Úsalo para corregir errores o si el cliente devuelve la compra. Se borrará de la hoja.`
-                + (quedaria < -0.005 ? `<br><br>⚠️ Ya ha gastado ese saldo: le quedará en <b style="color:#fca5a5">${euros(quedaria)}</b>
-                   (lo descontará de su próximo cashback).` : ''),
-            ok: 'Borrar', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_anular', { fila: m.fila, cliente_id: clienteActual.cliente.cliente_id, concepto: m.concepto, monto: m.monto });
-            if (data.error) throw new Error(errorDe(data));
-            pintarCliente(data);
-            toast('🗑️ Movimiento borrado', 'warning');
-            cargarClientes(true);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
-
-    // Solo admin: quita el cliente y todo su historial de la hoja
-    async function eliminarCliente() {
-        const d = clienteActual;
-        const ok = await confirmar({
-            titulo: '🗑️ Eliminar cliente',
-            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> y sus
-                   ${d.movimientos.length} movimiento${d.movimientos.length === 1 ? '' : 's'} de la hoja. <b style="color:#fca5a5">No se puede deshacer.</b>`
-                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : '')
-                + '<br><br>Úsalo solo para clientes de prueba o dados de alta por error. Su carné dejará de funcionar.',
-            ok: 'Eliminar', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
-            if (data.error) throw new Error(errorDe(data));
-            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
-            clienteActual = null;
-            document.getElementById('cliResultado').innerHTML = '';
-            document.getElementById('cliBuscar').focus();
-            cargarClientes(true);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
-
-    async function dialogoNuevoCliente() {
-        const escrito = document.getElementById('cliBuscar').value.trim();
-        const nombreInicial = escrito && !/^\d+$/.test(escrito) ? nombrePropio(escrito) : '';
-        abrirDialogo(`
-            <h3>➕ Nuevo cliente</h3>
-            <div class="dmsg">Se le crea un carné con código de barras para escanearlo en caja.</div>
-            <div class="field"><label>Nombre</label><input class="inp" type="text" id="nuevoCliNombre" placeholder="Ej: Marta Gómez" value="${esc(nombreInicial)}"></div>
-            <div class="field"><label>Carné físico (opcional)</label>
-                <input class="inp mono" type="text" id="nuevoCliCarne" placeholder="Escanéalo si ya tiene uno impreso" autocomplete="off">
-                <div class="cfg-hint">Si lo dejas vacío se genera uno nuevo para imprimirlo en ticket.</div></div>
-            <label class="ticket-chk"><input type="checkbox" id="nuevoCliImprimir" checked> 🎫 Imprimir el carné al crearlo</label>
-            <div class="dbtns" style="margin-top: 18px">
-                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
-                <button class="sbtn sbtn-gold" id="btnNuevoCli">Crear</button>
-            </div>`);
-        const input = document.getElementById('nuevoCliNombre');
-        const carne = document.getElementById('nuevoCliCarne');
-        const imprimirChk = document.getElementById('nuevoCliImprimir');
-        carne.addEventListener('input', () => { if (carne.value.trim()) imprimirChk.checked = false; });
-        input.focus();
-        const crear = async () => {
-            const nombre = nombrePropio(input.value);
-            if (!nombre) { input.focus(); return; }
-            const codigo = carne.value;
-            const imprimir = imprimirChk.checked;
-            const parecido = clientes.find(c => normalizar(c.nombre) === normalizar(nombre));
-            if (parecido) {
-                cerrarDialogo(false);
-                const seguir = await confirmar({
-                    titulo: '🤔 Ya existe alguien así',
-                    html: `Ya hay un cliente llamado <b style="color:white">${esc(parecido.nombre)}</b>. ¿Crear otro igualmente?`,
-                    ok: 'Crear otro'
-                });
-                if (!seguir) return;
-            }
-            const btn = document.getElementById('btnNuevoCli');
-            if (btn) cargando(btn, true, 'Creando...');
-            try {
-                const data = await api('cliente_nuevo', { nombre, carne: codigo });
-                if (data.error) throw new Error(errorDe(data));
-                cerrarDialogo(true);
-                toast(`🎉 ${data.cliente.nombre} dado de alta`, 'success');
-                document.getElementById('cliBuscar').value = '';
-                document.getElementById('cliSugerencias').innerHTML = '';
-                pintarCliente(data, imprimir ? '' : 'carne');
-                cargarClientes(true);
-                if (imprimir) imprimirCarne(true);
-            } catch (err) {
-                toast('⚠️ ' + err.message, 'danger');
-                if (btn) cargando(btn, false);
-            }
-        };
-        document.getElementById('btnNuevoCli').onclick = crear;
-        [input, carne].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') crear(); }));
-    }
-
-    // ---- Carné del cliente en ticket (mismo diseño elegido en 🧾 Tickets) ----
-    async function cuerpoCarneTicket(c, diseno) {
-        const legible = String(c.carne).replace(/(.{4})(?=.)/g, '$1 ');
-        const pie = `<div class="c pie"><b>Enseña este carné en cada compra</b><br>y acumula un ${pct(cashbackCfg.porcentaje)} en saldo para gastar en tienda.<br>¡Gracias por tu visita!</div>`;
-        if (diseno === 'basico') {
-            return `
-                ${cabeceraTicket().replace(esc(TICKET.sub), 'Carné de cliente')}
-                <div class="c">
-                    <div class="lbl">Cliente</div>
-                    <div class="saldo" style="font-size: 18pt">${esc(c.nombre)}</div>
-                </div>
-                <div class="c barras">${await codigoDeBarras(c.carne, 70)}</div>
-                <div class="c codigo">${esc(legible)}</div>
-                <div class="sep"></div>
-                ${pie}`;
-        }
-        return `
-            <div class="tj"><div class="tj-dentro">
-                <div class="tj-top">
-                    <div><div class="tj-marca">${esc(TICKET.tienda)}</div><div class="tj-tipo">Carné de cliente</div></div>
-                    ${LOGO_PANDA}
-                </div>
-                <div class="tj-saldo" style="font-size: 16pt; overflow-wrap: anywhere">${esc(c.nombre)}</div>
-                <div class="tj-barras">${await codigoDeBarras(c.carne, 42)}</div>
-                <div class="tj-codigo">${esc(legible)}</div>
-            </div></div>
-            <div class="sep"></div>
-            ${pie}`;
-    }
-
-    async function imprimirCarne() {
-        if (!clienteActual) return;
-        try {
-            imprimirTicket('Carné de cliente', await cuerpoCarneTicket(clienteActual.cliente, disenoTicket()));
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
-
-    // ---- Ajustes del cashback (solo admin) ----
-    async function abrirConfigCashback() {
-        ficha = null;
-        const off = cashbackAdmin ? '' : 'disabled';
-        document.getElementById('sheetBody').innerHTML = `
-            <div class="d-head">
-                <div class="avatar">💸</div>
-                <div class="d-name">Ajustes del cashback</div>
-                <div class="d-id" style="margin-top: 4px">Lo que devuelve cada compra al saldo del cliente.<br>Independiente de los premios de la liga.</div>
-            </div>
-            <div class="row2">
-                <div class="field">
-                    <label>Cashback (%)</label>
-                    <input class="inp" type="number" id="cbPct" min="0" max="50" step="0.5" value="${cashbackCfg.porcentaje}" ${off}>
-                    ${cashbackAdmin ? `<div class="chips" id="cbChips">
-                        <button type="button" class="chip" data-v="3">3%</button>
-                        <button type="button" class="chip" data-v="4">4%</button>
-                        <button type="button" class="chip" data-v="5">5%</button>
-                    </div>` : ''}
-                </div>
-                <div class="field">
-                    <label>Compra mínima (€)</label>
-                    <input class="inp" type="number" id="cbMin" min="0" step="1" value="${cashbackCfg.minimo}" ${off}>
-                    <div class="cfg-hint">Las compras más pequeñas no dan cashback. 0 = todas.</div>
-                </div>
-            </div>
-            <div class="cfg-preview" id="cbPreview"></div>
-            ${cashbackAdmin
-                ? '<button class="sbtn sbtn-gold sbtn-full" id="btnCb" onclick="guardarConfigCashback()">💾 Guardar</button>'
-                : '<div class="cfg-lock">🔒 Para cambiarlo, entra al panel con la clave de admin</div>'}`;
-        document.getElementById('sheet').classList.add('open');
-        const pintar = () => {
-            const p = parseFloat(document.getElementById('cbPct').value) || 0;
-            const m = parseFloat(document.getElementById('cbMin').value) || 0;
-            const ej = n => euros(Math.round(n * p) / 100);
-            document.getElementById('cbPreview').innerHTML =
-                `Con un <b>${pct(p)}</b>: una compra de 10€ da <b>${10 >= m ? ej(10) : '0.00€'}</b>, de 25€ da <b>${25 >= m ? ej(25) : '0.00€'}</b> y de 100€ da <b>${ej(100)}</b>.`
-                + (m > 0 ? `<br>Las compras de menos de ${euros(m)} no dan cashback.` : '');
-        };
-        document.getElementById('cbPct').addEventListener('input', pintar);
-        document.getElementById('cbMin').addEventListener('input', pintar);
-        const chips = document.getElementById('cbChips');
-        if (chips) chips.addEventListener('click', e => {
-            const c = e.target.closest('.chip');
-            if (!c) return;
-            document.getElementById('cbPct').value = c.dataset.v;
-            pintar();
-        });
-        pintar();
-    }
-
-    async function guardarConfigCashback() {
-        const btn = document.getElementById('btnCb');
-        cargando(btn, true, 'Guardando...');
-        try {
-            const data = await api('cashback_guardar', {
-                porcentaje: document.getElementById('cbPct').value,
-                minimo: document.getElementById('cbMin').value || 0
-            });
-            if (data.error) throw new Error(errorDe(data));
-            cashbackCfg = data.config;
-            toast(`✅ Cashback: ${pct(data.config.porcentaje)}`, 'success');
-            cerrarFicha();
-            cargarClientes();
-            if (clienteActual) pintarCliente(clienteActual);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-            cargando(btn, false);
-        }
-    }
-
     // =========================================
     //  SELECTOR DE JUGADOR (buscador con sugerencias y "crear nuevo")
     // =========================================

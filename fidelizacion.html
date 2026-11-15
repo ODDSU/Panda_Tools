@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Fidelización</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px 16px 80px;
+            max-width: 100%; overflow-x: hidden;
+            background-color: var(--bg-dark); box-sizing: border-box;
+        }
+        .shop { width: 100%; max-width: 860px; }
+
+        /* HEADER */
+        .shop-header { text-align: center; margin-bottom: 26px; animation: fadeDown 0.6s ease-out backwards; }
+        .shop-badge {
+            display: inline-block; background: rgba(251, 191, 36, 0.12); color: #fbbf24;
+            padding: 5px 16px; border-radius: 20px; font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .shop-header h1 {
+            font-size: 2.3rem; font-weight: 900; margin: 0; animation: none; letter-spacing: 0;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
+        }
+        .shop-header p { color: var(--text-muted); font-size: 0.85rem; margin: 6px 0 0; }
+
+        /* PANELES */
+        .panel {
+            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 22px; margin-bottom: 16px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeUp 0.45s ease-out backwards;
+        }
+        .panel h2 { font-size: 0.95rem; font-weight: 700; margin: 0 0 16px; color: white; }
+
+        /* STATS */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; animation: fadeUp 0.45s ease-out backwards; }
+        .stat {
+            background: rgba(15, 15, 20, 0.55); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; padding: 16px 10px; text-align: center; backdrop-filter: blur(20px);
+        }
+        .stat-value { font-size: 1.5rem; font-weight: 900; color: #fcd34d; line-height: 1.2; }
+        .stat-label { font-size: 0.62rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1.3px; margin-top: 4px; }
+
+        /* TABS */
+        .shop-tabs {
+            display: flex; gap: 4px; margin-bottom: 16px;
+            background: rgba(0,0,0,0.4); border-radius: 14px; padding: 5px;
+        }
+        .shop-tab {
+            flex: 1; padding: 11px 6px; border: none; border-radius: 10px; background: transparent;
+            color: var(--text-muted); font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .shop-tab:hover { color: white; }
+        .shop-tab.active { background: rgba(251, 191, 36, 0.15); color: #fbbf24; box-shadow: 0 2px 10px rgba(251, 191, 36, 0.1); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* CAMPOS */
+        .field { margin-bottom: 16px; }
+        .field:last-child { margin-bottom: 0; }
+        .field label, .lbl {
+            display: block; font-size: 0.72rem; color: var(--text-muted);
+            margin-bottom: 6px; font-weight: 600; letter-spacing: 0.5px;
+        }
+        input.inp, select.inp {
+            width: 100%; padding: 12px 16px; box-sizing: border-box;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: white; color-scheme: dark;
+            font-family: 'Poppins', sans-serif; font-size: 0.88rem; outline: none; transition: all 0.25s;
+        }
+        input.inp:focus, select.inp:focus {
+            border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1); background: rgba(0,0,0,0.6);
+        }
+        select.inp option { background: var(--bg-dark); }
+        .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* BOTONES */
+        .sbtn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer;
+            font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; transition: all 0.25s; white-space: nowrap;
+        }
+        .sbtn:disabled { opacity: 0.55; cursor: wait; transform: none !important; }
+        .sbtn-gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a2e; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25); }
+        .sbtn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35); }
+        .sbtn-ghost { background: rgba(255,255,255,0.04); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.08); }
+        .sbtn-ghost:hover { background: rgba(255,255,255,0.08); color: white; }
+        .sbtn-ok { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.2); }
+        .sbtn-ok:hover { background: rgba(52, 211, 153, 0.22); }
+        .sbtn-ko { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .sbtn-ko:hover { background: rgba(239, 68, 68, 0.2); }
+        .sbtn-full { width: 100%; }
+        .sbtn-sm { padding: 8px 12px; font-size: 0.68rem; border-radius: 9px; letter-spacing: 0.5px; }
+
+        /* LISTA DE JUGADORES */
+        .toolbar { display: flex; gap: 8px; margin-bottom: 14px; }
+        .toolbar .search { flex: 1; position: relative; }
+        .toolbar .search input { padding-left: 40px; }
+        .toolbar .search::before {
+            content: '🔍'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            font-size: 0.85rem; z-index: 1; pointer-events: none;
+        }
+        .toolbar select.inp { width: auto; padding-right: 10px; }
+
+        .prow {
+            display: flex; align-items: center; gap: 14px; padding: 12px 14px; margin-bottom: 8px;
+            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .prow:hover { background: rgba(0,0,0,0.4); border-color: rgba(251, 191, 36, 0.25); transform: translateX(3px); }
+        .avatar {
+            width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.25));
+            color: #fcd34d; font-weight: 900; font-size: 1.05rem;
+        }
+        .pinfo { flex: 1; min-width: 0; }
+        .pname { font-weight: 700; color: white; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pmeta { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .psaldo { font-weight: 900; font-size: 1.05rem; color: #fcd34d; flex-shrink: 0; }
+        .psaldo.cero { color: #475569; }
+
+        .empty { text-align: center; padding: 34px 10px; color: var(--text-muted); font-size: 0.85rem; }
+        .empty .ico { font-size: 2.4rem; margin-bottom: 8px; opacity: 0.6; }
+
+        /* TIPO (premio / canje) */
+        .tipo-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tipo-btn {
+            padding: 14px; border-radius: 14px; cursor: pointer; text-align: center;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06); color: var(--text-muted);
+            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all 0.2s;
+        }
+        .tipo-btn .t-ico { display: block; font-size: 1.5rem; margin-bottom: 2px; }
+        .tipo-btn:hover { color: white; }
+        .tipo-btn.on.premio { background: rgba(16, 185, 129, 0.12); border-color: rgba(52, 211, 153, 0.45); color: #34d399; }
+        .tipo-btn.on.canje { background: rgba(239, 68, 68, 0.1); border-color: rgba(252, 165, 165, 0.4); color: #fca5a5; }
+        .tipo-btn.on.diseno { background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.45); color: #d8b4fe; }
+
+        /* Vista previa del ticket (opciones de tickets) */
+        .ticket-muestra {
+            display: flex; justify-content: center; margin: 16px 0 14px; padding: 16px 10px; border-radius: 16px;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+        }
+        .ticket-muestra iframe { width: 80mm; height: 380px; border: 0; background: #fff; flex-shrink: 0; box-shadow: 0 10px 24px rgba(0,0,0,0.45); }
+        @media (max-width: 420px) { .ticket-muestra iframe { zoom: 0.8; } }
+
+        .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .chip {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #cbd5e1;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; cursor: pointer;
+            font-family: inherit; transition: 0.2s;
+        }
+        .chip:hover { border-color: rgba(251, 191, 36, 0.4); color: #fbbf24; }
+
+        .saldo-preview {
+            display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px; padding: 14px; margin: 18px 0 14px; font-weight: 700; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .saldo-preview b { color: white; font-size: 1.05rem; }
+        .saldo-preview .up { color: #34d399; }
+        .saldo-preview .down { color: #fca5a5; }
+        .saldo-preview .neg { color: #ef4444; }
+
+        /* SELECTOR DE JUGADOR */
+        .picker { position: relative; }
+        .picker-list {
+            display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30;
+            background: #121218; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); max-height: 270px; overflow-y: auto; padding: 6px;
+        }
+        .picker-list.open { display: block; }
+        .picker-item {
+            display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; cursor: pointer;
+        }
+        .picker-item:hover, .picker-item.hl { background: rgba(251, 191, 36, 0.1); }
+        .picker-item .avatar { width: 32px; height: 32px; border-radius: 9px; font-size: 0.85rem; }
+        .picker-item .pname { font-size: 0.85rem; }
+        .picker-item .psaldo { font-size: 0.85rem; }
+        .picker-item.crear .pname { color: #fbbf24; }
+        .picker-item.crear .avatar { background: rgba(251, 191, 36, 0.12); font-size: 0.9rem; }
+        .picker-empty { padding: 12px; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+
+        /* JORNADA */
+        .jrow { display: grid; grid-template-columns: 1fr 130px 100px 40px; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .jrow .x {
+            height: 44px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.08); color: #fca5a5; cursor: pointer; font-size: 0.85rem;
+        }
+        .jrow .x:hover { background: rgba(239, 68, 68, 0.2); }
+        .jhead { display: grid; grid-template-columns: 1fr 130px 100px 40px; gap: 8px; margin-bottom: 6px; }
+        .jtotal { text-align: right; color: var(--text-muted); font-weight: 700; font-size: 0.85rem; margin: 12px 0; }
+        .jtotal b { color: #34d399; font-size: 1.05rem; }
+
+        /* FICHA DEL JUGADOR (hoja deslizante) */
+        .sheet-overlay {
+            position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet {
+            background: #0f0f15; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px;
+            width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); animation: scaleUp 0.25s ease-out;
+            scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent;
+        }
+        .sheet::-webkit-scrollbar { width: 6px; }
+        .sheet::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        .sheet::before {
+            content: ''; position: sticky; top: 0; display: block; height: 4px; z-index: 2;
+            background: linear-gradient(to right, #f59e0b, #8b5cf6);
+        }
+        .sheet-body { padding: 22px 24px 26px; }
+        .sheet-close {
+            position: absolute; top: 14px; right: 14px; z-index: 3; width: 34px; height: 34px; border-radius: 10px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: var(--text-muted);
+            cursor: pointer; font-size: 1rem;
+        }
+        .sheet-close:hover { color: white; background: rgba(255,255,255,0.1); }
+        .d-head { text-align: center; margin-bottom: 16px; }
+        .d-head .avatar { width: 56px; height: 56px; border-radius: 16px; font-size: 1.4rem; margin: 0 auto 10px; }
+        .d-name { font-size: 1.2rem; font-weight: 800; color: white; }
+        .d-id { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+        .d-saldo-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 16px; }
+        .d-saldo { font-size: 2.8rem; font-weight: 900; color: #fcd34d; text-shadow: 0 0 30px rgba(245, 158, 11, 0.3); line-height: 1.15; }
+        .d-mini { display: flex; justify-content: center; gap: 18px; font-size: 0.78rem; font-weight: 700; margin-top: 4px; }
+        .d-mini .g { color: #34d399; } .d-mini .s { color: #fca5a5; } .d-mini .c { color: var(--text-muted); }
+        .d-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 18px 0; }
+        .qform {
+            display: none; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 16px; margin-bottom: 18px; animation: fadeUp 0.3s ease-out;
+        }
+        .qform.open { display: block; }
+        .qform h3 { margin: 0 0 12px; font-size: 0.85rem; color: white; }
+
+        /* CADUCIDAD */
+        .d-expiry { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 10px; }
+        .d-expiry.pronto, .mv-caduca.pronto { color: #fbbf24; opacity: 1; }
+        .mv-caduca { font-weight: 600; opacity: 0.75; }
+        .switch-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 14px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;
+        }
+        .switch-row b { color: white; font-size: 0.9rem; display: block; }
+        .switch-row small { color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
+        .switch {
+            width: 50px; height: 28px; border-radius: 14px; flex-shrink: 0; cursor: pointer; position: relative;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.12); transition: 0.25s;
+        }
+        .switch::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+            background: #94a3b8; transition: 0.25s;
+        }
+        .switch.on { background: rgba(251, 191, 36, 0.3); border-color: rgba(251, 191, 36, 0.5); }
+        .switch.on::after { left: 25px; background: #fbbf24; }
+        .switch:disabled { cursor: not-allowed; opacity: 0.6; }
+        .cfg-hint { font-size: 0.7rem; color: rgba(148,163,184,0.75); margin-top: 6px; line-height: 1.5; }
+        .cfg-preview {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px;
+            padding: 14px 16px; margin: 18px 0; font-size: 0.8rem; color: #cbd5e1; line-height: 1.7;
+        }
+        .cfg-preview b { color: white; }
+        .cfg-preview .alerta { color: #fca5a5; }
+        .cfg-preview .aviso { color: #fbbf24; }
+        .cfg-lock {
+            text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 600;
+            background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; border: 1px dashed rgba(255,255,255,0.1);
+        }
+        input.inp:disabled { opacity: 0.55; cursor: not-allowed; }
+
+        /* BARRA FIJA + SELECTOR DE MODO (Liga dorado / Tarjetas morado) */
+        .sticky-top {
+            position: sticky; top: 0; z-index: 60; margin: -20px -16px 8px; padding: 14px 16px 16px;
+            background: linear-gradient(to bottom, rgba(9, 9, 14, 0.94) 75%, rgba(9, 9, 14, 0));
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .tb-home {
+            width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06); transition: 0.2s;
+        }
+        .tb-home:hover { background: rgba(255,255,255,0.06); transform: translateX(-2px); }
+        .tb-title {
+            flex: 1; font-weight: 900; font-size: 1.15rem; letter-spacing: -0.3px;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .tb-user {
+            display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
+            padding: 5px 6px 5px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: #cbd5e1;
+        }
+        .tb-user button {
+            background: rgba(255,255,255,0.05); border: none; color: var(--text-muted); cursor: pointer;
+            font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px;
+        }
+        .tb-user button:hover { color: white; background: rgba(255,255,255,0.1); }
+
+        .modos {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px;
+            background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+        .modo {
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-width: 0;
+            border-radius: 15px; border: 1px solid transparent; background: transparent; cursor: pointer;
+            font-family: 'Poppins', sans-serif; text-align: left; color: var(--text-muted); transition: all 0.25s;
+        }
+        .modo:hover { background: rgba(255,255,255,0.04); }
+        .modo-ico {
+            width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0; font-size: 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.04); transition: all 0.25s; filter: grayscale(0.6);
+        }
+        .modo-txt { min-width: 0; }
+        .modo-txt b { display: block; font-size: 1rem; font-weight: 800; color: #cbd5e1; transition: color 0.25s; }
+        .modo-txt small {
+            display: block; font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .modo.active .modo-ico { filter: none; transform: scale(1.05); }
+        .modo.liga.active {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.06));
+            border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 6px 24px rgba(251, 191, 36, 0.15);
+        }
+        .modo.liga.active b { color: #fbbf24; }
+        .modo.liga.active .modo-ico { background: rgba(251, 191, 36, 0.18); }
+        .modo.tarjetas.active {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.22), rgba(139, 92, 246, 0.06));
+            border-color: rgba(192, 132, 252, 0.5); box-shadow: 0 6px 24px rgba(139, 92, 246, 0.22);
+        }
+        .modo.tarjetas.active b { color: #d8b4fe; }
+        .modo.tarjetas.active .modo-ico { background: rgba(192, 132, 252, 0.2); }
+        .modo.cashback.active {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(16, 185, 129, 0.06));
+            border-color: rgba(52, 211, 153, 0.5); box-shadow: 0 6px 24px rgba(16, 185, 129, 0.18);
+        }
+        .modo.cashback.active b { color: #6ee7b7; }
+        .modo.cashback.active .modo-ico { background: rgba(52, 211, 153, 0.18); }
+        .modo-vista { animation: fadeUp 0.35s ease-out; }
+
+        /* Pestañas de la liga + botón de caducidad */
+        .subnav { display: flex; gap: 8px; align-items: stretch; margin-bottom: 16px; }
+        .subnav .shop-tabs { flex: 1; margin-bottom: 0; }
+        .icon-btn {
+            width: 46px; flex-shrink: 0; border-radius: 14px; cursor: pointer; font-size: 1.1rem;
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); transition: 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(251, 191, 36, 0.3); }
+
+        /* Modo tarjetas: acentos morados */
+        body.modo-tarjetas .stat-value { color: #e9d5ff; }
+        body.modo-tarjetas .scan-panel { border-color: rgba(192, 132, 252, 0.25); box-shadow: 0 10px 30px rgba(139, 92, 246, 0.12); }
+        body.modo-tarjetas .scan input.inp:focus { border-color: #c084fc; box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.15); }
+
+        /* Modo cashback: acentos verdes */
+        body.modo-cashback .stat-value { color: #a7f3d0; }
+        body.modo-cashback .scan-panel { border-color: rgba(52, 211, 153, 0.25); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.12); }
+        body.modo-cashback .scan input.inp:focus { border-color: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15); }
+        #cliBuscar { font-family: inherit; letter-spacing: 0.3px; }
+        .cli-nuevo {
+            display: block; width: 100%; max-width: 420px; margin: 12px auto 0; cursor: pointer;
+            background: rgba(52, 211, 153, 0.06); border: 1px dashed rgba(52, 211, 153, 0.35); color: #6ee7b7;
+            border-radius: 12px; padding: 10px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 600; transition: 0.2s;
+        }
+        .cli-nuevo b { color: #a7f3d0; }
+        .cli-nuevo:hover { background: rgba(52, 211, 153, 0.14); border-style: solid; }
+        .cli-sug { max-width: 420px; margin: 10px auto 0; background: rgba(0,0,0,0.3); border-radius: 14px; padding: 4px 10px; }
+        .cli-sug:empty { display: none; }
+        .gcard.cli { background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(245, 158, 11, 0.16)); border-color: rgba(52, 211, 153, 0.35); }
+        .gcard.cli::after { background: rgba(52, 211, 153, 0.1); }
+        .gcard.cli .gcard-brand { color: #6ee7b7; }
+        .gcard-nombre { font-size: 1.2rem; font-weight: 800; color: white; margin-top: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .gcard.cli .gcard-saldo { margin-top: 2px; color: #6ee7b7; text-shadow: 0 0 30px rgba(52, 211, 153, 0.3); }
+        .cli-compra {
+            max-width: 420px; margin: 0 auto 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: 16px; padding: 16px;
+        }
+        .cli-compra h3 { margin: 0 0 12px; font-size: 0.9rem; color: white; }
+        .cli-compra .row2 { margin-bottom: 0; }
+        .cb-gana { color: #34d399; }
+        .cli-extra { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 420px; margin: 0 auto 14px; }
+
+        /* TARJETAS REGALO */
+        .tar-eliminar {
+            display: block; margin: 22px auto 0; background: transparent; cursor: pointer;
+            border: 1px dashed rgba(239, 68, 68, 0.3); color: #fca5a5; border-radius: 10px;
+            padding: 8px 14px; font-family: inherit; font-size: 0.7rem; font-weight: 700; transition: 0.2s;
+        }
+        .tar-eliminar:hover { background: rgba(239, 68, 68, 0.12); border-style: solid; }
+        .tar-nueva-ticket, .tar-reimprimir {
+            display: block; width: 100%; max-width: 420px; margin: 12px auto 0; cursor: pointer;
+            background: rgba(192, 132, 252, 0.06); border: 1px dashed rgba(192, 132, 252, 0.35); color: #d8b4fe;
+            border-radius: 12px; padding: 10px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 600; transition: 0.2s;
+        }
+        .tar-nueva-ticket b { color: #e9d5ff; }
+        .tar-nueva-ticket:hover, .tar-reimprimir:hover { background: rgba(192, 132, 252, 0.14); border-style: solid; }
+        .tar-reimprimir { margin: 18px auto 0; font-size: 0.72rem; font-weight: 700; padding: 8px 14px; width: auto; }
+        .scan { display: flex; gap: 8px; }
+        .scan input.inp { font-size: 1.05rem; font-weight: 700; letter-spacing: 1.5px; font-family: 'Courier New', monospace; }
+        .gcard {
+            position: relative; overflow: hidden; max-width: 420px; margin: 20px auto 18px;
+            border-radius: 20px; padding: 20px 22px; min-height: 150px; box-sizing: border-box;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.25));
+            border: 1px solid rgba(251, 191, 36, 0.35); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: fadeUp 0.35s ease-out;
+        }
+        .gcard::after {
+            content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%;
+            right: -70px; top: -90px; background: rgba(251, 191, 36, 0.12); pointer-events: none;
+        }
+        .gcard.nueva { background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,255,255,0.2); }
+        .gcard.vacia { filter: grayscale(0.7); }
+        .gcard-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .gcard-brand { font-size: 0.68rem; font-weight: 800; letter-spacing: 2px; color: #fcd34d; text-transform: uppercase; }
+        .gcard-pill {
+            font-size: 0.62rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 20px; background: rgba(0,0,0,0.35); color: #cbd5e1;
+        }
+        .gcard-pill.ok { color: #34d399; } .gcard-pill.off { color: #fbbf24; }
+        .gcard-saldo { font-size: 2.6rem; font-weight: 900; color: #fcd34d; line-height: 1.1; margin-top: 18px; text-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
+        .gcard-sub { font-size: 0.72rem; color: #cbd5e1; font-weight: 600; margin-top: 2px; }
+        .gcard-code { font-family: 'Courier New', monospace; font-size: 1rem; letter-spacing: 2px; color: #e2e8f0; margin-top: 14px; word-break: break-all; }
+        .tar-acciones { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; max-width: 420px; margin: 0 auto 14px; }
+        .sbtn-ticket {
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0;
+            padding-left: 14px; padding-right: 14px;
+        }
+        .sbtn-ticket:hover { border-color: rgba(192, 132, 252, 0.45); background: rgba(192, 132, 252, 0.1); }
+        .sbtn-ticket.recien { border-color: #c084fc; box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.18); animation: latido 1.6s ease-in-out 3; }
+        @keyframes latido { 50% { box-shadow: 0 0 0 7px rgba(192, 132, 252, 0.05); } }
+        .ticket-chk {
+            display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; cursor: pointer; user-select: none;
+            font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+        }
+        .ticket-chk input { width: 16px; height: 16px; accent-color: #c084fc; cursor: pointer; }
+        .tar-form { max-width: 420px; margin: 0 auto 18px; }
+        .tar-historial { max-width: 420px; margin: 0 auto; }
+        .mono { font-family: 'Courier New', monospace; letter-spacing: 1px; }
+        .mv-icon.carga { background: rgba(16, 185, 129, 0.15); }
+
+        /* MOVIMIENTOS (mismo estilo que el wallet del jugador) */
+        .mv { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .mv:last-child { border-bottom: none; }
+        .mv-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; }
+        .mv-icon.ingreso { background: rgba(16, 185, 129, 0.15); }
+        .mv-icon.gasto { background: rgba(239, 68, 68, 0.15); }
+        .mv-icon.caducado { background: rgba(148, 163, 184, 0.12); }
+        .mv-info { flex: 1; min-width: 0; }
+        .mv-concepto { font-size: 0.85rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mv-fecha { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 1px; }
+        .mv-monto { font-weight: 800; font-size: 0.92rem; flex-shrink: 0; }
+        .mv-monto.positivo { color: #34d399; } .mv-monto.negativo { color: #fca5a5; } .mv-monto.caducado { color: var(--text-muted); }
+        .mv-del {
+            width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; cursor: pointer; font-size: 0.75rem;
+            background: transparent; border: 1px solid transparent; color: #475569; transition: 0.2s;
+        }
+        .mv-del:hover { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+        .mv-dev {
+            flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 0.68rem; font-weight: 700;
+            padding: 6px 10px; border-radius: 8px; transition: 0.2s; white-space: nowrap;
+            background: rgba(52, 211, 153, 0.1); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+        .mv-dev:hover { background: rgba(52, 211, 153, 0.2); }
+        .mv-ok { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; padding: 0 4px; }
+
+        /* DIÁLOGO (confirmar / nuevo jugador) */
+        .dialog-overlay {
+            position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .dialog-overlay.open { display: flex; }
+        .dialog {
+            background: #0f0f15; border: 1px solid rgba(255,255,255,0.08); padding: 26px; border-radius: 20px;
+            max-width: 420px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.6); animation: scaleUp 0.25s ease-out;
+        }
+        .dialog h3 { margin: 0 0 10px; color: white; font-size: 1.05rem; }
+        .dialog .dmsg { color: #cbd5e1; font-size: 0.85rem; line-height: 1.6; margin-bottom: 20px; }
+        .dialog .dbtns { display: flex; gap: 10px; justify-content: flex-end; }
+        .dialog .resumen-jornada { max-height: 220px; overflow-y: auto; margin-top: 10px; }
+        .dialog .resumen-jornada div { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+        /* LOGIN */
+        .login { max-width: 420px; margin: 20px auto 0; }
+        .login p { color: var(--text-muted); font-size: 0.8rem; margin: 0 0 18px; line-height: 1.6; }
+
+        .spinner {
+            width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #fbbf24;
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin: 30px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none;
+            font-weight: 600; font-size: 0.85rem; margin-bottom: 16px; padding: 8px 16px;
+            background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
+        }
+        .back-link:hover { color: white; background: rgba(255,255,255,0.05); }
+
+        @media (max-width: 600px) {
+            .shop-header h1 { font-size: 1.8rem; }
+            .shop-tab { font-size: 0.72rem; padding: 10px 2px; }
+            .tb-title { font-size: 1rem; }
+            .modos { gap: 4px; padding: 5px; }
+            .modo { flex-direction: column; text-align: center; padding: 8px 4px; gap: 4px; }
+            .modo-ico { width: 36px; height: 36px; font-size: 1.25rem; border-radius: 11px; }
+            .modo-txt b { font-size: 0.85rem; }
+            .modo-txt small { font-size: 0.6rem; white-space: normal; line-height: 1.3; }
+            .solo-ancho { display: none; }
+            .gcard-saldo { font-size: 2.2rem; }
+            .stat-value { font-size: 1.15rem; }
+            .panel { padding: 16px; }
+            .row2 { grid-template-columns: 1fr; }
+            .toolbar { flex-wrap: wrap; }
+            .toolbar .search { flex-basis: 100%; }
+            .toolbar select.inp, .toolbar .sbtn { flex: 1; }
+            .jhead { display: none; }
+            .jrow {
+                grid-template-columns: 1fr 1fr 40px; padding: 10px; border-radius: 12px;
+                background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.04);
+            }
+            .jrow .picker { grid-column: 1 / -1; }
+            .sheet-overlay { padding: 0; align-items: flex-end; }
+            .sheet { max-height: 92vh; border-radius: 24px 24px 0 0; }
+            .sheet-body { padding: 20px 16px 30px; }
+            .d-saldo { font-size: 2.3rem; }
+            .d-actions .sbtn { padding: 12px 6px; font-size: 0.68rem; }
+        }
+    </style>
+    <style>
+        /* ===== Ajustes propios de Fidelización ===== */
+        .modos { grid-template-columns: 1fr 1fr; }
+        .shop-header h1, .tb-title {
+            background: linear-gradient(to right, #6ee7b7, #34d399);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .shop-header h1 { filter: drop-shadow(0 0 20px rgba(52, 211, 153, 0.3)); }
+        .shop-badge { background: rgba(52, 211, 153, 0.12); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.25); }
+        .modo.torneos.active {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.22), rgba(59, 130, 246, 0.06));
+            border-color: rgba(96, 165, 250, 0.5); box-shadow: 0 6px 24px rgba(59, 130, 246, 0.2);
+        }
+        .modo.torneos.active b { color: #93c5fd; }
+        .modo.torneos.active .modo-ico { background: rgba(96, 165, 250, 0.2); }
+        .proximamente { text-align: center; padding: 34px 26px; }
+        .proximamente .pr-ico { font-size: 2.6rem; margin-bottom: 8px; }
+        .proximamente h2 { font-size: 1.1rem; margin-bottom: 10px; }
+        .proximamente p { color: #cbd5e1; font-size: 0.85rem; line-height: 1.6; max-width: 480px; margin: 0 auto 14px; }
+        .proximamente h2 { text-align: center; }
+        .proximamente ul { text-align: left; max-width: 460px; margin: 0 auto 18px; color: #cbd5e1; font-size: 0.82rem; line-height: 1.6; }
+        .proximamente li {
+            display: block; padding: 10px 14px; margin-bottom: 8px; border-radius: 12px;
+            background: rgba(0,0,0,0.3); border-left: 3px solid rgba(96, 165, 250, 0.5);
+        }
+        .proximamente li:hover { transform: none; border-left-color: rgba(96, 165, 250, 0.5); }
+        .proximamente li b { color: #93c5fd; }
+        .pr-tag {
+            display: inline-block; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            color: #93c5fd; background: rgba(96, 165, 250, 0.12); border: 1px solid rgba(96, 165, 250, 0.3);
+            padding: 5px 14px; border-radius: 20px;
+        }
+        @media (max-width: 600px) {
+            .modo { flex-direction: row; text-align: left; padding: 8px 10px; gap: 9px; }
+            .modo-txt b { font-size: 0.9rem; }
+            .modo-txt small { font-size: 0.64rem; line-height: 1.35; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-auras">
+    <div class="aura aura-1"></div>
+    <div class="aura aura-2"></div>
+    <div class="aura aura-3"></div>
+</div>
+
+<div class="shop">
+    <!-- CABECERA GRANDE: solo en la pantalla de entrada -->
+    <div id="hero">
+        <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
+        <div class="shop-header">
+            <div class="shop-badge">🏪 Panel de la tienda</div>
+            <h1>🐼 Fidelización</h1>
+            <p>Cashback de clientes y ventajas para jugadores</p>
+        </div>
+    </div>
+
+    <!-- BARRA FIJA: usuario + selector de modo (siempre a mano al hacer scroll) -->
+    <div class="sticky-top" id="barraApp" style="display:none">
+        <div class="topbar">
+            <a href="index.html" class="tb-home" title="Volver al Hub">🐼</a>
+            <div class="tb-title">Fidelización</div>
+            <div class="tb-user">
+                <span>👤 <span id="staffName"></span></span>
+                <button onclick="cerrarSesion()">Salir</button>
+            </div>
+        </div>
+        <div class="modos">
+            <button class="modo cashback" data-modo="cashback">
+                <span class="modo-ico">💸</span>
+                <span class="modo-txt"><b>Cashback</b><small id="modoCliInfo">Compras de clientes</small></span>
+            </button>
+            <button class="modo torneos" data-modo="torneos">
+                <span class="modo-ico">🎮</span>
+                <span class="modo-txt"><b>Torneos</b><small>Ventajas para jugadores</small></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================== LOGIN ===================== -->
+    <div id="vistaLogin" class="panel login" style="display:none">
+        <h2>🔒 Entrar</h2>
+        <p>Usa la clave de la tienda (la misma que en la Wallet). Se guarda en este dispositivo para no tener que ponerla cada vez.</p>
+        <form onsubmit="entrar(event)">
+            <div class="field">
+                <label>Tu nombre</label>
+                <input class="inp" type="text" id="loginNombre" placeholder="Ej: Ana" autocomplete="name" required>
+            </div>
+            <div class="field">
+                <label>Clave de la tienda</label>
+                <input class="inp" type="password" id="loginClave" placeholder="••••••••" required>
+            </div>
+            <button class="sbtn sbtn-gold sbtn-full" id="btnEntrar" type="submit" style="margin-top: 6px">Entrar</button>
+        </form>
+    </div>
+
+    <!-- ===================== APP ===================== -->
+    <div id="vistaApp" style="display:none">
+
+      <!-- ===================== MODO CASHBACK ===================== -->
+      <div id="modoCashback" class="modo-vista" style="display:none">
+        <div class="panel scan-panel">
+            <h2>💸 Busca al cliente</h2>
+            <form class="scan" onsubmit="event.preventDefault(); buscarClienteCaja()">
+                <input class="inp" type="text" id="cliBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
+                <button class="sbtn sbtn-gold" type="submit">Buscar</button>
+            </form>
+            <div class="cfg-hint">Con el lector: escanea el carné. Sin carné: escribe el nombre y elige de la lista.</div>
+            <div class="cli-sug" id="cliSugerencias"></div>
+            <button type="button" class="cli-nuevo" onclick="dialogoNuevoCliente()">➕ ¿Cliente nuevo? <b>Darlo de alta</b></button>
+            <div id="cliResultado"></div>
+        </div>
+
+        <div class="panel">
+            <div class="stats" style="animation: none">
+                <div class="stat"><div class="stat-value" id="cliTotal">—</div><div class="stat-label">Clientes</div></div>
+                <div class="stat"><div class="stat-value" id="cliPendiente">—</div><div class="stat-label">Saldo pendiente</div></div>
+                <div class="stat"><div class="stat-value" id="cliPct">—</div><div class="stat-label">Cashback</div></div>
+            </div>
+            <div class="toolbar">
+                <div class="search"><input class="inp" type="text" id="cliFiltro" placeholder="Buscar cliente..." autocomplete="off"></div>
+                <button class="sbtn sbtn-ghost" onclick="abrirConfigCashback()">⚙️ Cashback</button>
+                <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('cashback')">⏳ Caducidad</button>
+            </div>
+            <div id="listaClientes"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- ===================== MODO TORNEOS (en preparación) ===================== -->
+      <div id="modoTorneos" class="modo-vista" style="display:none">
+        <div class="panel proximamente">
+            <div class="pr-ico">🎮</div>
+            <h2>Torneos y ventajas para jugadores</h2>
+            <p>Aquí irá la parte de fidelización para los jugadores de TCG. Todavía está por decidir; la idea de partida es:</p>
+            <ul>
+                <li><b>Fichar en los torneos</b> escaneando el mismo carné del cashback.</li>
+                <li><b>Jugador activo</b>: quien haya jugado hace poco tiene precio especial en TCG, y el panel os lo avisa al escanear su carné.</li>
+                <li><b>Sellos o puntos</b> por asistencia, con premio cada X torneos.</li>
+            </ul>
+            <div class="pr-tag">En preparación</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- FICHA DEL JUGADOR -->
+<div class="sheet-overlay" id="sheet" onclick="if (event.target === this) cerrarFicha()">
+    <div class="sheet">
+        <button class="sheet-close" onclick="cerrarFicha()">✕</button>
+        <div class="sheet-body" id="sheetBody"></div>
+    </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="dialog-overlay" id="dialog">
+    <div class="dialog" id="dialogBox"></div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script>
+    // URL de la implementación de Apps Script (la misma que en wallet.html)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywfB7iHCneKZE-_S5TdslmxKPuJm1cVwO_TwXK4vVImd74czpiPj5njWLG8Xftt7yOtA/exec';
+    // Dirección pública del wallet de los jugadores (los links serán WALLET_URL?t=token)
+    const WALLET_URL = 'https://oddsu.github.io/Timer-Panda/wallet';
+
+    const MENSAJES = {
+        jugador_no_encontrado: 'Ese jugador no existe en la hoja',
+        tipo_invalido: 'Tipo de movimiento no válido',
+        monto_invalido: 'La cantidad tiene que ser mayor que 0',
+        falta_concepto: 'Ponle nombre a la jornada',
+        sin_premios: 'No hay ningún premio con cantidad',
+        falta_nombre: 'Escribe el nombre del jugador',
+        fila_cambiada: 'La hoja ha cambiado mientras tanto. Recarga e inténtalo otra vez',
+        accion_desconocida: 'El script está desactualizado: despliega una nueva versión',
+        solo_admin: 'Solo se puede cambiar entrando con la clave de admin',
+        codigo_invalido: 'Código no válido: tiene que tener al menos 4 caracteres',
+        tarjeta_ya_activa: 'Esta tarjeta ya está activada',
+        tarjeta_no_activa: 'Esta tarjeta no está activada',
+        saldo_insuficiente: 'La tarjeta no tiene saldo suficiente',
+        cliente_no_encontrado: 'Ese cliente no existe en la hoja',
+        carne_en_uso: 'Ese carné ya es de otro cliente',
+        con_saldo_invalido: 'Lo pagado con saldo no puede ser más que la compra',
+        porcentaje_invalido: 'El cashback tiene que estar entre 0 y 50%',
+        minimo_invalido: 'La compra mínima no es válida',
+        meses_invalidos: 'Los meses tienen que estar entre 1 y 36',
+        fecha_invalida: 'Elige una fecha de inicio válida',
+        permisos_disparador: 'Guardado, pero Google necesita permiso para el repaso nocturno. Abre la hoja y usa 🐼 Wallet → Apuntar caducidades ahora una vez',
+        interno: 'Error en el script de Google'
+    };
+
+    // =========================================
+    //  SESIÓN Y API
+    // =========================================
+    function getData(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
+    }
+    function setData(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+
+    let sesion = getData('panda_tienda_sesion', null);
+    let jugadores = [];
+
+    async function api(accion, datos = {}) {
+        // Sin cabeceras: así el navegador no hace la petición previa (CORS) que Apps Script no admite
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ ...datos, accion, clave: sesion.clave, por: sesion.por })
+        });
+        if (!res.ok) throw new Error('No se pudo conectar con Google');
+        const data = await res.json();
+        if (data.error === 'no_autorizado') {
+            cerrarSesion();
+            throw new Error('Clave de la tienda incorrecta');
+        }
+        return data;
+    }
+
+    function errorDe(data) {
+        return MENSAJES[data.error] || data.detalle || data.error;
+    }
+
+
+    // =========================================
+    //  ENTRADA, MODOS (CASHBACK / TORNEOS)
+    // =========================================
+    // La sesión es la misma que la de la Wallet: si ya entraste allí, aquí entras directo.
+    async function entrar(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnEntrar');
+        sesion = {
+            por: document.getElementById('loginNombre').value.trim(),
+            clave: document.getElementById('loginClave').value.trim()
+        };
+        cargando(btn, true, 'Comprobando...');
+        try {
+            const data = await api('clientes');
+            if (data.error) throw new Error(errorDe(data));
+            setData('panda_tienda_sesion', sesion);
+            mostrarApp();
+            toast(`👋 Hola, ${sesion.por}`, 'success');
+        } catch (err) {
+            toast('⛔ ' + err.message, 'danger');
+        } finally {
+            cargando(btn, false);
+        }
+    }
+
+    function cerrarSesion() {
+        sesion = null;
+        try { localStorage.removeItem('panda_tienda_sesion'); } catch {}
+        document.getElementById('vistaApp').style.display = 'none';
+        document.getElementById('barraApp').style.display = 'none';
+        document.getElementById('hero').style.display = '';
+        document.getElementById('vistaLogin').style.display = 'block';
+        document.body.classList.remove('modo-cashback');
+        cerrarFicha();
+    }
+
+    function mostrarApp() {
+        document.getElementById('hero').style.display = 'none';
+        document.getElementById('vistaLogin').style.display = 'none';
+        document.getElementById('barraApp').style.display = '';
+        document.getElementById('vistaApp').style.display = 'block';
+        document.getElementById('staffName').textContent = sesion.por;
+        const modo = getData('panda_fidelizacion_modo', 'cashback');
+        setModo(modo);
+        if (modo !== 'cashback') cargarClientes(true); // para el resumen del botón
+    }
+
+    function setModo(modo) {
+        if (modo !== 'torneos') modo = 'cashback';
+        document.body.classList.toggle('modo-cashback', modo === 'cashback');
+        document.querySelectorAll('.modo').forEach(b => b.classList.toggle('active', b.dataset.modo === modo));
+        document.getElementById('modoCashback').style.display = modo === 'cashback' ? '' : 'none';
+        document.getElementById('modoTorneos').style.display = modo === 'torneos' ? '' : 'none';
+        setData('panda_fidelizacion_modo', modo);
+        if (modo === 'cashback') {
+            cargarClientes();
+            setTimeout(() => document.getElementById('cliBuscar').focus(), 50);
+        }
+    }
+
+    document.querySelectorAll('.modo').forEach(b => {
+        b.onclick = () => {
+            if (b.classList.contains('active')) return;
+            setModo(b.dataset.modo);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+    });
+
+    // Hoja deslizante (ajustes y caducidad)
+    let ficha = null;
+    function cerrarFicha() {
+        document.getElementById('sheet').classList.remove('open');
+        ficha = null;
+    }
+
+    // "⏳ 7.00€ caducan el 29 oct 2026": la parte del saldo que caduca antes
+    function avisoCaducidad(movs) {
+        const proximo = movs.filter(m => m.caduca && m.restante > 0)
+            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
+        if (!proximo) return '';
+        const pronto = diasHasta(proximo.caduca) <= 30 ? 'pronto' : '';
+        return `<div class="d-expiry ${pronto}">⏳ ${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>`;
+    }
+
+    // Lo que escribe el lector: sin espacios y en mayúsculas
+    function normalizarCodigo(c) { return String(c || '').trim().toUpperCase().replace(/\s+/g, ''); }
+
+    // =========================================
+    //  CONFIGURACIÓN DE LA CADUCIDAD
+    // =========================================
+    let cadSimulacion = null;
+    let cadTimer = null;
+    let cadAmbito = 'liga';
+
+    const TEXTOS_CADUCIDAD = {
+        liga: {
+            titulo: 'Caducidad del saldo de la liga',
+            sub: 'Cada premio caduca unos meses después de ganarlo.<br>Los canjes gastan primero el saldo más antiguo.',
+            hint: 'Los premios ganados antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.',
+            ejemplo: 'un premio ganado hoy',
+            quien: n => `${n} jugador${n === 1 ? '' : 'es'}`
+        },
+        tarjetas: {
+            titulo: 'Caducidad de las tarjetas regalo',
+            sub: 'Cada carga caduca unos meses después de hacerse.<br>Las compras gastan primero el saldo más antiguo.',
+            hint: 'Las tarjetas cargadas antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.',
+            ejemplo: 'una tarjeta activada hoy',
+            quien: n => `${n} tarjeta${n === 1 ? '' : 's'}`
+        },
+        cashback: {
+            titulo: 'Caducidad del cashback',
+            sub: 'Cada cashback caduca unos meses después de ganarlo.<br>Las compras con saldo gastan primero el más antiguo.',
+            hint: 'El cashback ganado antes de esta fecha cuenta sus meses desde aquí, para que nadie pierda saldo de golpe.',
+            ejemplo: 'un cashback ganado hoy',
+            quien: n => `${n} cliente${n === 1 ? '' : 's'}`
+        }
+    };
+
+    async function abrirCaducidad(ambito = 'liga') {
+        cadAmbito = ambito;
+        ficha = null;
+        document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
+        document.getElementById('sheet').classList.add('open');
+        try {
+            const data = await api('caducidad', { ambito });
+            if (data.error) throw new Error(errorDe(data));
+            pintarCaducidad(data.config, data.esAdmin);
+        } catch (err) {
+            cerrarFicha();
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function pintarCaducidad(cfg, esAdmin) {
+        const off = esAdmin ? '' : 'disabled';
+        const tx = TEXTOS_CADUCIDAD[cadAmbito];
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">${cadAmbito === 'tarjetas' ? '🎁' : cadAmbito === 'cashback' ? '💸' : '⏳'}</div>
+                <div class="d-name">${tx.titulo}</div>
+                <div class="d-id" style="margin-top: 4px">${tx.sub}</div>
+            </div>
+
+            <div class="switch-row">
+                <span><b>Caducidad activada</b><small>Ahora mismo está ${cfg.activa ? 'activada' : 'desactivada'}</small></span>
+                <button type="button" class="switch ${cfg.activa ? 'on' : ''}" id="cadActiva" ${off} aria-label="Activar caducidad"></button>
+            </div>
+
+            <div class="row2">
+                <div class="field">
+                    <label>Meses de validez</label>
+                    <input class="inp" type="number" id="cadMeses" min="1" max="36" step="1" value="${cfg.meses}" ${off}>
+                    ${esAdmin ? `<div class="chips" id="cadChips">
+                        <button type="button" class="chip" data-v="3">3</button>
+                        <button type="button" class="chip" data-v="4">4</button>
+                        <button type="button" class="chip" data-v="6">6</button>
+                        <button type="button" class="chip" data-v="12">12</button>
+                        <button type="button" class="chip" data-v="24">24</button>
+                    </div>` : ''}
+                </div>
+                <div class="field">
+                    <label>Empieza a contar desde</label>
+                    <input class="inp" type="date" id="cadInicio" value="${cfg.inicio}" ${off}>
+                    <div class="cfg-hint">${tx.hint}</div>
+                </div>
+            </div>
+
+            <div class="cfg-preview" id="cadPreview">Calculando...</div>
+
+            ${esAdmin
+                ? '<button class="sbtn sbtn-gold sbtn-full" id="btnCad" onclick="guardarCaducidad()">💾 Guardar</button>'
+                : '<div class="cfg-lock">🔒 Para cambiarlo, entra al panel con la clave de admin</div>'}
+        `;
+
+        if (esAdmin) {
+            document.getElementById('cadActiva').onclick = e => { e.currentTarget.classList.toggle('on'); simularCaducidad(); };
+            document.getElementById('cadMeses').addEventListener('input', simularCaducidad);
+            document.getElementById('cadInicio').addEventListener('change', simularCaducidad);
+            document.getElementById('cadChips').addEventListener('click', e => {
+                const c = e.target.closest('.chip');
+                if (!c) return;
+                document.getElementById('cadMeses').value = c.dataset.v;
+                simularCaducidad();
+            });
+        }
+        simularCaducidad();
+    }
+
+    function leerFormCaducidad() {
+        return {
+            ambito: cadAmbito,
+            activa: document.getElementById('cadActiva').classList.contains('on'),
+            meses: document.getElementById('cadMeses').value,
+            inicio: document.getElementById('cadInicio').value
+        };
+    }
+
+    // Calcula (sin guardar) qué pasaría con estos ajustes. Espera a que se deje de teclear.
+    function simularCaducidad() {
+        clearTimeout(cadTimer);
+        cadSimulacion = null;
+        const el = document.getElementById('cadPreview');
+        if (!el) return;
+        el.innerHTML = 'Calculando...';
+        cadTimer = setTimeout(async () => {
+            const cfg = leerFormCaducidad();
+            const tx = TEXTOS_CADUCIDAD[cfg.ambito];
+            try {
+                const r = await api('simular_caducidad', cfg);
+                if (!document.getElementById('cadPreview')) return; // se cerró mientras tanto
+                if (r.error) { el.innerHTML = `<span class="alerta">⚠️ ${esc(errorDe(r))}</span>`; return; }
+                cadSimulacion = r;
+                el.innerHTML = !cfg.activa
+                    ? `Con la caducidad <b>desactivada</b> el saldo no caduca nunca.<br>
+                       <span style="opacity:0.75">Si la activas así, ${tx.ejemplo} caducaría el ${fecha(r.ejemplo)}.</span>`
+                    : `📅 ${mayuscula(tx.ejemplo)} caduca el <b>${fecha(r.ejemplo)}</b>.<br>`
+                      + (r.caducaYa > 0
+                          ? `<span class="alerta">⏳ Caducarían <b class="alerta">${euros(r.caducaYa)}</b> de ${tx.quien(r.jugadoresYa)} en cuanto guardes.</span><br>`
+                          : '✅ Nadie pierde saldo al guardar.<br>')
+                      + (r.proximos30 > 0
+                          ? `<span class="aviso">⚠️ ${euros(r.proximos30)} más caducarán en los próximos 30 días.</span>`
+                          : 'Nada más caduca en los próximos 30 días.');
+            } catch (err) {
+                el.innerHTML = `<span class="alerta">⚠️ ${esc(err.message)}</span>`;
+            }
+        }, 450);
+    }
+
+    async function guardarCaducidad() {
+        const cfg = leerFormCaducidad();
+        if (cfg.activa && cadSimulacion && cadSimulacion.caducaYa > 0) {
+            const ok = await confirmar({
+                titulo: '⏳ ¿Seguro?',
+                html: `Al guardar caducarán <b style="color:#fca5a5">${euros(cadSimulacion.caducaYa)}</b> de
+                       ${TEXTOS_CADUCIDAD[cfg.ambito].quien(cadSimulacion.jugadoresYa)} y se apuntarán en la hoja.<br><br>
+                       Si no es lo que quieres, retrasa la fecha de inicio.`,
+                ok: 'Guardar igualmente', peligro: true
+            });
+            if (!ok) return;
+        }
+        const btn = document.getElementById('btnCad');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const r = await api('guardar_caducidad', cfg);
+            if (r.error === 'permisos_disparador') { toast('⚠️ ' + errorDe(r), 'warning'); }
+            else if (r.error) throw new Error(errorDe(r));
+            else toast(r.config.activa
+                ? `✅ Caducidad activada: ${r.config.meses} meses` + (r.apuntadas ? ` · ${r.apuntadas} caducidades apuntadas` : '')
+                : '✅ Caducidad desactivada', 'success');
+            if (cfg.ambito === 'tarjetas') cargarTarjetas();
+            else if (cfg.ambito === 'cashback') { cargarClientes(); if (clienteActual) abrirCliente({ cliente_id: clienteActual.cliente.cliente_id }); }
+            else cargarResumen();
+            if (r.config) pintarCaducidad(r.config, true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    function mayuscula(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    // =========================================
+    //  RESGUARDO PARA LA IMPRESORA DE TICKETS
+    // =========================================
+    // Cambia estos textos si quieres otra cabecera o pie en el ticket
+    const TICKET = {
+        tienda: 'PANDA',
+        sub: 'Tarjeta regalo',
+        pie: 'Presenta tu tarjeta en tienda para usar el saldo.<br>¡Gracias por tu visita!',
+        ancho: 80   // ancho del papel en mm (80 o 58)
+    };
+
+    function cabeceraTicket() {
+        return `<div class="c">
+                <div class="tienda">${esc(TICKET.tienda)}</div>
+                <div class="sub">${esc(TICKET.sub)}</div>
+            </div>
+            <div class="sep"></div>`;
+    }
+
+    // "12.00€ caducan el 15 mar 2027" para la parte del saldo que caduca antes
+    function caducaTicket(d) {
+        const proximo = d.movimientos.filter(m => m.caduca && m.restante > 0)
+            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
+        if (!proximo || d.saldo <= 0.005) return '';
+        return proximo.restante >= d.saldo - 0.005
+            ? `<div class="caduca">Válida hasta el ${fecha(proximo.caduca)}</div>`
+            : `<div class="caduca">${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>`;
+    }
+
+    // Documento completo del ticket (80 mm) con todos los estilos de los dos diseños
+    function htmlTicket(titulo, cuerpo) {
+        return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
+            <style>
+                @page { margin: 0; }
+                * { box-sizing: border-box; }
+                html, body { width: ${TICKET.ancho}mm; }
+                body { margin: 0; padding: 3mm 4mm 6mm; font-family: Arial, Helvetica, sans-serif; color: #000; background: #fff; font-size: 10pt; }
+                .c { text-align: center; }
+                .tienda { font-size: 17pt; font-weight: 900; letter-spacing: 3px; }
+                .sub { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; }
+                .sep { border-top: 1px dashed #000; margin: 3mm 0; }
+                .fila { display: flex; justify-content: space-between; gap: 3mm; margin: 1mm 0; }
+                .fila span:first-child { overflow-wrap: anywhere; }
+                .nota { font-size: 8pt; margin-top: 1mm; }
+                .lbl { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+                .saldo { font-size: 26pt; font-weight: 900; margin: 1mm 0; }
+                .caduca { font-size: 9pt; font-weight: 700; margin-top: 1mm; }
+                .mono { font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: 1px; }
+                .pie { font-size: 8pt; margin-top: 4mm; line-height: 1.4; }
+                .barras { margin: 3mm 0 1mm; }
+                .barras svg, .tj-barras svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+                .barras rect, .tj-barras rect { shape-rendering: crispEdges; }
+                .codigo { font-family: 'Courier New', monospace; font-size: 12pt; font-weight: 700; letter-spacing: 2px; }
+
+                /* Diseño "tarjeta": doble borde redondeado con el logo del panda */
+                .tj { border: 0.5mm solid #000; border-radius: 4mm; padding: 1mm; }
+                .tj-dentro { border: 0.25mm solid #000; border-radius: 3mm; padding: 3mm 3.5mm 2.5mm; }
+                .tj-top { display: flex; justify-content: space-between; align-items: center; }
+                .tj-marca { font-size: 14pt; font-weight: 900; letter-spacing: 3px; line-height: 1; }
+                .tj-tipo { font-size: 6.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1mm; }
+                .tj-logo { width: 16.5mm; height: auto; display: block; }
+                .tj-saldo { font-size: 24pt; font-weight: 900; text-align: center; margin: 2mm 0 1.5mm; line-height: 1; }
+                .tj-caduca { font-size: 7.5pt; font-weight: 700; text-align: center; margin: -0.5mm 0 1.5mm; }
+                .tj-codigo { font-family: 'Courier New', monospace; font-size: 10pt; font-weight: 700; letter-spacing: 2.5px; text-align: center; margin-top: 1mm; }
+            </style></head><body>${cuerpo}</body></html>`;
+    }
+
+    // Imprime el ticket desde un marco invisible, sin tocar la página del panel
+    function imprimirTicket(titulo, cuerpo) {
+        const html = htmlTicket(titulo, cuerpo);
+        let marco = document.getElementById('marcoTicket');
+        if (marco) marco.remove();
+        marco = document.createElement('iframe');
+        marco.id = 'marcoTicket';
+        marco.setAttribute('aria-hidden', 'true');
+        marco.style.cssText = 'position:fixed; right:0; bottom:0; width:0; height:0; border:0; opacity:0; pointer-events:none';
+        document.body.appendChild(marco);
+        const doc = marco.contentDocument;
+        doc.open();
+        doc.write(html);
+        doc.close();
+        setTimeout(() => {
+            // La "página" mide justo lo que ocupa el ticket: así no sale papel en blanco al final
+            const alto = Math.ceil(doc.body.getBoundingClientRect().height * 25.4 / 96) + 2;
+            const pagina = doc.createElement('style');
+            pagina.textContent = `@page { size: ${TICKET.ancho}mm ${alto}mm; margin: 0; }`;
+            doc.head.appendChild(pagina);
+            try { marco.contentWindow.focus(); marco.contentWindow.print(); }
+            catch { toast('⚠️ No se pudo abrir la impresión', 'danger'); }
+            const btn = document.getElementById('tarCodigo');
+            if (btn) btn.focus();
+        }, 200);
+    }
+
+    // =========================================
+    //  TARJETAS EN TICKET (sin tarjeta física)
+    // =========================================
+    let tarjetaEnTicket = null;   // código generado que todavía no se ha activado
+    let jsBarcodeCargando = null;
+
+    // Logo del panda en blanco y negro (vectorial, para que salga nítido en la impresora)
+    const LOGO_PANDA = `<svg class="tj-logo" viewBox="525 595 870 740" aria-hidden="true">
+        <path fill="#000" d="M612,832 C590,802 584,772 597,745 C614,706 645,692 685,692 C716,692 738,709 753,729 Z"/>
+        <path fill="#000" d="M1085,689 C1105,649 1140,621 1176,612 C1216,602 1262,608 1296,630 C1331,653 1353,692 1360,731 C1367,776 1349,816 1329,829 Z"/>
+        <ellipse cx="960" cy="1000" rx="423" ry="312" transform="rotate(-4 960 1000)" fill="#fff" stroke="#000" stroke-width="22"/>
+        <path fill="#000" d="M786,1021 C810,1015 822,996 820,980 C818,962 805,948 790,938 C770,926 750,928 732,934 C700,944 672,975 662,1010 C652,1045 660,1080 680,1097 C692,1108 704,1110 715,1108 C727,1104 737,1086 738,1076 C742,1045 744,1035 755,1028 C764,1023 776,1023 786,1021 Z"/>
+        <path fill="#000" d="M1020,999 C1050,996 1068,1018 1074,1045 C1080,1075 1082,1095 1100,1104 C1118,1112 1135,1104 1148,1090 C1165,1073 1178,1048 1178,1025 C1176,980 1158,935 1125,905 C1100,883 1070,872 1040,872 C1005,872 980,885 963,908 C945,932 938,952 952,975 C966,998 988,1004 1020,999 Z"/>
+        <path fill="#000" d="M860,1135 C860,1115 875,1111 895,1110 C910,1109 920,1118 927,1130 C935,1145 918,1163 896,1164 C876,1165 860,1155 860,1135 Z"/>
+    </svg>`;
+
+    // Diseño del ticket de las tarjetas: "tarjeta" (con el panda) o "basico" (solo texto). Se guarda en este ordenador.
+    function disenoTicket() {
+        try {
+            const v = localStorage.getItem('panda_ticket_diseno');
+            if (v === 'tarjeta' || v === 'basico') return v;
+        } catch {}
+        return 'tarjeta';
+    }
+
+    // El generador de códigos de barras solo se descarga cuando hace falta
+    function cargarJsBarcode() {
+        if (window.JsBarcode) return Promise.resolve();
+        if (!jsBarcodeCargando) jsBarcodeCargando = new Promise((ok, ko) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js';
+            s.onload = ok;
+            s.onerror = () => { jsBarcodeCargando = null; s.remove(); ko(new Error('No se pudo cargar el código de barras. ¿Hay internet?')); };
+            document.head.appendChild(s);
+        });
+        return jsBarcodeCargando;
+    }
+
+    async function codigoDeBarras(codigo, alto) {
+        await cargarJsBarcode();
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        try {
+            JsBarcode(svg, codigo, { format: 'CODE128', width: 2, height: alto, margin: 0, displayValue: false, background: '#ffffff', lineColor: '#000000' });
+        } catch {
+            throw new Error('Este código no se puede convertir en código de barras');
+        }
+        return svg.outerHTML;
+    }
+
+
+    // =========================================
+    //  CASHBACK DE CLIENTES
+    // =========================================
+    let clientes = [];
+    let clienteActual = null;
+    let cashbackCfg = { porcentaje: 4, minimo: 0 };
+    let cashbackAdmin = false;
+
+    // silencioso: al entrar al panel se carga de fondo y no debe dar la lata si algo falla
+    async function cargarClientes(silencioso = false) {
+        try {
+            const data = await api('clientes');
+            if (data.error) throw new Error(errorDe(data));
+            clientes = data.clientes || [];
+            cashbackCfg = data.config || cashbackCfg;
+            cashbackAdmin = !!data.esAdmin;
+            const pendiente = clientes.reduce((s, c) => s + c.saldo, 0);
+            document.getElementById('cliTotal').textContent = clientes.length;
+            document.getElementById('cliPendiente').textContent = euros(pendiente);
+            document.getElementById('cliPct').textContent = pct(cashbackCfg.porcentaje);
+            document.getElementById('modoCliInfo').textContent = `${clientes.length} cliente${clientes.length === 1 ? '' : 's'} · ${pct(cashbackCfg.porcentaje)}`;
+            pintarListaClientes();
+        } catch (err) {
+            if (!silencioso && document.body.classList.contains('modo-cashback')) toast('⚠️ ' + err.message, 'danger');
+            document.getElementById('listaClientes').innerHTML = '';
+        }
+    }
+
+    function pct(n) { return String(Number(n) || 0).replace('.', ',') + '%'; }
+
+    function filaCliente(c) {
+        return `
+            <div class="prow" data-id="${esc(c.cliente_id)}">
+                <div class="avatar">${esc(inicial(c.nombre))}</div>
+                <div class="pinfo">
+                    <div class="pname">${esc(c.nombre)}</div>
+                    <div class="pmeta">${euros(c.ganado)} de cashback · ${c.ultimo ? 'última compra ' + fecha(c.ultimo) : 'sin compras'}</div>
+                </div>
+                <div class="psaldo ${c.saldo > 0.005 ? '' : 'cero'}">${euros(c.saldo)}</div>
+            </div>`;
+    }
+
+    function pintarListaClientes() {
+        const q = normalizar(document.getElementById('cliFiltro').value);
+        const lista = clientes
+            .filter(c => normalizar(c.nombre + ' ' + c.carne).includes(q))
+            .sort((a, b) => String(b.ultimo).localeCompare(String(a.ultimo)) || a.nombre.localeCompare(b.nombre));
+        const cont = document.getElementById('listaClientes');
+        cont.innerHTML = lista.length ? lista.map(filaCliente).join('')
+            : `<div class="empty"><div class="ico">${q ? '🔍' : '💸'}</div>${q ? 'Ningún cliente coincide' : 'Aún no hay clientes. Da de alta el primero'}</div>`;
+    }
+
+    // Sugerencias mientras se escribe un nombre en el buscador de arriba
+    function pintarSugerencias() {
+        const texto = document.getElementById('cliBuscar').value.trim();
+        const cont = document.getElementById('cliSugerencias');
+        if (texto.length < 2 || /^\d+$/.test(texto)) { cont.innerHTML = ''; return; }
+        const q = normalizar(texto);
+        const lista = clientes.filter(c => normalizar(c.nombre).includes(q)).slice(0, 6);
+        cont.innerHTML = lista.length ? lista.map(filaCliente).join('')
+            : `<div class="picker-empty">Nadie se llama así. ¿Es un <a href="#" onclick="event.preventDefault(); dialogoNuevoCliente()" style="color:#6ee7b7">cliente nuevo</a>?</div>`;
+    }
+
+    document.getElementById('cliBuscar').addEventListener('input', pintarSugerencias);
+    document.getElementById('cliFiltro').addEventListener('input', pintarListaClientes);
+    ['cliSugerencias', 'listaClientes'].forEach(id => document.getElementById(id).addEventListener('click', e => {
+        const fila = e.target.closest('.prow');
+        if (!fila) return;
+        abrirCliente({ cliente_id: fila.dataset.id });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }));
+
+    // Enter en el buscador: carné escaneado, o el único cliente que encaja con el nombre
+    function buscarClienteCaja() {
+        const input = document.getElementById('cliBuscar');
+        const texto = input.value.trim();
+        if (!texto) { input.focus(); return; }
+        const codigo = normalizarCodigo(texto);
+        const porCarne = clientes.find(c => c.carne === codigo);
+        if (porCarne) return abrirCliente({ cliente_id: porCarne.cliente_id });
+        const q = normalizar(texto);
+        const exactos = clientes.filter(c => normalizar(c.nombre) === q);
+        const parecidos = clientes.filter(c => normalizar(c.nombre).includes(q));
+        if (exactos.length === 1) return abrirCliente({ cliente_id: exactos[0].cliente_id });
+        if (parecidos.length === 1) return abrirCliente({ cliente_id: parecidos[0].cliente_id });
+        if (/^\d{4,}$/.test(codigo)) return abrirCliente({ carne: codigo }); // carné que aún no está en la lista cargada
+        pintarSugerencias();
+        if (!parecidos.length) toast('🔍 No hay ningún cliente así', 'warning');
+    }
+
+    async function abrirCliente(datos) {
+        const res = document.getElementById('cliResultado');
+        res.innerHTML = '<div class="spinner"></div>';
+        try {
+            const data = await api('cliente', datos);
+            if (data.error) throw new Error(errorDe(data));
+            document.getElementById('cliBuscar').value = '';
+            document.getElementById('cliSugerencias').innerHTML = '';
+            pintarCliente(data);
+        } catch (err) {
+            res.innerHTML = '';
+            toast('⚠️ ' + err.message, 'danger');
+            document.getElementById('cliBuscar').select();
+        }
+    }
+
+    function pintarCliente(d, recien = '') {
+        clienteActual = d;
+        if (d.config) cashbackCfg = d.config;
+        const c = d.cliente;
+        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+        const res = document.getElementById('cliResultado');
+        res.innerHTML = `
+            <div class="gcard cli">
+                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Cliente</span>
+                    <span class="gcard-pill ok">${pct(cashbackCfg.porcentaje)} cashback</span></div>
+                <div class="gcard-nombre">${esc(c.nombre)}</div>
+                <div class="gcard-saldo">${euros(d.saldo)}</div>
+                <div class="gcard-sub">${euros(d.ganado)} de cashback en total${c.alta ? ' · cliente desde ' + fecha(c.alta) : ''}</div>
+                <div class="gcard-code">${esc(c.carne)}</div>
+            </div>
+            <div style="text-align:center; margin-top:-8px; margin-bottom: 14px">${avisoCaducidad(movs)}</div>
+
+            <div class="cli-compra">
+                <h3>🛒 Apuntar compra</h3>
+                <div class="row2">
+                    <div class="field">
+                        <label>Importe de la compra (€)</label>
+                        <input class="inp" type="number" id="cliImporte" min="0" step="0.01" inputmode="decimal" placeholder="0">
+                    </div>
+                    <div class="field">
+                        <label>Pagado con saldo (€)</label>
+                        <input class="inp" type="number" id="cliConSaldo" min="0" step="0.01" inputmode="decimal" placeholder="0" ${d.saldo > 0.005 ? '' : 'disabled'}>
+                        ${d.saldo > 0.005 ? `<div class="chips"><button type="button" class="chip" id="cliTodoSaldo">Usar todo (${euros(d.saldo)})</button></div>` : ''}
+                    </div>
+                </div>
+                <div class="saldo-preview" id="cliPreview" style="margin: 12px 0"></div>
+                <button class="sbtn sbtn-gold sbtn-full" id="btnCliCompra" onclick="enviarCompraCliente()">💾 Apuntar compra</button>
+            </div>
+
+            <div class="cli-extra">
+                <button class="sbtn sbtn-ghost sbtn-sm ${recien === 'carne' ? 'sbtn-ticket recien' : ''}" onclick="imprimirCarne()">🎫 Imprimir carné</button>
+            </div>
+
+            <div class="tar-historial">
+                <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
+                ${movs.length ? movs.map((m, i) => pintarMovCliente(m, i)).join('') : '<div class="empty" style="padding: 18px 10px">Todavía no tiene compras</div>'}
+                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarCliente()">🗑️ Eliminar cliente (solo para pruebas o errores)</button>' : ''}
+            </div>`;
+
+        const importe = document.getElementById('cliImporte');
+        const conSaldo = document.getElementById('cliConSaldo');
+        importe.addEventListener('input', previewCompraCliente);
+        conSaldo.addEventListener('input', previewCompraCliente);
+        [importe, conSaldo].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') enviarCompraCliente(); }));
+        const todo = document.getElementById('cliTodoSaldo');
+        if (todo) todo.onclick = () => {
+            const imp = parseFloat(importe.value) || 0;
+            conSaldo.value = (imp > 0 ? Math.min(imp, d.saldo) : d.saldo).toFixed(2);
+            previewCompraCliente();
+        };
+        res.querySelectorAll('.mv-del').forEach(btn => { btn.onclick = () => anularMovCliente(movs[Number(btn.dataset.i)]); });
+        previewCompraCliente();
+        importe.focus();
+    }
+
+    function pintarMovCliente(m, i) {
+        const cb = m.tipo === 'cashback';
+        const caducado = m.tipo === 'caducado';
+        let caduca = '';
+        if (m.caduca && m.restante > 0) {
+            const texto = m.restante < m.monto ? `quedan ${euros(m.restante)}, caducan el ${fecha(m.caduca)}` : `caduca el ${fecha(m.caduca)}`;
+            caduca = ` · <span class="mv-caduca ${diasHasta(m.caduca) <= 30 ? 'pronto' : ''}">${texto}</span>`;
+        }
+        return `
+            <div class="mv">
+                <div class="mv-icon ${cb ? 'carga' : caducado ? 'caducado' : 'gasto'}">${cb ? '💸' : caducado ? '⏳' : '🛒'}</div>
+                <div class="mv-info">
+                    <div class="mv-concepto">${esc(m.concepto || '—')}</div>
+                    <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}${caduca}</div>
+                </div>
+                <div class="mv-monto ${cb ? 'positivo' : caducado ? 'caducado' : 'negativo'}">${cb ? '+' : '-'}${euros(m.monto)}</div>
+                ${m.fila ? `<button class="mv-del" title="Borrar este movimiento (por ejemplo, si devuelven la compra)" data-i="${i}">🗑️</button>` : ''}
+            </div>`;
+    }
+
+    // Lo mismo que calcula el script, para enseñarlo antes de guardar
+    function calcularCompra() {
+        const importe = Math.round((parseFloat(document.getElementById('cliImporte').value) || 0) * 100) / 100;
+        const conSaldo = Math.round((parseFloat(document.getElementById('cliConSaldo').value) || 0) * 100) / 100;
+        const base = Math.max(0, Math.round((importe - conSaldo) * 100) / 100);
+        const cashback = base > 0 && base >= cashbackCfg.minimo - 0.005 ? Math.round(base * cashbackCfg.porcentaje) / 100 : 0;
+        return { importe, conSaldo, base, cashback };
+    }
+
+    function previewCompraCliente() {
+        const el = document.getElementById('cliPreview');
+        const saldo = clienteActual.saldo;
+        const { importe, conSaldo, base, cashback } = calcularCompra();
+        if (!(importe > 0)) {
+            el.innerHTML = `Cada compra devuelve un <b class="cb-gana">${pct(cashbackCfg.porcentaje)}</b>`
+                + (cashbackCfg.minimo > 0 ? ` a partir de ${euros(cashbackCfg.minimo)}` : '');
+            return;
+        }
+        if (conSaldo > saldo + 0.005) { el.innerHTML = `<span class="neg">Solo tiene ${euros(saldo)} de saldo</span>`; return; }
+        if (conSaldo > importe + 0.005) { el.innerHTML = '<span class="neg">Pagado con saldo no puede ser más que la compra</span>'; return; }
+        const despues = saldo - conSaldo + cashback;
+        el.innerHTML = (cashback > 0
+                ? `Cashback: <b class="cb-gana">+${euros(cashback)}</b>`
+                : `<span>Sin cashback${base > 0 && cashbackCfg.minimo > 0 ? ` (mínimo ${euros(cashbackCfg.minimo)})` : ''}</span>`)
+            + ` <span>·</span> Saldo: <b>${euros(saldo)}</b> <span>→</span> <b class="${despues >= saldo ? 'up' : 'down'}">${euros(despues)}</b>`;
+    }
+
+    async function enviarCompraCliente() {
+        const { importe, conSaldo, base, cashback } = calcularCompra();
+        if (!(importe > 0)) { toast('⚠️ Pon el importe de la compra', 'warning'); document.getElementById('cliImporte').focus(); return; }
+        if (conSaldo > clienteActual.saldo + 0.005) { toast(`⚠️ Solo tiene ${euros(clienteActual.saldo)} de saldo`, 'warning'); return; }
+        if (conSaldo > importe + 0.005) { toast('⚠️ Pagado con saldo no puede ser más que la compra', 'warning'); return; }
+        if (!(cashback > 0) && !(conSaldo > 0)) {
+            toast(`⚠️ Esta compra no genera cashback${cashbackCfg.minimo > 0 ? ` (mínimo ${euros(cashbackCfg.minimo)})` : ''}`, 'warning');
+            return;
+        }
+        const btn = document.getElementById('btnCliCompra');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const data = await api('cliente_compra', { cliente_id: clienteActual.cliente.cliente_id, importe, con_saldo: conSaldo });
+            if (data.error === 'saldo_insuficiente') throw new Error(`Solo tiene ${euros(data.saldo)} de saldo`);
+            if (data.error === 'bajo_minimo') throw new Error(`Esta compra no genera cashback (mínimo ${euros(data.minimo)})`);
+            if (data.error) throw new Error(errorDe(data));
+            toast((data.cashback > 0 ? `💸 +${euros(data.cashback)} de cashback` : `🛒 ${euros(conSaldo)} pagados con saldo`)
+                + ` · saldo ${euros(data.saldo)}`, 'success');
+            pintarCliente(data);
+            cargarClientes(true);
+            document.getElementById('cliBuscar').focus(); // listo para el siguiente cliente
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    async function anularMovCliente(m) {
+        const quedaria = clienteActual.saldo + (m.tipo === 'cashback' ? -m.monto : m.monto);
+        const ok = await confirmar({
+            titulo: '🗑️ ¿Borrar este movimiento?',
+            html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
+                   Úsalo para corregir errores o si el cliente devuelve la compra. Se borrará de la hoja.`
+                + (quedaria < -0.005 ? `<br><br>⚠️ Ya ha gastado ese saldo: le quedará en <b style="color:#fca5a5">${euros(quedaria)}</b>
+                   (lo descontará de su próximo cashback).` : ''),
+            ok: 'Borrar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_anular', { fila: m.fila, cliente_id: clienteActual.cliente.cliente_id, concepto: m.concepto, monto: m.monto });
+            if (data.error) throw new Error(errorDe(data));
+            pintarCliente(data);
+            toast('🗑️ Movimiento borrado', 'warning');
+            cargarClientes(true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // Solo admin: quita el cliente y todo su historial de la hoja
+    async function eliminarCliente() {
+        const d = clienteActual;
+        const ok = await confirmar({
+            titulo: '🗑️ Eliminar cliente',
+            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> y sus
+                   ${d.movimientos.length} movimiento${d.movimientos.length === 1 ? '' : 's'} de la hoja. <b style="color:#fca5a5">No se puede deshacer.</b>`
+                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : '')
+                + '<br><br>Úsalo solo para clientes de prueba o dados de alta por error. Su carné dejará de funcionar.',
+            ok: 'Eliminar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
+            clienteActual = null;
+            document.getElementById('cliResultado').innerHTML = '';
+            document.getElementById('cliBuscar').focus();
+            cargarClientes(true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function dialogoNuevoCliente() {
+        const escrito = document.getElementById('cliBuscar').value.trim();
+        const nombreInicial = escrito && !/^\d+$/.test(escrito) ? nombrePropio(escrito) : '';
+        abrirDialogo(`
+            <h3>➕ Nuevo cliente</h3>
+            <div class="dmsg">Se le crea un carné con código de barras para escanearlo en caja.</div>
+            <div class="field"><label>Nombre</label><input class="inp" type="text" id="nuevoCliNombre" placeholder="Ej: Marta Gómez" value="${esc(nombreInicial)}"></div>
+            <div class="field"><label>Carné físico (opcional)</label>
+                <input class="inp mono" type="text" id="nuevoCliCarne" placeholder="Escanéalo si ya tiene uno impreso" autocomplete="off">
+                <div class="cfg-hint">Si lo dejas vacío se genera uno nuevo para imprimirlo en ticket.</div></div>
+            <label class="ticket-chk"><input type="checkbox" id="nuevoCliImprimir" checked> 🎫 Imprimir el carné al crearlo</label>
+            <div class="dbtns" style="margin-top: 18px">
+                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
+                <button class="sbtn sbtn-gold" id="btnNuevoCli">Crear</button>
+            </div>`);
+        const input = document.getElementById('nuevoCliNombre');
+        const carne = document.getElementById('nuevoCliCarne');
+        const imprimirChk = document.getElementById('nuevoCliImprimir');
+        carne.addEventListener('input', () => { if (carne.value.trim()) imprimirChk.checked = false; });
+        input.focus();
+        const crear = async () => {
+            const nombre = nombrePropio(input.value);
+            if (!nombre) { input.focus(); return; }
+            const codigo = carne.value;
+            const imprimir = imprimirChk.checked;
+            const parecido = clientes.find(c => normalizar(c.nombre) === normalizar(nombre));
+            if (parecido) {
+                cerrarDialogo(false);
+                const seguir = await confirmar({
+                    titulo: '🤔 Ya existe alguien así',
+                    html: `Ya hay un cliente llamado <b style="color:white">${esc(parecido.nombre)}</b>. ¿Crear otro igualmente?`,
+                    ok: 'Crear otro'
+                });
+                if (!seguir) return;
+            }
+            const btn = document.getElementById('btnNuevoCli');
+            if (btn) cargando(btn, true, 'Creando...');
+            try {
+                const data = await api('cliente_nuevo', { nombre, carne: codigo });
+                if (data.error) throw new Error(errorDe(data));
+                cerrarDialogo(true);
+                toast(`🎉 ${data.cliente.nombre} dado de alta`, 'success');
+                document.getElementById('cliBuscar').value = '';
+                document.getElementById('cliSugerencias').innerHTML = '';
+                pintarCliente(data, imprimir ? '' : 'carne');
+                cargarClientes(true);
+                if (imprimir) imprimirCarne(true);
+            } catch (err) {
+                toast('⚠️ ' + err.message, 'danger');
+                if (btn) cargando(btn, false);
+            }
+        };
+        document.getElementById('btnNuevoCli').onclick = crear;
+        [input, carne].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') crear(); }));
+    }
+
+    // ---- Carné del cliente en ticket (mismo diseño elegido en 🧾 Tickets) ----
+    async function cuerpoCarneTicket(c, diseno) {
+        const legible = String(c.carne).replace(/(.{4})(?=.)/g, '$1 ');
+        const pie = `<div class="c pie"><b>Enseña este carné en cada compra</b><br>y acumula un ${pct(cashbackCfg.porcentaje)} en saldo para gastar en tienda.<br>¡Gracias por tu visita!</div>`;
+        if (diseno === 'basico') {
+            return `
+                ${cabeceraTicket().replace(esc(TICKET.sub), 'Carné de cliente')}
+                <div class="c">
+                    <div class="lbl">Cliente</div>
+                    <div class="saldo" style="font-size: 18pt">${esc(c.nombre)}</div>
+                </div>
+                <div class="c barras">${await codigoDeBarras(c.carne, 70)}</div>
+                <div class="c codigo">${esc(legible)}</div>
+                <div class="sep"></div>
+                ${pie}`;
+        }
+        return `
+            <div class="tj"><div class="tj-dentro">
+                <div class="tj-top">
+                    <div><div class="tj-marca">${esc(TICKET.tienda)}</div><div class="tj-tipo">Carné de cliente</div></div>
+                    ${LOGO_PANDA}
+                </div>
+                <div class="tj-saldo" style="font-size: 16pt; overflow-wrap: anywhere">${esc(c.nombre)}</div>
+                <div class="tj-barras">${await codigoDeBarras(c.carne, 42)}</div>
+                <div class="tj-codigo">${esc(legible)}</div>
+            </div></div>
+            <div class="sep"></div>
+            ${pie}`;
+    }
+
+    async function imprimirCarne() {
+        if (!clienteActual) return;
+        try {
+            imprimirTicket('Carné de cliente', await cuerpoCarneTicket(clienteActual.cliente, disenoTicket()));
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // ---- Ajustes del cashback (solo admin) ----
+    async function abrirConfigCashback() {
+        ficha = null;
+        const off = cashbackAdmin ? '' : 'disabled';
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">💸</div>
+                <div class="d-name">Ajustes del cashback</div>
+                <div class="d-id" style="margin-top: 4px">Lo que devuelve cada compra al saldo del cliente.<br>Independiente de los premios de la liga.</div>
+            </div>
+            <div class="row2">
+                <div class="field">
+                    <label>Cashback (%)</label>
+                    <input class="inp" type="number" id="cbPct" min="0" max="50" step="0.5" value="${cashbackCfg.porcentaje}" ${off}>
+                    ${cashbackAdmin ? `<div class="chips" id="cbChips">
+                        <button type="button" class="chip" data-v="3">3%</button>
+                        <button type="button" class="chip" data-v="4">4%</button>
+                        <button type="button" class="chip" data-v="5">5%</button>
+                    </div>` : ''}
+                </div>
+                <div class="field">
+                    <label>Compra mínima (€)</label>
+                    <input class="inp" type="number" id="cbMin" min="0" step="1" value="${cashbackCfg.minimo}" ${off}>
+                    <div class="cfg-hint">Las compras más pequeñas no dan cashback. 0 = todas.</div>
+                </div>
+            </div>
+            <div class="cfg-preview" id="cbPreview"></div>
+            ${cashbackAdmin
+                ? '<button class="sbtn sbtn-gold sbtn-full" id="btnCb" onclick="guardarConfigCashback()">💾 Guardar</button>'
+                : '<div class="cfg-lock">🔒 Para cambiarlo, entra al panel con la clave de admin</div>'}`;
+        document.getElementById('sheet').classList.add('open');
+        const pintar = () => {
+            const p = parseFloat(document.getElementById('cbPct').value) || 0;
+            const m = parseFloat(document.getElementById('cbMin').value) || 0;
+            const ej = n => euros(Math.round(n * p) / 100);
+            document.getElementById('cbPreview').innerHTML =
+                `Con un <b>${pct(p)}</b>: una compra de 10€ da <b>${10 >= m ? ej(10) : '0.00€'}</b>, de 25€ da <b>${25 >= m ? ej(25) : '0.00€'}</b> y de 100€ da <b>${ej(100)}</b>.`
+                + (m > 0 ? `<br>Las compras de menos de ${euros(m)} no dan cashback.` : '');
+        };
+        document.getElementById('cbPct').addEventListener('input', pintar);
+        document.getElementById('cbMin').addEventListener('input', pintar);
+        const chips = document.getElementById('cbChips');
+        if (chips) chips.addEventListener('click', e => {
+            const c = e.target.closest('.chip');
+            if (!c) return;
+            document.getElementById('cbPct').value = c.dataset.v;
+            pintar();
+        });
+        pintar();
+    }
+
+    async function guardarConfigCashback() {
+        const btn = document.getElementById('btnCb');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const data = await api('cashback_guardar', {
+                porcentaje: document.getElementById('cbPct').value,
+                minimo: document.getElementById('cbMin').value || 0
+            });
+            if (data.error) throw new Error(errorDe(data));
+            cashbackCfg = data.config;
+            toast(`✅ Cashback: ${pct(data.config.porcentaje)}`, 'success');
+            cerrarFicha();
+            cargarClientes();
+            if (clienteActual) pintarCliente(clienteActual);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    // "marta gómez" → "Marta Gómez"
+    function nombrePropio(s) {
+        return s.trim().replace(/\s+/g, ' ').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+    }
+
+    // =========================================
+    //  DIÁLOGOS
+    // =========================================
+    let resolverDialogo = null;
+
+    function abrirDialogo(html) {
+        document.getElementById('dialogBox').innerHTML = html;
+        document.getElementById('dialog').classList.add('open');
+    }
+
+    function cerrarDialogo(valor) {
+        document.getElementById('dialog').classList.remove('open');
+        if (resolverDialogo) { resolverDialogo(valor); resolverDialogo = null; }
+    }
+
+    function confirmar({ titulo, html, ok = 'Confirmar', peligro = false }) {
+        abrirDialogo(`
+            <h3>${titulo}</h3>
+            <div class="dmsg">${html}</div>
+            <div class="dbtns">
+                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
+                <button class="sbtn ${peligro ? 'sbtn-ko' : 'sbtn-gold'}" onclick="cerrarDialogo(true)">${ok}</button>
+            </div>`);
+        return new Promise(r => { resolverDialogo = r; });
+    }
+
+    // =========================================
+    //  UTILIDADES
+    // =========================================
+    function esIngreso(tipo) { return tipo === 'ingreso' || tipo === 'premio'; }
+    function diasHasta(s) {
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        return Math.round((new Date(s) - hoy) / 86400000);
+    }
+    function euros(n) { return (Number(n) || 0).toFixed(2) + '€'; }
+    function inicial(nombre) { return (String(nombre).trim()[0] || '?').toUpperCase(); }
+    function normalizar(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
+    function esc(s) {
+        return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function hoyISO() {
+        const d = new Date(), p = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    }
+    function fecha(s) {
+        const d = new Date(s);
+        return isNaN(d) ? String(s || '') : d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    function cargando(btn, on, texto) {
+        if (on) { btn.dataset.txt = btn.innerHTML; btn.innerHTML = '⏳ ' + texto; btn.disabled = true; }
+        else if (btn.dataset.txt) { btn.innerHTML = btn.dataset.txt; btn.disabled = false; }
+    }
+    function toast(msg, tipo = '') {
+        const cont = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast ' + tipo;
+        t.textContent = msg;
+        cont.appendChild(t);
+        setTimeout(() => { t.style.transition = '0.3s'; t.style.transform = 'translateX(100%)'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
+    }
+
+    // =========================================
+    //  ARRANQUE
+    // =========================================
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        if (document.getElementById('dialog').classList.contains('open')) cerrarDialogo(false);
+        else cerrarFicha();
+    });
+
+    if (sesion) mostrarApp();
+    else document.getElementById('vistaLogin').style.display = 'block';
+</script>
+
+</body>
+</html>
