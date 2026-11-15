@@ -30,16 +30,6 @@
             filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
         }
         .shop-header p { color: var(--text-muted); font-size: 0.85rem; margin: 6px 0 0; }
-        .staff-chip {
-            display: inline-flex; align-items: center; gap: 10px; margin-top: 14px;
-            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
-            padding: 6px 8px 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: #cbd5e1;
-        }
-        .staff-chip button {
-            background: rgba(255,255,255,0.05); border: none; color: var(--text-muted); cursor: pointer;
-            font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px;
-        }
-        .staff-chip button:hover { color: white; background: rgba(255,255,255,0.1); }
 
         /* PANELES */
         .panel {
@@ -281,8 +271,85 @@
         }
         input.inp:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        /* En la pestaña de tarjetas no se muestra nada de la liga */
-        body.modo-tarjetas .solo-liga { display: none !important; }
+        /* BARRA FIJA + SELECTOR DE MODO (Liga dorado / Tarjetas morado) */
+        .sticky-top {
+            position: sticky; top: 0; z-index: 60; margin: -20px -16px 8px; padding: 14px 16px 16px;
+            background: linear-gradient(to bottom, rgba(9, 9, 14, 0.94) 75%, rgba(9, 9, 14, 0));
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .tb-home {
+            width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06); transition: 0.2s;
+        }
+        .tb-home:hover { background: rgba(255,255,255,0.06); transform: translateX(-2px); }
+        .tb-title {
+            flex: 1; font-weight: 900; font-size: 1.15rem; letter-spacing: -0.3px;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .tb-user {
+            display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
+            padding: 5px 6px 5px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: #cbd5e1;
+        }
+        .tb-user button {
+            background: rgba(255,255,255,0.05); border: none; color: var(--text-muted); cursor: pointer;
+            font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px;
+        }
+        .tb-user button:hover { color: white; background: rgba(255,255,255,0.1); }
+
+        .modos {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px;
+            background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+        .modo {
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-width: 0;
+            border-radius: 15px; border: 1px solid transparent; background: transparent; cursor: pointer;
+            font-family: 'Poppins', sans-serif; text-align: left; color: var(--text-muted); transition: all 0.25s;
+        }
+        .modo:hover { background: rgba(255,255,255,0.04); }
+        .modo-ico {
+            width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0; font-size: 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.04); transition: all 0.25s; filter: grayscale(0.6);
+        }
+        .modo-txt { min-width: 0; }
+        .modo-txt b { display: block; font-size: 1rem; font-weight: 800; color: #cbd5e1; transition: color 0.25s; }
+        .modo-txt small {
+            display: block; font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .modo.active .modo-ico { filter: none; transform: scale(1.05); }
+        .modo.liga.active {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.06));
+            border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 6px 24px rgba(251, 191, 36, 0.15);
+        }
+        .modo.liga.active b { color: #fbbf24; }
+        .modo.liga.active .modo-ico { background: rgba(251, 191, 36, 0.18); }
+        .modo.tarjetas.active {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.22), rgba(139, 92, 246, 0.06));
+            border-color: rgba(192, 132, 252, 0.5); box-shadow: 0 6px 24px rgba(139, 92, 246, 0.22);
+        }
+        .modo.tarjetas.active b { color: #d8b4fe; }
+        .modo.tarjetas.active .modo-ico { background: rgba(192, 132, 252, 0.2); }
+        .modo-vista { animation: fadeUp 0.35s ease-out; }
+
+        /* Pestañas de la liga + botón de caducidad */
+        .subnav { display: flex; gap: 8px; align-items: stretch; margin-bottom: 16px; }
+        .subnav .shop-tabs { flex: 1; margin-bottom: 0; }
+        .icon-btn {
+            width: 46px; flex-shrink: 0; border-radius: 14px; cursor: pointer; font-size: 1.1rem;
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); transition: 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(251, 191, 36, 0.3); }
+
+        /* Modo tarjetas: acentos morados */
+        body.modo-tarjetas .stat-value { color: #e9d5ff; }
+        body.modo-tarjetas .scan-panel { border-color: rgba(192, 132, 252, 0.25); box-shadow: 0 10px 30px rgba(139, 92, 246, 0.12); }
+        body.modo-tarjetas .scan input.inp:focus { border-color: #c084fc; box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.15); }
 
         /* TARJETAS REGALO */
         .tar-eliminar {
@@ -384,7 +451,13 @@
 
         @media (max-width: 600px) {
             .shop-header h1 { font-size: 1.8rem; }
-            .shop-tab { font-size: 0.7rem; padding: 10px 2px; }
+            .shop-tab { font-size: 0.72rem; padding: 10px 2px; }
+            .tb-title { font-size: 1rem; }
+            .modo { padding: 8px 10px; gap: 9px; }
+            .modo-ico { width: 36px; height: 36px; font-size: 1.25rem; border-radius: 11px; }
+            .modo-txt b { font-size: 0.9rem; }
+            .modo-txt small { font-size: 0.64rem; white-space: normal; line-height: 1.35; }
+            .solo-ancho { display: none; }
             .gcard-saldo { font-size: 2.2rem; }
             .stat-value { font-size: 1.15rem; }
             .panel { padding: 16px; }
@@ -415,16 +488,35 @@
 </div>
 
 <div class="shop">
-    <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
+    <!-- CABECERA GRANDE: solo en la pantalla de entrada -->
+    <div id="hero">
+        <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
+        <div class="shop-header">
+            <div class="shop-badge">🏪 Panel de la tienda</div>
+            <h1>🐼 Wallet Tienda</h1>
+            <p>Saldos de la liga y tarjetas regalo</p>
+        </div>
+    </div>
 
-    <div class="shop-header">
-        <div class="shop-badge">🏪 Panel de la tienda</div>
-        <h1>🐼 Wallet Tienda</h1>
-        <p>Consulta saldos y apunta premios y canjes</p>
-        <div class="staff-chip" id="staffChip" style="display:none">
-            <span>👤 <span id="staffName"></span></span>
-            <button class="solo-liga" onclick="abrirCaducidad()">⏳ Caducidad liga</button>
-            <button onclick="cerrarSesion()">Salir</button>
+    <!-- BARRA FIJA: usuario + selector de modo (siempre a mano al hacer scroll) -->
+    <div class="sticky-top" id="barraApp" style="display:none">
+        <div class="topbar">
+            <a href="index.html" class="tb-home" title="Volver al Hub">🐼</a>
+            <div class="tb-title">Wallet Tienda</div>
+            <div class="tb-user">
+                <span>👤 <span id="staffName"></span></span>
+                <button onclick="cerrarSesion()">Salir</button>
+            </div>
+        </div>
+        <div class="modos">
+            <button class="modo liga" data-modo="liga">
+                <span class="modo-ico">🏆</span>
+                <span class="modo-txt"><b>Liga</b><small id="modoLigaInfo">Premios y canjes</small></span>
+            </button>
+            <button class="modo tarjetas" data-modo="tarjetas">
+                <span class="modo-ico">🎁</span>
+                <span class="modo-txt"><b>Tarjetas<span class="solo-ancho"> regalo</span></b><small id="modoTarInfo">Activar y canjear</small></span>
+            </button>
         </div>
     </div>
 
@@ -448,17 +540,21 @@
     <!-- ===================== APP ===================== -->
     <div id="vistaApp" style="display:none">
 
-        <div class="stats solo-liga">
+      <!-- ===================== MODO LIGA ===================== -->
+      <div id="modoLiga" class="modo-vista">
+        <div class="stats">
             <div class="stat"><div class="stat-value" id="stJugadores">—</div><div class="stat-label">Jugadores</div></div>
             <div class="stat"><div class="stat-value" id="stConSaldo">—</div><div class="stat-label">Con saldo</div></div>
             <div class="stat"><div class="stat-value" id="stTotal">—</div><div class="stat-label">Saldo total</div></div>
         </div>
 
-        <div class="shop-tabs">
-            <button class="shop-tab active" data-tab="jugadores">👥 Jugadores</button>
-            <button class="shop-tab" data-tab="movimiento">⚡ Apuntar</button>
-            <button class="shop-tab" data-tab="jornada">🏆 Jornada</button>
-            <button class="shop-tab" data-tab="tarjetas">🎁 Tarjetas</button>
+        <div class="subnav">
+            <div class="shop-tabs">
+                <button class="shop-tab active" data-tab="jugadores">👥 Jugadores</button>
+                <button class="shop-tab" data-tab="movimiento">⚡ Apuntar</button>
+                <button class="shop-tab" data-tab="jornada">🏆 Jornada</button>
+            </div>
+            <button class="icon-btn" onclick="abrirCaducidad()" title="Caducidad del saldo de la liga">⏳</button>
         </div>
 
         <!-- TAB: JUGADORES -->
@@ -555,10 +651,13 @@
             </div>
         </div>
 
-        <!-- TAB: TARJETAS REGALO -->
-        <div class="tab-panel" id="tab-tarjetas">
-            <div class="panel">
-                <h2>🎁 Tarjetas regalo</h2>
+      </div>
+
+      <!-- ===================== MODO TARJETAS ===================== -->
+      <div id="modoTarjetas" class="modo-vista" style="display:none">
+        <div id="tab-tarjetas">
+            <div class="panel scan-panel">
+                <h2>🎁 Escanea una tarjeta</h2>
                 <form class="scan" onsubmit="event.preventDefault(); abrirTarjeta()">
                     <input class="inp" type="text" id="tarCodigo" placeholder="Escanea o escribe el código" autocomplete="off" autocapitalize="characters" spellcheck="false">
                     <button class="sbtn sbtn-gold" type="submit">Buscar</button>
@@ -580,6 +679,7 @@
                 <div id="listaTarjetas"><div class="spinner"></div></div>
             </div>
         </div>
+      </div>
     </div>
 </div>
 
@@ -680,17 +780,47 @@
         sesion = null;
         try { localStorage.removeItem('panda_tienda_sesion'); } catch {}
         document.getElementById('vistaApp').style.display = 'none';
-        document.getElementById('staffChip').style.display = 'none';
+        document.getElementById('barraApp').style.display = 'none';
+        document.getElementById('hero').style.display = '';
         document.getElementById('vistaLogin').style.display = 'block';
+        document.body.classList.remove('modo-tarjetas');
         cerrarFicha();
     }
 
     function mostrarApp() {
+        document.getElementById('hero').style.display = 'none';
         document.getElementById('vistaLogin').style.display = 'none';
+        document.getElementById('barraApp').style.display = '';
         document.getElementById('vistaApp').style.display = 'block';
-        document.getElementById('staffChip').style.display = 'inline-flex';
         document.getElementById('staffName').textContent = sesion.por;
+        const modo = getData('panda_tienda_modo', 'liga');
+        setModo(modo);
+        if (modo !== 'tarjetas') cargarTarjetas(); // para el resumen del botón de tarjetas
     }
+
+    // =========================================
+    //  MODOS: LIGA / TARJETAS
+    // =========================================
+    function setModo(modo) {
+        if (modo !== 'tarjetas') modo = 'liga';
+        document.body.classList.toggle('modo-tarjetas', modo === 'tarjetas');
+        document.querySelectorAll('.modo').forEach(b => b.classList.toggle('active', b.dataset.modo === modo));
+        document.getElementById('modoLiga').style.display = modo === 'liga' ? '' : 'none';
+        document.getElementById('modoTarjetas').style.display = modo === 'tarjetas' ? '' : 'none';
+        setData('panda_tienda_modo', modo);
+        if (modo === 'tarjetas') {
+            cargarTarjetas();
+            setTimeout(() => document.getElementById('tarCodigo').focus(), 50);
+        }
+    }
+
+    document.querySelectorAll('.modo').forEach(b => {
+        b.onclick = () => {
+            if (b.classList.contains('active')) return;
+            setModo(b.dataset.modo);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+    });
 
     // =========================================
     //  RESUMEN / LISTA DE JUGADORES
@@ -710,7 +840,9 @@
         const conSaldo = jugadores.filter(j => j.saldo > 0.005);
         document.getElementById('stJugadores').textContent = jugadores.length;
         document.getElementById('stConSaldo').textContent = conSaldo.length;
-        document.getElementById('stTotal').textContent = euros(conSaldo.reduce((s, j) => s + j.saldo, 0));
+        const total = conSaldo.reduce((s, j) => s + j.saldo, 0);
+        document.getElementById('stTotal').textContent = euros(total);
+        document.getElementById('modoLigaInfo').textContent = `${jugadores.length} jugadores · ${euros(total)}`;
         pintarLista();
         actualizarPreviewMov();
     }
@@ -1371,7 +1503,9 @@
             tarjetas = data.tarjetas || [];
             const conSaldo = tarjetas.filter(t => t.saldo > 0.005);
             document.getElementById('tarActivas').textContent = conSaldo.length;
-            document.getElementById('tarPendiente').textContent = euros(conSaldo.reduce((s, t) => s + t.saldo, 0));
+            const pendiente = conSaldo.reduce((s, t) => s + t.saldo, 0);
+            document.getElementById('tarPendiente').textContent = euros(pendiente);
+            document.getElementById('modoTarInfo').textContent = `${conSaldo.length} con saldo · ${euros(pendiente)}`;
             document.getElementById('tarVendido').textContent = euros(tarjetas.reduce((s, t) => s + t.cargado, 0));
             pintarListaTarjetas();
         } catch (err) {
@@ -1407,7 +1541,7 @@
         if (!fila) return;
         document.getElementById('tarCodigo').value = fila.dataset.codigo;
         abrirTarjeta();
-        document.getElementById('tab-tarjetas').scrollIntoView({ behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     async function abrirTarjeta() {
@@ -1863,11 +1997,6 @@
         tab.onclick = () => {
             document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t === tab));
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab.dataset.tab));
-            document.body.classList.toggle('modo-tarjetas', tab.dataset.tab === 'tarjetas');
-            if (tab.dataset.tab === 'tarjetas') {
-                cargarTarjetas();
-                document.getElementById('tarCodigo').focus();
-            }
         };
     });
     document.addEventListener('keydown', e => {
