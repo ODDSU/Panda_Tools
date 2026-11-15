@@ -557,22 +557,65 @@
         }
         .modo.torneos.active b { color: #93c5fd; }
         .modo.torneos.active .modo-ico { background: rgba(96, 165, 250, 0.2); }
-        .proximamente { text-align: center; padding: 34px 26px; }
-        .proximamente .pr-ico { font-size: 2.6rem; margin-bottom: 8px; }
-        .proximamente h2 { font-size: 1.1rem; margin-bottom: 10px; }
-        .proximamente p { color: #cbd5e1; font-size: 0.85rem; line-height: 1.6; max-width: 480px; margin: 0 auto 14px; }
-        .proximamente h2 { text-align: center; }
-        .proximamente ul { text-align: left; max-width: 460px; margin: 0 auto 18px; color: #cbd5e1; font-size: 0.82rem; line-height: 1.6; }
-        .proximamente li {
-            display: block; padding: 10px 14px; margin-bottom: 8px; border-radius: 12px;
-            background: rgba(0,0,0,0.3); border-left: 3px solid rgba(96, 165, 250, 0.5);
+
+        /* Modo torneos: acentos azules */
+        body.modo-torneos .stat-value { color: #bfdbfe; }
+        body.modo-torneos .scan-panel { border-color: rgba(96, 165, 250, 0.25); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.12); }
+        body.modo-torneos .scan input.inp:focus, body.modo-torneos #torNombre:focus { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15); }
+        #torBuscar { font-family: inherit; letter-spacing: 0.3px; }
+        .cli-nuevo.tor { background: rgba(96, 165, 250, 0.06); border-color: rgba(96, 165, 250, 0.35); color: #93c5fd; }
+        .cli-nuevo.tor b { color: #bfdbfe; }
+        .cli-nuevo.tor:hover { background: rgba(96, 165, 250, 0.14); }
+        .gcard.jug { background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(139, 92, 246, 0.18)); border-color: rgba(96, 165, 250, 0.35); min-height: 0; }
+        .gcard.jug::after { background: rgba(96, 165, 250, 0.1); }
+        .gcard.jug .gcard-brand { color: #93c5fd; }
+        .psaldo.tor { color: #93c5fd; font-size: 0.8rem; letter-spacing: 1px; }
+        .tor-premio-pill {
+            flex-shrink: 0; font-size: 0.7rem; font-weight: 800; color: #1a1a2e; padding: 5px 10px; border-radius: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
         }
-        .proximamente li:hover { transform: none; border-left-color: rgba(96, 165, 250, 0.5); }
-        .proximamente li b { color: #93c5fd; }
-        .pr-tag {
-            display: inline-block; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-            color: #93c5fd; background: rgba(96, 165, 250, 0.12); border: 1px solid rgba(96, 165, 250, 0.3);
-            padding: 5px 14px; border-radius: 20px;
+        .mv-icon.tor { background: rgba(96, 165, 250, 0.15); }
+
+        /* Estado de jugador (en la ficha del cliente y al fichar) */
+        .jug-estado {
+            max-width: 420px; margin: 0 auto 14px; padding: 14px 16px; border-radius: 16px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+        }
+        .jug-estado.on { border-color: rgba(96, 165, 250, 0.35); background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(0,0,0,0.3)); }
+        .je-top b { display: block; color: #cbd5e1; font-size: 0.9rem; }
+        .jug-estado.on .je-top b { color: #93c5fd; }
+        .je-top small { display: block; color: var(--text-muted); font-size: 0.72rem; font-weight: 600; margin-top: 2px; }
+        .sellos { display: flex; gap: 6px; margin: 12px 0 6px; flex-wrap: wrap; }
+        .sello {
+            width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border: 2px dashed rgba(255,255,255,0.15); font-size: 0.9rem;
+        }
+        .sello.on { border: 2px solid rgba(96, 165, 250, 0.6); background: rgba(96, 165, 250, 0.15); }
+        .je-sub { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+        .je-acc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .je-acc:empty { display: none; }
+
+        /* Precios de jugador */
+        .tor-cab { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+        .tor-cab h2 { margin: 0; }
+        .tor-cab-btns { display: flex; gap: 6px; }
+        .precio-fila {
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-bottom: 6px;
+            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px;
+        }
+        .precio-prod { flex: 1; min-width: 0; color: white; font-weight: 600; font-size: 0.85rem; }
+        .precio-normal { color: var(--text-muted); text-decoration: line-through; font-size: 0.8rem; font-weight: 600; }
+        .precio-jug { color: #93c5fd; font-weight: 900; font-size: 1rem; }
+        .pe-cab, .pe-fila { display: grid; grid-template-columns: 1fr 86px 86px 34px; gap: 6px; align-items: center; }
+        .pe-cab { font-size: 0.68rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+        .pe-fila { margin-bottom: 6px; }
+        .pe-fila .inp { padding: 10px 10px; }
+        .pe-x {
+            height: 38px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.15); cursor: pointer;
+            background: rgba(239, 68, 68, 0.08); color: #fca5a5;
+        }
+        @media (max-width: 600px) {
+            .pe-cab, .pe-fila { grid-template-columns: 1fr 64px 64px 30px; }
         }
         @media (max-width: 600px) {
             .modo { flex-direction: row; text-align: left; padding: 8px 10px; gap: 9px; }
@@ -616,8 +659,8 @@
                 <span class="modo-txt"><b>Cashback</b><small id="modoCliInfo">Compras de clientes</small></span>
             </button>
             <button class="modo torneos" data-modo="torneos">
-                <span class="modo-ico">🎮</span>
-                <span class="modo-txt"><b>Torneos</b><small>Ventajas para jugadores</small></span>
+                <span class="modo-ico">⚔️</span>
+                <span class="modo-txt"><b>Torneos</b><small id="modoTorInfo">Fichajes y sellos</small></span>
             </button>
         </div>
     </div>
@@ -671,18 +714,45 @@
         </div>
       </div>
 
-      <!-- ===================== MODO TORNEOS (en preparación) ===================== -->
+      <!-- ===================== MODO TORNEOS ===================== -->
       <div id="modoTorneos" class="modo-vista" style="display:none">
-        <div class="panel proximamente">
-            <div class="pr-ico">🎮</div>
-            <h2>Torneos y ventajas para jugadores</h2>
-            <p>Aquí irá la parte de fidelización para los jugadores de TCG. Todavía está por decidir; la idea de partida es:</p>
-            <ul>
-                <li><b>Fichar en los torneos</b> escaneando el mismo carné del cashback.</li>
-                <li><b>Jugador activo</b>: quien haya jugado hace poco tiene precio especial en TCG, y el panel os lo avisa al escanear su carné.</li>
-                <li><b>Sellos o puntos</b> por asistencia, con premio cada X torneos.</li>
-            </ul>
-            <div class="pr-tag">En preparación</div>
+        <div class="panel scan-panel">
+            <h2>⚔️ Fichar en el torneo</h2>
+            <div class="field">
+                <label>Torneo de hoy</label>
+                <input class="inp" type="text" id="torNombre" list="torNombres" placeholder="Ej: Commander viernes" autocomplete="off">
+                <datalist id="torNombres"></datalist>
+            </div>
+            <form class="scan" onsubmit="event.preventDefault(); ficharCaja()">
+                <input class="inp" type="text" id="torBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
+                <button class="sbtn sbtn-gold" type="submit">Fichar</button>
+            </form>
+            <div class="cfg-hint">Escanea el carné de cada jugador al llegar: cada torneo es un sello y le da precio de jugador en TCG.</div>
+            <div class="cli-sug" id="torSugerencias"></div>
+            <button type="button" class="cli-nuevo tor" onclick="dialogoNuevoCliente(true)">➕ ¿No tiene carné? <b>Darlo de alta y fichar</b></button>
+            <div id="torResultado"></div>
+        </div>
+
+        <div class="panel">
+            <div class="stats" style="animation: none">
+                <div class="stat"><div class="stat-value" id="torHoy">—</div><div class="stat-label">Fichados hoy</div></div>
+                <div class="stat"><div class="stat-value" id="torActivos">—</div><div class="stat-label">Jugadores activos</div></div>
+                <div class="stat"><div class="stat-value" id="torMeta">—</div><div class="stat-label">Sellos = premio</div></div>
+            </div>
+            <h2>✅ Fichados hoy</h2>
+            <div id="listaFichados"><div class="spinner"></div></div>
+        </div>
+
+        <div class="panel">
+            <div class="tor-cab">
+                <h2>🃏 Precios de jugador (TCG)</h2>
+                <div class="tor-cab-btns">
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirEditorPrecios()">✏️ Precios</button>
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirAjustesTorneos()">⚙️ Ajustes</button>
+                </div>
+            </div>
+            <div class="cfg-hint" id="torReglas" style="margin: -6px 0 12px"></div>
+            <div id="listaPrecios"><div class="spinner"></div></div>
         </div>
       </div>
     </div>
@@ -728,6 +798,12 @@
         con_saldo_invalido: 'Lo pagado con saldo no puede ser más que la compra',
         porcentaje_invalido: 'El cashback tiene que estar entre 0 y 50%',
         minimo_invalido: 'La compra mínima no es válida',
+        ya_fichado: 'Ya estaba fichado en este torneo hoy',
+        faltan_sellos: 'Todavía no tiene sellos suficientes',
+        dias_invalidos: 'Los días tienen que estar entre 1 y 90',
+        meta_invalida: 'Los sellos tienen que estar entre 1 y 50',
+        falta_premio: 'Escribe cuál es el premio',
+        precio_invalido: 'Cada producto necesita su precio de jugador',
         meses_invalidos: 'Los meses tienen que estar entre 1 y 36',
         fecha_invalida: 'Elige una fecha de inicio válida',
         permisos_disparador: 'Guardado, pero Google necesita permiso para el repaso nocturno. Abre la hoja y usa 🐼 Wallet → Apuntar caducidades ahora una vez',
@@ -797,7 +873,7 @@
         document.getElementById('barraApp').style.display = 'none';
         document.getElementById('hero').style.display = '';
         document.getElementById('vistaLogin').style.display = 'block';
-        document.body.classList.remove('modo-cashback');
+        document.body.classList.remove('modo-cashback', 'modo-torneos');
         cerrarFicha();
     }
 
@@ -809,19 +885,24 @@
         document.getElementById('staffName').textContent = sesion.por;
         const modo = getData('panda_fidelizacion_modo', 'cashback');
         setModo(modo);
-        if (modo !== 'cashback') cargarClientes(true); // para el resumen del botón
+        // para el resumen de los botones y los precios de jugador en la ficha
+        if (modo !== 'torneos') cargarTorneos(true);
     }
 
     function setModo(modo) {
         if (modo !== 'torneos') modo = 'cashback';
         document.body.classList.toggle('modo-cashback', modo === 'cashback');
+        document.body.classList.toggle('modo-torneos', modo === 'torneos');
         document.querySelectorAll('.modo').forEach(b => b.classList.toggle('active', b.dataset.modo === modo));
         document.getElementById('modoCashback').style.display = modo === 'cashback' ? '' : 'none';
         document.getElementById('modoTorneos').style.display = modo === 'torneos' ? '' : 'none';
         setData('panda_fidelizacion_modo', modo);
-        if (modo === 'cashback') {
-            cargarClientes();
-            setTimeout(() => document.getElementById('cliBuscar').focus(), 50);
+        // Los clientes hacen falta en los dos modos (el carné y el nombre se buscan en esa lista)
+        cargarClientes(modo !== 'cashback');
+        if (modo === 'cashback') setTimeout(() => document.getElementById('cliBuscar').focus(), 50);
+        if (modo === 'torneos') {
+            cargarTorneos();
+            setTimeout(() => document.getElementById('torBuscar').focus(), 50);
         }
     }
 
@@ -1206,7 +1287,7 @@
                 <div class="avatar">${esc(inicial(c.nombre))}</div>
                 <div class="pinfo">
                     <div class="pname">${esc(c.nombre)}</div>
-                    <div class="pmeta">${euros(c.ganado)} de cashback · ${c.ultimo ? 'última compra ' + fecha(c.ultimo) : 'sin compras'}</div>
+                    <div class="pmeta">${c.activo ? '⚔️ Jugador activo · ' : ''}${euros(c.ganado)} de cashback · ${c.ultimo ? 'última compra ' + fecha(c.ultimo) : 'sin compras'}</div>
                 </div>
                 <div class="psaldo ${c.saldo > 0.005 ? '' : 'cero'}">${euros(c.saldo)}</div>
             </div>`;
@@ -1293,11 +1374,14 @@
             </div>
             <div style="text-align:center; margin-top:-8px; margin-bottom: 14px">${avisoCaducidad(movs)}</div>
 
+            ${bloqueJugador(d)}
+
             <div class="cli-compra">
-                <h3>🛒 Apuntar compra</h3>
+                <h3>🛒 Apuntar compra de juegos de mesa</h3>
+                <div class="cfg-hint" style="margin: -6px 0 12px">El TCG no da cashback ni se paga con este saldo.</div>
                 <div class="row2">
                     <div class="field">
-                        <label>Importe de la compra (€)</label>
+                        <label>Importe en juegos de mesa (€)</label>
                         <input class="inp" type="number" id="cliImporte" min="0" step="0.01" inputmode="decimal" placeholder="0">
                     </div>
                     <div class="field">
@@ -1317,6 +1401,7 @@
             <div class="tar-historial">
                 <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
                 ${movs.length ? movs.map((m, i) => pintarMovCliente(m, i)).join('') : '<div class="empty" style="padding: 18px 10px">Todavía no tiene compras</div>'}
+                ${historialTorneos(d)}
                 ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarCliente()">🗑️ Eliminar cliente (solo para pruebas o errores)</button>' : ''}
             </div>`;
 
@@ -1457,8 +1542,8 @@
         }
     }
 
-    async function dialogoNuevoCliente() {
-        const escrito = document.getElementById('cliBuscar').value.trim();
+    async function dialogoNuevoCliente(ficharAlCrear = false) {
+        const escrito = document.getElementById(ficharAlCrear ? 'torBuscar' : 'cliBuscar').value.trim();
         const nombreInicial = escrito && !/^\d+$/.test(escrito) ? nombrePropio(escrito) : '';
         abrirDialogo(`
             <h3>➕ Nuevo cliente</h3>
@@ -1499,6 +1584,15 @@
                 if (data.error) throw new Error(errorDe(data));
                 cerrarDialogo(true);
                 toast(`🎉 ${data.cliente.nombre} dado de alta`, 'success');
+                if (ficharAlCrear) {
+                    // En la pestaña de torneos: se ficha nada más crearlo
+                    if (imprimir) {
+                        try { imprimirTicket('Carné de cliente', await cuerpoCarneTicket(data.cliente, disenoTicket())); }
+                        catch (e) { toast('⚠️ ' + e.message, 'danger'); }
+                    }
+                    await fichar({ cliente_id: data.cliente.cliente_id });
+                    return;
+                }
                 document.getElementById('cliBuscar').value = '';
                 document.getElementById('cliSugerencias').innerHTML = '';
                 pintarCliente(data, imprimir ? '' : 'carne');
@@ -1516,7 +1610,7 @@
     // ---- Carné del cliente en ticket (mismo diseño elegido en 🧾 Tickets) ----
     async function cuerpoCarneTicket(c, diseno) {
         const legible = String(c.carne).replace(/(.{4})(?=.)/g, '$1 ');
-        const pie = `<div class="c pie"><b>Enseña este carné en cada compra</b><br>y acumula un ${pct(cashbackCfg.porcentaje)} en saldo para gastar en tienda.<br>¡Gracias por tu visita!</div>`;
+        const pie = `<div class="c pie"><b>Enseña este carné en caja y en los torneos</b><br>Juegos de mesa: ${pct(cashbackCfg.porcentaje)} de cada compra en saldo.<br>Torneos: precio de jugador en TCG y sellos con premio.<br>¡Gracias por tu visita!</div>`;
         if (diseno === 'basico') {
             return `
                 ${cabeceraTicket().replace(esc(TICKET.sub), 'Carné de cliente')}
@@ -1626,6 +1720,396 @@
     // "marta gómez" → "Marta Gómez"
     function nombrePropio(s) {
         return s.trim().replace(/\s+/g, ' ').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+    }
+
+    // =========================================
+    //  TORNEOS: FICHAJES, SELLOS Y PRECIOS DE JUGADOR
+    // =========================================
+    let torneosData = { config: { dias: 15, meta: 5, premio: 'Un sobre de regalo' }, precios: [], activos: 0, fichadosHoy: [] };
+    let torneosAdmin = false;
+    let torHistorial = [];      // fichajes del cliente que se está viendo (para borrar)
+    let jugadorVisto = null;    // último cliente mostrado en la pestaña de torneos
+
+    async function cargarTorneos(silencioso = false) {
+        try {
+            const data = await api('torneos_resumen');
+            if (data.error) throw new Error(errorDe(data));
+            torneosData = data;
+            torneosAdmin = !!data.esAdmin;
+            pintarTorneos();
+        } catch (err) {
+            if (!silencioso && document.body.classList.contains('modo-torneos')) toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function pintarTorneos() {
+        const { config, precios, activos, fichadosHoy } = torneosData;
+        document.getElementById('torHoy').textContent = fichadosHoy.length;
+        document.getElementById('torActivos').textContent = activos;
+        document.getElementById('torMeta').textContent = config.meta;
+        document.getElementById('modoTorInfo').textContent = `${fichadosHoy.length} fichado${fichadosHoy.length === 1 ? '' : 's'} hoy · ${activos} activo${activos === 1 ? '' : 's'}`;
+        document.getElementById('torReglas').innerHTML =
+            `Precio de jugador para quien haya jugado un torneo en los últimos <b>${config.dias} días</b>. `
+            + `Cada <b>${config.meta} sellos</b>: ${esc(config.premio)}.`;
+
+        document.getElementById('listaFichados').innerHTML = fichadosHoy.length
+            ? fichadosHoy.map((f, i) => `
+                <div class="prow" data-i="${i}">
+                    <div class="avatar">${esc(inicial(f.nombre))}</div>
+                    <div class="pinfo">
+                        <div class="pname">${esc(f.nombre)}</div>
+                        <div class="pmeta">${f.torneo ? esc(f.torneo) + ' · ' : ''}${f.sellos} de ${f.meta} sellos</div>
+                    </div>
+                    ${f.sellos >= f.meta ? '<span class="tor-premio-pill">🎁 Premio</span>' : `<div class="psaldo tor">${sellosTexto(f.sellos, f.meta)}</div>`}
+                </div>`).join('')
+            : '<div class="empty"><div class="ico">⚔️</div>Nadie ha fichado hoy todavía</div>';
+
+        document.getElementById('listaPrecios').innerHTML = tablaPrecios(precios);
+
+        // Nombres de torneo usados para el desplegable
+        const nombres = new Set(fichadosHoy.map(f => f.torneo).filter(Boolean));
+        getData('panda_torneos_usados', []).forEach(n => nombres.add(n));
+        document.getElementById('torNombres').innerHTML = [...nombres].slice(0, 12).map(n => `<option value="${esc(n)}">`).join('');
+    }
+
+    function tablaPrecios(precios) {
+        if (!precios.length) return `<div class="empty" style="padding: 20px 10px"><div class="ico">🃏</div>Aún no hay precios de jugador.${torneosAdmin ? ' Añádelos con ✏️ Precios.' : ''}</div>`;
+        return `<div class="precios">${precios.map(p => `
+            <div class="precio-fila">
+                <span class="precio-prod">${esc(p.producto)}</span>
+                ${p.precio > 0 ? `<span class="precio-normal">${euros(p.precio)}</span>` : ''}
+                <span class="precio-jug">${euros(p.precio_jugador)}</span>
+            </div>`).join('')}</div>`;
+    }
+
+    // ●●●○○
+    function sellosTexto(n, meta) {
+        const llenos = Math.min(n, meta);
+        return '●'.repeat(llenos) + '○'.repeat(Math.max(0, meta - llenos));
+    }
+
+    function sellosHTML(n, meta) {
+        const llenos = Math.min(n, meta);
+        let h = '';
+        for (let i = 0; i < meta; i++) h += `<span class="sello ${i < llenos ? 'on' : ''}">${i < llenos ? '🐼' : ''}</span>`;
+        return `<div class="sellos">${h}</div>`;
+    }
+
+    // Estado de jugador dentro de la ficha del cliente (cashback) o tras fichar
+    function bloqueJugador(d) {
+        const j = d.jugador;
+        if (!j) return '';
+        const premio = j.sellos >= j.meta;
+        return `
+            <div class="jug-estado ${j.activo ? 'on' : ''}">
+                <div class="je-top">
+                    <b>⚔️ ${j.activo ? 'Jugador activo' : 'Sin torneos recientes'}</b>
+                    <small>${j.activo ? `Precio de jugador en TCG hasta el ${fecha(j.hasta)}`
+                        : j.ultima ? `Último torneo el ${fecha(j.ultima)}: ficha en uno para tener precio de jugador`
+                        : 'Todavía no ha fichado en ningún torneo'}</small>
+                </div>
+                ${sellosHTML(j.sellos, j.meta)}
+                <div class="je-sub">${j.sellos} de ${j.meta} sellos · ${esc(j.premio)}</div>
+                <div class="je-acc">
+                    ${premio ? `<button class="sbtn sbtn-gold sbtn-sm" onclick="canjearSellos()">🎁 Dar premio</button>` : ''}
+                    ${j.activo ? '<button class="sbtn sbtn-ghost sbtn-sm" onclick="verPreciosJugador()">🃏 Precios jugador</button>' : ''}
+                </div>
+            </div>`;
+    }
+
+    // Historial de torneos del cliente (fichajes y premios), con 🗑️ para corregir
+    function historialTorneos(d) {
+        const j = d.jugador;
+        torHistorial = j ? j.historial : [];
+        if (!torHistorial.length) return '';
+        return `
+            <h2 style="font-size: 0.95rem; margin: 18px 0 6px">⚔️ Torneos</h2>
+            ${torHistorial.map((a, i) => `
+                <div class="mv">
+                    <div class="mv-icon ${a.tipo === 'premio' ? 'gasto' : 'tor'}">${a.tipo === 'premio' ? '🎁' : '⚔️'}</div>
+                    <div class="mv-info">
+                        <div class="mv-concepto">${a.tipo === 'premio' ? 'Premio: ' + esc(a.torneo) : esc(a.torneo || 'Torneo')}</div>
+                        <div class="mv-fecha">${fecha(a.fecha)}${a.por ? ' · por ' + esc(a.por) : ''}</div>
+                    </div>
+                    <div class="mv-monto ${a.tipo === 'premio' ? 'negativo' : 'positivo'}">${a.tipo === 'premio' ? '-' + a.sellos : '+1'} 🐼</div>
+                    <button class="mv-del" title="Borrar (si se fichó o canjeó por error)" onclick="anularTorneo(${i})">🗑️</button>
+                </div>`).join('')}`;
+    }
+
+    // ---- Fichar ----
+    function nombreTorneo() {
+        const v = document.getElementById('torNombre').value.trim();
+        try { localStorage.setItem('panda_torneo_nombre', v); } catch {}
+        if (v) {
+            const usados = getData('panda_torneos_usados', []).filter(n => n !== v);
+            setData('panda_torneos_usados', [v, ...usados].slice(0, 12));
+        }
+        return v;
+    }
+
+    function pintarSugerenciasTorneo() {
+        const texto = document.getElementById('torBuscar').value.trim();
+        const cont = document.getElementById('torSugerencias');
+        if (texto.length < 2 || /^\d+$/.test(texto)) { cont.innerHTML = ''; return; }
+        const q = normalizar(texto);
+        const lista = clientes.filter(c => normalizar(c.nombre).includes(q)).slice(0, 6);
+        cont.innerHTML = lista.length ? lista.map(c => `
+                <div class="prow" data-id="${esc(c.cliente_id)}">
+                    <div class="avatar">${esc(inicial(c.nombre))}</div>
+                    <div class="pinfo"><div class="pname">${esc(c.nombre)}</div>
+                        <div class="pmeta">${c.activo ? '⚔️ Activo · ' : ''}${c.sellos || 0} sellos</div></div>
+                    <div class="psaldo tor">Fichar</div>
+                </div>`).join('')
+            : `<div class="picker-empty">Nadie se llama así. ¿<a href="#" onclick="event.preventDefault(); dialogoNuevoCliente(true)" style="color:#93c5fd">Darlo de alta</a>?</div>`;
+    }
+
+    document.getElementById('torBuscar').addEventListener('input', pintarSugerenciasTorneo);
+    document.getElementById('torSugerencias').addEventListener('click', e => {
+        const fila = e.target.closest('.prow');
+        if (fila) fichar({ cliente_id: fila.dataset.id });
+    });
+    document.getElementById('listaFichados').addEventListener('click', e => {
+        const fila = e.target.closest('.prow');
+        if (!fila) return;
+        abrirJugador(torneosData.fichadosHoy[Number(fila.dataset.i)].cliente_id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    try { document.getElementById('torNombre').value = localStorage.getItem('panda_torneo_nombre') || ''; } catch {}
+
+    function ficharCaja() {
+        const input = document.getElementById('torBuscar');
+        const texto = input.value.trim();
+        if (!texto) { input.focus(); return; }
+        const codigo = normalizarCodigo(texto);
+        const porCarne = clientes.find(c => c.carne === codigo);
+        if (porCarne) return fichar({ cliente_id: porCarne.cliente_id });
+        const q = normalizar(texto);
+        const exactos = clientes.filter(c => normalizar(c.nombre) === q);
+        const parecidos = clientes.filter(c => normalizar(c.nombre).includes(q));
+        if (exactos.length === 1) return fichar({ cliente_id: exactos[0].cliente_id });
+        if (parecidos.length === 1) return fichar({ cliente_id: parecidos[0].cliente_id });
+        if (/^\d{4,}$/.test(codigo)) return fichar({ carne: codigo });
+        pintarSugerenciasTorneo();
+        if (!parecidos.length) toast('🔍 No hay ningún cliente así', 'warning');
+    }
+
+    async function fichar(datos) {
+        const res = document.getElementById('torResultado');
+        res.innerHTML = '<div class="spinner"></div>';
+        try {
+            const data = await api('torneos_fichar', { ...datos, torneo: nombreTorneo() });
+            if (data.error && data.error !== 'ya_fichado') throw new Error(errorDe(data));
+            const j = data.jugador;
+            if (data.error === 'ya_fichado') toast(`ℹ️ ${data.cliente.nombre} ya estaba fichado en este torneo`, 'warning');
+            else toast(`✅ ${data.cliente.nombre} fichado · ${j.sellos}/${j.meta} sellos` + (j.sellos >= j.meta ? ' · 🎁 ¡tiene premio!' : ''), 'success');
+            document.getElementById('torBuscar').value = '';
+            document.getElementById('torSugerencias').innerHTML = '';
+            pintarJugador(data);
+            cargarTorneos(true);
+            cargarClientes(true);
+        } catch (err) {
+            res.innerHTML = '';
+            toast('⚠️ ' + err.message, 'danger');
+            document.getElementById('torBuscar').select();
+        }
+        document.getElementById('torBuscar').focus(); // listo para el siguiente
+    }
+
+    async function abrirJugador(id) {
+        const res = document.getElementById('torResultado');
+        res.innerHTML = '<div class="spinner"></div>';
+        try {
+            const data = await api('cliente', { cliente_id: id });
+            if (data.error) throw new Error(errorDe(data));
+            pintarJugador(data);
+        } catch (err) {
+            res.innerHTML = '';
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // Ficha corta del jugador en la pestaña de torneos
+    function pintarJugador(d) {
+        jugadorVisto = d;
+        const j = d.jugador;
+        document.getElementById('torResultado').innerHTML = `
+            <div class="gcard jug">
+                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Jugador</span>
+                    <span class="gcard-pill ${j.activo ? 'ok' : ''}">${j.activo ? 'Activo' : 'Inactivo'}</span></div>
+                <div class="gcard-nombre">${esc(d.cliente.nombre)}</div>
+                <div class="gcard-sub">${j.torneos} torneo${j.torneos === 1 ? '' : 's'} jugado${j.torneos === 1 ? '' : 's'}${j.activo ? ' · precio de jugador hasta el ' + fecha(j.hasta) : ''}</div>
+            </div>
+            ${bloqueJugador(d)}
+            <div class="tar-historial">${historialTorneos(d)}</div>`;
+    }
+
+    // Refresca la ficha que esté a la vista (cashback o torneos) con los datos nuevos
+    function refrescarFichas(data) {
+        if (document.body.classList.contains('modo-torneos')) pintarJugador(data);
+        else pintarCliente(data);
+        cargarTorneos(true);
+        cargarClientes(true);
+    }
+
+    function clienteEnPantalla() {
+        return document.body.classList.contains('modo-torneos') ? jugadorVisto : clienteActual;
+    }
+
+    async function canjearSellos() {
+        const d = clienteEnPantalla();
+        if (!d) return;
+        const j = d.jugador;
+        const ok = await confirmar({
+            titulo: '🎁 Dar premio',
+            html: `<b style="color:white">${esc(d.cliente.nombre)}</b> tiene ${j.sellos} sellos.<br><br>
+                   Entrégale: <b style="color:#fcd34d">${esc(j.premio)}</b><br>Se gastarán ${j.meta} sellos.`,
+            ok: 'Premio entregado'
+        });
+        if (!ok) return;
+        try {
+            const data = await api('torneos_sellos', { cliente_id: d.cliente.cliente_id });
+            if (data.error === 'faltan_sellos') throw new Error(`Solo tiene ${data.sellos} de ${data.meta} sellos`);
+            if (data.error) throw new Error(errorDe(data));
+            toast(`🎁 Premio entregado a ${data.cliente.nombre}`, 'success');
+            refrescarFichas(data);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function anularTorneo(i) {
+        const d = clienteEnPantalla();
+        const a = torHistorial[i];
+        if (!d || !a) return;
+        const ok = await confirmar({
+            titulo: '🗑️ ¿Borrar?',
+            html: `${a.tipo === 'premio' ? 'Premio' : 'Fichaje'} de <b style="color:white">${esc(d.cliente.nombre)}</b> del ${fecha(a.fecha)}${a.torneo ? ' (' + esc(a.torneo) + ')' : ''}.<br><br>
+                   ${a.tipo === 'premio' ? 'Le volverán los sellos que gastó.' : 'Perderá ese sello.'}`,
+            ok: 'Borrar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('torneos_anular', { fila: a.fila, cliente_id: d.cliente.cliente_id, tipo: a.tipo });
+            if (data.error) throw new Error(errorDe(data));
+            toast('🗑️ Borrado', 'warning');
+            refrescarFichas(data);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // ---- Precios de jugador ----
+    function verPreciosJugador() {
+        ficha = null;
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">🃏</div>
+                <div class="d-name">Precios de jugador</div>
+                <div class="d-id" style="margin-top: 4px">Para quien ha jugado un torneo en los últimos ${torneosData.config.dias} días.<br>Aplícalos en el TPV.</div>
+            </div>
+            ${tablaPrecios(torneosData.precios)}`;
+        document.getElementById('sheet').classList.add('open');
+    }
+
+    function filaEditorPrecio(p = {}) {
+        return `
+            <div class="pe-fila">
+                <input class="inp" type="text" placeholder="Producto (ej: Sobre Bloomburrow)" value="${esc(p.producto || '')}" data-k="producto">
+                <input class="inp" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Normal" value="${p.precio > 0 ? p.precio : ''}" data-k="precio">
+                <input class="inp" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Jugador" value="${p.precio_jugador > 0 ? p.precio_jugador : ''}" data-k="precio_jugador">
+                <button type="button" class="pe-x" title="Quitar" onclick="this.parentElement.remove()">✕</button>
+            </div>`;
+    }
+
+    function abrirEditorPrecios() {
+        if (!torneosAdmin) { verPreciosJugador(); toast('🔒 Para cambiar los precios, entra con la clave de admin', 'warning'); return; }
+        ficha = null;
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">✏️</div>
+                <div class="d-name">Precios de jugador</div>
+                <div class="d-id" style="margin-top: 4px">Producto, precio normal (opcional, para comparar) y precio de jugador.</div>
+            </div>
+            <div class="pe-cab"><span>Producto</span><span>Normal</span><span>Jugador</span><span></span></div>
+            <div id="peFilas">${(torneosData.precios.length ? torneosData.precios : [{}]).map(filaEditorPrecio).join('')}</div>
+            <button class="sbtn sbtn-ghost sbtn-sm" style="margin: 6px 0 18px" onclick="document.getElementById('peFilas').insertAdjacentHTML('beforeend', filaEditorPrecio())">➕ Añadir producto</button>
+            <button class="sbtn sbtn-gold sbtn-full" id="btnPrecios" onclick="guardarPrecios()">💾 Guardar precios</button>`;
+        document.getElementById('sheet').classList.add('open');
+    }
+
+    async function guardarPrecios() {
+        const precios = [...document.querySelectorAll('#peFilas .pe-fila')].map(f => {
+            const v = k => f.querySelector(`[data-k="${k}"]`).value.trim();
+            return { producto: v('producto'), precio: v('precio'), precio_jugador: v('precio_jugador') };
+        }).filter(p => p.producto);
+        if (precios.some(p => !(parseFloat(p.precio_jugador) > 0))) { toast('⚠️ Pon el precio de jugador de cada producto', 'warning'); return; }
+        const btn = document.getElementById('btnPrecios');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const data = await api('torneos_precios', { precios });
+            if (data.error) throw new Error(errorDe(data));
+            torneosData.precios = data.precios;
+            pintarTorneos();
+            cerrarFicha();
+            toast(`✅ ${data.precios.length} precio${data.precios.length === 1 ? '' : 's'} guardado${data.precios.length === 1 ? '' : 's'}`, 'success');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    // ---- Ajustes (solo admin) ----
+    function abrirAjustesTorneos() {
+        ficha = null;
+        const c = torneosData.config;
+        const off = torneosAdmin ? '' : 'disabled';
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">⚔️</div>
+                <div class="d-name">Ajustes de torneos</div>
+                <div class="d-id" style="margin-top: 4px">Cuándo se es "jugador activo" y qué premio dan los sellos.</div>
+            </div>
+            <div class="row2">
+                <div class="field">
+                    <label>Días de jugador activo</label>
+                    <input class="inp" type="number" id="tcDias" min="1" max="90" value="${c.dias}" ${off}>
+                    <div class="cfg-hint">Tras jugar un torneo, tiene precio de jugador durante estos días.</div>
+                </div>
+                <div class="field">
+                    <label>Sellos para el premio</label>
+                    <input class="inp" type="number" id="tcMeta" min="1" max="50" value="${c.meta}" ${off}>
+                    <div class="cfg-hint">Cada torneo fichado es un sello.</div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Premio</label>
+                <input class="inp" type="text" id="tcPremio" value="${esc(c.premio)}" placeholder="Ej: Un sobre de regalo" ${off}>
+            </div>
+            ${torneosAdmin
+                ? '<button class="sbtn sbtn-gold sbtn-full" id="btnTc" onclick="guardarAjustesTorneos()" style="margin-top: 8px">💾 Guardar</button>'
+                : '<div class="cfg-lock" style="margin-top: 8px">🔒 Para cambiarlo, entra al panel con la clave de admin</div>'}`;
+        document.getElementById('sheet').classList.add('open');
+    }
+
+    async function guardarAjustesTorneos() {
+        const btn = document.getElementById('btnTc');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const data = await api('torneos_config', {
+                dias: document.getElementById('tcDias').value,
+                meta: document.getElementById('tcMeta').value,
+                premio: document.getElementById('tcPremio').value
+            });
+            if (data.error) throw new Error(errorDe(data));
+            torneosData.config = data.config;
+            cerrarFicha();
+            toast('✅ Ajustes de torneos guardados', 'success');
+            cargarTorneos();
+            cargarClientes(true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
     }
 
     // =========================================
