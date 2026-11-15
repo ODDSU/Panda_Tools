@@ -383,7 +383,19 @@
         .gcard-saldo { font-size: 2.6rem; font-weight: 900; color: #fcd34d; line-height: 1.1; margin-top: 18px; text-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
         .gcard-sub { font-size: 0.72rem; color: #cbd5e1; font-weight: 600; margin-top: 2px; }
         .gcard-code { font-family: 'Courier New', monospace; font-size: 1rem; letter-spacing: 2px; color: #e2e8f0; margin-top: 14px; word-break: break-all; }
-        .tar-acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 420px; margin: 0 auto 14px; }
+        .tar-acciones { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; max-width: 420px; margin: 0 auto 14px; }
+        .sbtn-ticket {
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0;
+            padding-left: 14px; padding-right: 14px;
+        }
+        .sbtn-ticket:hover { border-color: rgba(192, 132, 252, 0.45); background: rgba(192, 132, 252, 0.1); }
+        .sbtn-ticket.recien { border-color: #c084fc; box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.18); animation: latido 1.6s ease-in-out 3; }
+        @keyframes latido { 50% { box-shadow: 0 0 0 7px rgba(192, 132, 252, 0.05); } }
+        .ticket-chk {
+            display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; cursor: pointer; user-select: none;
+            font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+        }
+        .ticket-chk input { width: 16px; height: 16px; accent-color: #c084fc; cursor: pointer; }
         .tar-form { max-width: 420px; margin: 0 auto 18px; }
         .tar-historial { max-width: 420px; margin: 0 auto; }
         .mono { font-family: 'Courier New', monospace; letter-spacing: 1px; }
@@ -1569,7 +1581,7 @@
         input.focus();
     }
 
-    function pintarTarjeta(d) {
+    function pintarTarjeta(d, recien = false) {
         tarjetaActual = d;
         const res = document.getElementById('tarResultado');
 
@@ -1596,6 +1608,7 @@
                         <label>Comprador (opcional)</label>
                         <input class="inp" type="text" id="tarComprador" placeholder="Ej: Ana, regalo para su hermano">
                     </div>
+                    ${checkTicket()}
                     <button class="sbtn sbtn-gold sbtn-full" id="btnTarActivar" onclick="activarTarjeta()">✅ Activar tarjeta</button>
                 </div>`;
             const importe = document.getElementById('tarImporte');
@@ -1631,6 +1644,7 @@
             <div class="tar-acciones">
                 <button class="sbtn sbtn-ko" onclick="abrirFormTarjeta('canje')" ${vacia ? 'disabled' : ''}>🛒 Canjear</button>
                 <button class="sbtn sbtn-ok" onclick="abrirFormTarjeta('recarga')">➕ Recargar</button>
+                <button class="sbtn sbtn-ticket ${recien ? 'recien' : ''}" onclick="imprimirResguardo()" title="Imprimir resguardo con el saldo">🧾 Ticket</button>
             </div>
             <div class="qform tar-form" id="tarForm">
                 <h3 id="tarFormTitulo"></h3>
@@ -1643,7 +1657,9 @@
                     <label>Concepto (opcional)</label>
                     <input class="inp" type="text" id="tarConcepto" placeholder="Ej: Caja de sobres">
                 </div>
-                <div class="saldo-preview" id="tarPreview" style="margin: 12px 0"></div>
+                <div class="saldo-preview" id="tarPreview" style="margin: 12px 0 4px"></div>
+                ${checkTicket()}
+                <div style="height: 10px"></div>
                 <div style="display:flex; gap:8px">
                     <button class="sbtn sbtn-ghost" onclick="document.getElementById('tarForm').classList.remove('open')">Cancelar</button>
                     <button class="sbtn sbtn-gold" style="flex:1" id="btnTarForm" onclick="enviarFormTarjeta()">💾 Guardar</button>
@@ -1744,7 +1760,9 @@
             toast(tipo === 'canje'
                 ? `🛒 Canjeados ${euros(importe)} · quedan ${euros(data.saldo)}`
                 : `➕ Recargados ${euros(importe)} · saldo ${euros(data.saldo)}`, 'success');
-            pintarTarjeta(data);
+            const imprimir = quiereTicket();
+            pintarTarjeta(data, !imprimir);
+            if (imprimir) imprimirResguardo();
             listoParaEscanear();
             cargarTarjetas();
         } catch (err) {
@@ -1772,13 +1790,128 @@
             });
             if (data.error) throw new Error(errorDe(data));
             toast(`🎁 Tarjeta activada con ${euros(importe)}`, 'success');
-            pintarTarjeta(data);
+            const imprimir = quiereTicket();
+            pintarTarjeta(data, !imprimir);
+            if (imprimir) imprimirResguardo();
             listoParaEscanear();
             cargarTarjetas();
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
             cargando(btn, false);
         }
+    }
+
+    // =========================================
+    //  RESGUARDO PARA LA IMPRESORA DE TICKETS
+    // =========================================
+    // Cambia estos textos si quieres otra cabecera o pie en el ticket
+    const TICKET = {
+        tienda: 'PANDA',
+        sub: 'Tarjeta regalo',
+        pie: 'Presenta tu tarjeta en tienda para usar el saldo.<br>¡Gracias por tu visita!'
+    };
+
+    function quiereTicket() {
+        const c = document.getElementById('tarTicket');
+        return !!(c && c.checked);
+    }
+
+    // Casilla "Imprimir resguardo"; se recuerda en este ordenador
+    function checkTicket() {
+        let on = true;
+        try { on = localStorage.getItem('panda_ticket_auto') !== 'no'; } catch {}
+        return `<label class="ticket-chk"><input type="checkbox" id="tarTicket" ${on ? 'checked' : ''}
+            onchange="try { localStorage.setItem('panda_ticket_auto', this.checked ? 'si' : 'no') } catch {}">
+            🧾 Imprimir resguardo al guardar</label>`;
+    }
+
+    function imprimirResguardo() {
+        const d = tarjetaActual;
+        if (!d || !d.existe) return;
+        const t = d.tarjeta;
+        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+        const ult = movs[0];
+        const NOMBRES = { carga: 'Carga', canje: 'Compra', caducado: 'Saldo caducado' };
+
+        // Solo los últimos 4 caracteres: el código completo sirve para gastar la tarjeta
+        const codigo = String(t.codigo);
+        const oculto = codigo.length > 4 ? '****' + codigo.slice(-4) : codigo;
+
+        const ahora = new Date();
+        const cuando = ahora.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            + ' ' + ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+        let operacion = '';
+        if (ult) {
+            const suma = ult.tipo === 'carga';
+            const antes = d.saldo + (suma ? -ult.monto : ult.monto);
+            const nombre = ult.concepto && ult.tipo === 'canje' ? ult.concepto : (NOMBRES[ult.tipo] || ult.concepto || 'Movimiento');
+            operacion = `
+                <div class="sep"></div>
+                <div class="fila"><span>Saldo anterior</span><span>${euros(antes)}</span></div>
+                <div class="fila"><span>${esc(nombre)}</span><b>${suma ? '+' : '-'}${euros(ult.monto)}</b></div>
+                <div class="nota">${fecha(ult.fecha)}</div>`;
+        }
+
+        const proximo = movs.filter(m => m.caduca && m.restante > 0)
+            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
+        const caduca = proximo && d.saldo > 0.005
+            ? `<div class="caduca">${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>` : '';
+
+        const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Resguardo</title>
+            <style>
+                @page { margin: 0; }
+                * { box-sizing: border-box; }
+                body { margin: 0; padding: 3mm 4mm 6mm; font-family: Arial, Helvetica, sans-serif; color: #000; background: #fff; font-size: 10pt; }
+                .c { text-align: center; }
+                .tienda { font-size: 17pt; font-weight: 900; letter-spacing: 3px; }
+                .sub { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 1mm; }
+                .sep { border-top: 1px dashed #000; margin: 3mm 0; }
+                .fila { display: flex; justify-content: space-between; gap: 3mm; margin: 1mm 0; }
+                .fila span:first-child { overflow-wrap: anywhere; }
+                .nota { font-size: 8pt; margin-top: 1mm; }
+                .lbl { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+                .saldo { font-size: 26pt; font-weight: 900; margin: 1mm 0; }
+                .caduca { font-size: 9pt; font-weight: 700; margin-top: 1mm; }
+                .mono { font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: 1px; }
+                .pie { font-size: 8pt; margin-top: 4mm; line-height: 1.4; }
+            </style></head><body>
+            <div class="c">
+                <div class="tienda">${esc(TICKET.tienda)}</div>
+                <div class="sub">${esc(TICKET.sub)}</div>
+            </div>
+            <div class="sep"></div>
+            <div class="fila"><span>Tarjeta</span><span class="mono">${esc(oculto)}</span></div>
+            <div class="fila"><span>Fecha</span><span>${cuando}</span></div>
+            ${operacion}
+            <div class="sep"></div>
+            <div class="c">
+                <div class="lbl">Saldo disponible</div>
+                <div class="saldo">${euros(d.saldo)}</div>
+                ${caduca}
+            </div>
+            <div class="sep"></div>
+            <div class="c pie">${TICKET.pie}</div>
+        </body></html>`;
+
+        // Se imprime desde un marco invisible para no tocar la página del panel
+        let marco = document.getElementById('marcoTicket');
+        if (marco) marco.remove();
+        marco = document.createElement('iframe');
+        marco.id = 'marcoTicket';
+        marco.setAttribute('aria-hidden', 'true');
+        marco.style.cssText = 'position:fixed; right:0; bottom:0; width:0; height:0; border:0; opacity:0; pointer-events:none';
+        document.body.appendChild(marco);
+        const doc = marco.contentDocument;
+        doc.open();
+        doc.write(html);
+        doc.close();
+        setTimeout(() => {
+            try { marco.contentWindow.focus(); marco.contentWindow.print(); }
+            catch { toast('⚠️ No se pudo abrir la impresión', 'danger'); }
+            const btn = document.getElementById('tarCodigo');
+            if (btn) btn.focus();
+        }, 200);
     }
 
     // Solo admin: quita la tarjeta y todo su historial de la hoja
