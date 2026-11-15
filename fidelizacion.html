@@ -1160,6 +1160,9 @@
                 .barras svg, .tj-barras svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
                 .barras rect, .tj-barras rect { shape-rendering: crispEdges; }
                 .codigo { font-family: 'Courier New', monospace; font-size: 12pt; font-weight: 700; letter-spacing: 2px; }
+                .qr svg { display: block; width: 30mm; height: 30mm; margin: 1mm auto 2mm; }
+                .qr rect, .qr path { shape-rendering: crispEdges; }
+                .qr-txt { font-size: 8pt; line-height: 1.35; }
 
                 /* Diseño "tarjeta": doble borde redondeado con el logo del panda */
                 .tj { border: 0.5mm solid #000; border-radius: 4mm; padding: 1mm; }
@@ -1396,6 +1399,8 @@
 
             <div class="cli-extra">
                 <button class="sbtn sbtn-ghost sbtn-sm ${recien === 'carne' ? 'sbtn-ticket recien' : ''}" onclick="imprimirCarne()">🎫 Imprimir carné</button>
+                ${c.token ? `<button class="sbtn sbtn-ghost sbtn-sm" onclick="copiarLinkCarne()" title="Copiar el link de su carné digital">🔗 Link</button>
+                <button class="sbtn sbtn-ghost sbtn-sm" onclick="renovarLinkCarne()" title="Si ha perdido el móvil o el ticket">🔄 Renovar</button>` : ''}
             </div>
 
             <div class="tar-historial">
@@ -1611,6 +1616,13 @@
     async function cuerpoCarneTicket(c, diseno) {
         const legible = String(c.carne).replace(/(.{4})(?=.)/g, '$1 ');
         const pie = `<div class="c pie"><b>Enseña este carné en caja y en los torneos</b><br>Juegos de mesa: ${pct(cashbackCfg.porcentaje)} de cada compra en saldo.<br>Torneos: precio de jugador en TCG y sellos con premio.<br>¡Gracias por tu visita!</div>`;
+        // QR con el link privado a su carné digital (saldo, sellos y precios)
+        const qr = c.token ? `
+            <div class="sep"></div>
+            <div class="c qr-bloque">
+                <div class="qr">${await codigoQR(linkCarne(c.token))}</div>
+                <div class="qr-txt"><b>Escanéame con el móvil</b><br>y guarda tu carné digital: saldo, sellos y precios de jugador siempre a mano</div>
+            </div>` : '';
         if (diseno === 'basico') {
             return `
                 ${cabeceraTicket().replace(esc(TICKET.sub), 'Carné de cliente')}
@@ -1620,6 +1632,7 @@
                 </div>
                 <div class="c barras">${await codigoDeBarras(c.carne, 70)}</div>
                 <div class="c codigo">${esc(legible)}</div>
+                ${qr}
                 <div class="sep"></div>
                 ${pie}`;
         }
@@ -1633,8 +1646,68 @@
                 <div class="tj-barras">${await codigoDeBarras(c.carne, 42)}</div>
                 <div class="tj-codigo">${esc(legible)}</div>
             </div></div>
+            ${qr}
             <div class="sep"></div>
             ${pie}`;
+    }
+
+    // ---- Carné digital: link privado y QR ----
+    const CARNE_URL = 'https://oddsu.github.io/Timer-Panda/carne';
+    function linkCarne(token) { return `${CARNE_URL}?c=${encodeURIComponent(token)}`; }
+
+    let qrCargando = null;
+    function cargarQR() {
+        if (window.qrcode) return Promise.resolve();
+        if (!qrCargando) qrCargando = new Promise((ok, ko) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+            s.onload = ok;
+            s.onerror = () => { qrCargando = null; s.remove(); ko(new Error('No se pudo cargar el generador de QR. ¿Hay internet?')); };
+            document.head.appendChild(s);
+        });
+        return qrCargando;
+    }
+
+    async function codigoQR(texto) {
+        await cargarQR();
+        const q = qrcode(0, 'M');
+        q.addData(texto);
+        q.make();
+        return q.createSvgTag(4, 0);
+    }
+
+    async function copiarLinkCarne() {
+        const c = clienteActual && clienteActual.cliente;
+        if (!c || !c.token) return;
+        const link = linkCarne(c.token);
+        try {
+            await navigator.clipboard.writeText(link);
+            toast('🔗 Link copiado. Mándaselo solo a él: con este link se ve y se usa su carné', 'success');
+        } catch {
+            abrirDialogo(`<h3>🔗 Link del carné</h3><div class="dmsg">Cópialo y mándaselo solo a <b style="color:white">${esc(c.nombre)}</b>:</div>
+                <input class="inp" value="${esc(link)}" onclick="this.select()" readonly>
+                <div class="dbtns" style="margin-top: 16px"><button class="sbtn sbtn-gold" onclick="cerrarDialogo(true)">Hecho</button></div>`);
+        }
+    }
+
+    async function renovarLinkCarne() {
+        const c = clienteActual && clienteActual.cliente;
+        if (!c) return;
+        const ok = await confirmar({
+            titulo: '🔄 Nuevo link del carné',
+            html: `El link y el QR actuales de <b style="color:white">${esc(c.nombre)}</b> dejarán de funcionar.<br><br>
+                   Úsalo si ha perdido el móvil o el ticket, o si alguien más tiene su link. Después imprímele el carné de nuevo.`,
+            ok: 'Crear nuevo link', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_token_nuevo', { cliente_id: c.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            toast('🔄 Link renovado: imprime el carné nuevo', 'success');
+            pintarCliente(data, 'carne');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
     }
 
     async function imprimirCarne() {
