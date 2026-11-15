@@ -281,6 +281,38 @@
         }
         input.inp:disabled { opacity: 0.55; cursor: not-allowed; }
 
+        /* TARJETAS REGALO */
+        .scan { display: flex; gap: 8px; }
+        .scan input.inp { font-size: 1.05rem; font-weight: 700; letter-spacing: 1.5px; font-family: 'Courier New', monospace; }
+        .gcard {
+            position: relative; overflow: hidden; max-width: 420px; margin: 20px auto 18px;
+            border-radius: 20px; padding: 20px 22px; min-height: 150px; box-sizing: border-box;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.25));
+            border: 1px solid rgba(251, 191, 36, 0.35); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: fadeUp 0.35s ease-out;
+        }
+        .gcard::after {
+            content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%;
+            right: -70px; top: -90px; background: rgba(251, 191, 36, 0.12); pointer-events: none;
+        }
+        .gcard.nueva { background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,255,255,0.2); }
+        .gcard.vacia { filter: grayscale(0.7); }
+        .gcard-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .gcard-brand { font-size: 0.68rem; font-weight: 800; letter-spacing: 2px; color: #fcd34d; text-transform: uppercase; }
+        .gcard-pill {
+            font-size: 0.62rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 20px; background: rgba(0,0,0,0.35); color: #cbd5e1;
+        }
+        .gcard-pill.ok { color: #34d399; } .gcard-pill.off { color: #fbbf24; }
+        .gcard-saldo { font-size: 2.6rem; font-weight: 900; color: #fcd34d; line-height: 1.1; margin-top: 18px; text-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
+        .gcard-sub { font-size: 0.72rem; color: #cbd5e1; font-weight: 600; margin-top: 2px; }
+        .gcard-code { font-family: 'Courier New', monospace; font-size: 1rem; letter-spacing: 2px; color: #e2e8f0; margin-top: 14px; word-break: break-all; }
+        .tar-acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 420px; margin: 0 auto 14px; }
+        .tar-form { max-width: 420px; margin: 0 auto 18px; }
+        .tar-historial { max-width: 420px; margin: 0 auto; }
+        .mono { font-family: 'Courier New', monospace; letter-spacing: 1px; }
+        .mv-icon.carga { background: rgba(16, 185, 129, 0.15); }
+
         /* MOVIMIENTOS (mismo estilo que el wallet del jugador) */
         .mv { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .mv:last-child { border-bottom: none; }
@@ -343,6 +375,8 @@
 
         @media (max-width: 600px) {
             .shop-header h1 { font-size: 1.8rem; }
+            .shop-tab { font-size: 0.7rem; padding: 10px 2px; }
+            .gcard-saldo { font-size: 2.2rem; }
             .stat-value { font-size: 1.15rem; }
             .panel { padding: 16px; }
             .row2 { grid-template-columns: 1fr; }
@@ -415,6 +449,7 @@
             <button class="shop-tab active" data-tab="jugadores">👥 Jugadores</button>
             <button class="shop-tab" data-tab="movimiento">⚡ Apuntar</button>
             <button class="shop-tab" data-tab="jornada">🏆 Jornada</button>
+            <button class="shop-tab" data-tab="tarjetas">🎁 Tarjetas</button>
         </div>
 
         <!-- TAB: JUGADORES -->
@@ -510,6 +545,32 @@
                 <button class="sbtn sbtn-gold sbtn-full" id="btnJor" onclick="enviarJornada()">🏆 Apuntar premios</button>
             </div>
         </div>
+
+        <!-- TAB: TARJETAS REGALO -->
+        <div class="tab-panel" id="tab-tarjetas">
+            <div class="panel">
+                <h2>🎁 Tarjetas regalo</h2>
+                <form class="scan" onsubmit="event.preventDefault(); abrirTarjeta()">
+                    <input class="inp" type="text" id="tarCodigo" placeholder="Escanea o escribe el código" autocomplete="off" autocapitalize="characters" spellcheck="false">
+                    <button class="sbtn sbtn-gold" type="submit">Buscar</button>
+                </form>
+                <div class="cfg-hint">Con el lector: toca el campo y escanea la tarjeta. Se busca sola.</div>
+                <div id="tarResultado"></div>
+            </div>
+
+            <div class="panel">
+                <div class="stats" style="animation: none">
+                    <div class="stat"><div class="stat-value" id="tarActivas">—</div><div class="stat-label">Con saldo</div></div>
+                    <div class="stat"><div class="stat-value" id="tarPendiente">—</div><div class="stat-label">Por canjear</div></div>
+                    <div class="stat"><div class="stat-value" id="tarVendido">—</div><div class="stat-label">Total cargado</div></div>
+                </div>
+                <div class="toolbar">
+                    <div class="search"><input class="inp" type="text" id="tarBuscar" placeholder="Buscar por código o comprador..." autocomplete="off"></div>
+                    <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('tarjetas')">⏳ Caducidad</button>
+                </div>
+                <div id="listaTarjetas"><div class="spinner"></div></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -544,6 +605,10 @@
         fila_cambiada: 'La hoja ha cambiado mientras tanto. Recarga e inténtalo otra vez',
         accion_desconocida: 'El script está desactualizado: despliega una nueva versión',
         solo_admin: 'Solo se puede cambiar entrando con la clave de admin',
+        codigo_invalido: 'Código no válido: tiene que tener al menos 4 caracteres',
+        tarjeta_ya_activa: 'Esta tarjeta ya está activada',
+        tarjeta_no_activa: 'Esta tarjeta no está activada',
+        saldo_insuficiente: 'La tarjeta no tiene saldo suficiente',
         meses_invalidos: 'Los meses tienen que estar entre 1 y 36',
         fecha_invalida: 'Elige una fecha de inicio válida',
         permisos_disparador: 'Guardado, pero Google necesita permiso para el repaso nocturno. Abre la hoja y usa 🐼 Wallet → Apuntar caducidades ahora una vez',
@@ -935,13 +1000,32 @@
     // =========================================
     let cadSimulacion = null;
     let cadTimer = null;
+    let cadAmbito = 'liga';
 
-    async function abrirCaducidad() {
+    const TEXTOS_CADUCIDAD = {
+        liga: {
+            titulo: 'Caducidad del saldo de la liga',
+            sub: 'Cada premio caduca unos meses después de ganarlo.<br>Los canjes gastan primero el saldo más antiguo.',
+            hint: 'Los premios ganados antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.',
+            ejemplo: 'un premio ganado hoy',
+            quien: n => `${n} jugador${n === 1 ? '' : 'es'}`
+        },
+        tarjetas: {
+            titulo: 'Caducidad de las tarjetas regalo',
+            sub: 'Cada carga caduca unos meses después de hacerse.<br>Las compras gastan primero el saldo más antiguo.',
+            hint: 'Las tarjetas cargadas antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.',
+            ejemplo: 'una tarjeta activada hoy',
+            quien: n => `${n} tarjeta${n === 1 ? '' : 's'}`
+        }
+    };
+
+    async function abrirCaducidad(ambito = 'liga') {
+        cadAmbito = ambito;
         ficha = null;
         document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
         document.getElementById('sheet').classList.add('open');
         try {
-            const data = await api('caducidad');
+            const data = await api('caducidad', { ambito });
             if (data.error) throw new Error(errorDe(data));
             pintarCaducidad(data.config, data.esAdmin);
         } catch (err) {
@@ -952,11 +1036,12 @@
 
     function pintarCaducidad(cfg, esAdmin) {
         const off = esAdmin ? '' : 'disabled';
+        const tx = TEXTOS_CADUCIDAD[cadAmbito];
         document.getElementById('sheetBody').innerHTML = `
             <div class="d-head">
-                <div class="avatar">⏳</div>
-                <div class="d-name">Caducidad del saldo</div>
-                <div class="d-id" style="margin-top: 4px">Cada premio caduca unos meses después de ganarlo.<br>Los canjes gastan primero el saldo más antiguo.</div>
+                <div class="avatar">${cadAmbito === 'tarjetas' ? '🎁' : '⏳'}</div>
+                <div class="d-name">${tx.titulo}</div>
+                <div class="d-id" style="margin-top: 4px">${tx.sub}</div>
             </div>
 
             <div class="switch-row">
@@ -973,12 +1058,13 @@
                         <button type="button" class="chip" data-v="4">4</button>
                         <button type="button" class="chip" data-v="6">6</button>
                         <button type="button" class="chip" data-v="12">12</button>
+                        <button type="button" class="chip" data-v="24">24</button>
                     </div>` : ''}
                 </div>
                 <div class="field">
                     <label>Empieza a contar desde</label>
                     <input class="inp" type="date" id="cadInicio" value="${cfg.inicio}" ${off}>
-                    <div class="cfg-hint">Los premios ganados antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.</div>
+                    <div class="cfg-hint">${tx.hint}</div>
                 </div>
             </div>
 
@@ -1005,6 +1091,7 @@
 
     function leerFormCaducidad() {
         return {
+            ambito: cadAmbito,
             activa: document.getElementById('cadActiva').classList.contains('on'),
             meses: document.getElementById('cadMeses').value,
             inicio: document.getElementById('cadInicio').value
@@ -1020,6 +1107,7 @@
         el.innerHTML = 'Calculando...';
         cadTimer = setTimeout(async () => {
             const cfg = leerFormCaducidad();
+            const tx = TEXTOS_CADUCIDAD[cfg.ambito];
             try {
                 const r = await api('simular_caducidad', cfg);
                 if (!document.getElementById('cadPreview')) return; // se cerró mientras tanto
@@ -1027,10 +1115,10 @@
                 cadSimulacion = r;
                 el.innerHTML = !cfg.activa
                     ? `Con la caducidad <b>desactivada</b> el saldo no caduca nunca.<br>
-                       <span style="opacity:0.75">Si la activas así, un premio ganado hoy caducaría el ${fecha(r.ejemplo)}.</span>`
-                    : `📅 Un premio ganado hoy caduca el <b>${fecha(r.ejemplo)}</b>.<br>`
+                       <span style="opacity:0.75">Si la activas así, ${tx.ejemplo} caducaría el ${fecha(r.ejemplo)}.</span>`
+                    : `📅 ${mayuscula(tx.ejemplo)} caduca el <b>${fecha(r.ejemplo)}</b>.<br>`
                       + (r.caducaYa > 0
-                          ? `<span class="alerta">⏳ Caducarían <b class="alerta">${euros(r.caducaYa)}</b> de ${r.jugadoresYa} jugador${r.jugadoresYa === 1 ? '' : 'es'} en cuanto guardes.</span><br>`
+                          ? `<span class="alerta">⏳ Caducarían <b class="alerta">${euros(r.caducaYa)}</b> de ${tx.quien(r.jugadoresYa)} en cuanto guardes.</span><br>`
                           : '✅ Nadie pierde saldo al guardar.<br>')
                       + (r.proximos30 > 0
                           ? `<span class="aviso">⚠️ ${euros(r.proximos30)} más caducarán en los próximos 30 días.</span>`
@@ -1047,7 +1135,7 @@
             const ok = await confirmar({
                 titulo: '⏳ ¿Seguro?',
                 html: `Al guardar caducarán <b style="color:#fca5a5">${euros(cadSimulacion.caducaYa)}</b> de
-                       ${cadSimulacion.jugadoresYa} jugador${cadSimulacion.jugadoresYa === 1 ? '' : 'es'} y se apuntarán en la hoja.<br><br>
+                       ${TEXTOS_CADUCIDAD[cfg.ambito].quien(cadSimulacion.jugadoresYa)} y se apuntarán en la hoja.<br><br>
                        Si no es lo que quieres, retrasa la fecha de inicio.`,
                 ok: 'Guardar igualmente', peligro: true
             });
@@ -1062,13 +1150,15 @@
             else toast(r.config.activa
                 ? `✅ Caducidad activada: ${r.config.meses} meses` + (r.apuntadas ? ` · ${r.apuntadas} caducidades apuntadas` : '')
                 : '✅ Caducidad desactivada', 'success');
-            cargarResumen();
+            if (cfg.ambito === 'tarjetas') cargarTarjetas(); else cargarResumen();
             if (r.config) pintarCaducidad(r.config, true);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
             cargando(btn, false);
         }
     }
+
+    function mayuscula(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
     // =========================================
     //  NUEVO JUGADOR
@@ -1258,6 +1348,315 @@
     }
 
     // =========================================
+    //  TARJETAS REGALO
+    // =========================================
+    let tarjetas = [];
+    let tarjetaActual = null;
+
+    function normalizarCodigo(c) { return String(c || '').trim().toUpperCase().replace(/\s+/g, ''); }
+
+    async function cargarTarjetas() {
+        try {
+            const data = await api('tarjetas');
+            if (data.error) throw new Error(errorDe(data));
+            tarjetas = data.tarjetas || [];
+            const conSaldo = tarjetas.filter(t => t.saldo > 0.005);
+            document.getElementById('tarActivas').textContent = conSaldo.length;
+            document.getElementById('tarPendiente').textContent = euros(conSaldo.reduce((s, t) => s + t.saldo, 0));
+            document.getElementById('tarVendido').textContent = euros(tarjetas.reduce((s, t) => s + t.cargado, 0));
+            pintarListaTarjetas();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function pintarListaTarjetas() {
+        const q = normalizar(document.getElementById('tarBuscar').value);
+        const lista = tarjetas
+            .filter(t => normalizar(t.codigo + ' ' + t.comprador).includes(q))
+            .sort((a, b) => (b.saldo > 0.005) - (a.saldo > 0.005) || String(b.ultimo).localeCompare(String(a.ultimo)));
+        const cont = document.getElementById('listaTarjetas');
+        if (!lista.length) {
+            cont.innerHTML = `<div class="empty"><div class="ico">${q ? '🔍' : '🎁'}</div>
+                ${q ? 'Ninguna tarjeta coincide' : 'Aún no hay tarjetas. Escanea una para activarla'}</div>`;
+            return;
+        }
+        cont.innerHTML = lista.map(t => `
+            <div class="prow" data-codigo="${esc(t.codigo)}">
+                <div class="avatar">🎁</div>
+                <div class="pinfo">
+                    <div class="pname mono">${esc(t.codigo)}</div>
+                    <div class="pmeta">${t.comprador ? esc(t.comprador) + ' · ' : ''}${euros(t.cargado)} cargados · ${t.ultimo ? 'último uso ' + fecha(t.ultimo) : 'sin uso'}</div>
+                </div>
+                <div class="psaldo ${t.saldo > 0.005 ? '' : 'cero'}">${euros(t.saldo)}</div>
+            </div>`).join('');
+    }
+
+    document.getElementById('tarBuscar').addEventListener('input', pintarListaTarjetas);
+    document.getElementById('listaTarjetas').addEventListener('click', e => {
+        const fila = e.target.closest('.prow');
+        if (!fila) return;
+        document.getElementById('tarCodigo').value = fila.dataset.codigo;
+        abrirTarjeta();
+        document.getElementById('tab-tarjetas').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    async function abrirTarjeta() {
+        const input = document.getElementById('tarCodigo');
+        const codigo = normalizarCodigo(input.value);
+        if (!codigo) { input.focus(); return; }
+        input.value = codigo;
+        const res = document.getElementById('tarResultado');
+        res.innerHTML = '<div class="spinner"></div>';
+        try {
+            const data = await api('tarjeta', { codigo });
+            if (data.error) throw new Error(errorDe(data));
+            pintarTarjeta(data);
+        } catch (err) {
+            res.innerHTML = '';
+            toast('⚠️ ' + err.message, 'danger');
+            input.select();
+        }
+    }
+
+    // Deja el campo listo para escanear la siguiente tarjeta
+    function listoParaEscanear() {
+        const input = document.getElementById('tarCodigo');
+        input.value = '';
+        input.focus();
+    }
+
+    function pintarTarjeta(d) {
+        tarjetaActual = d;
+        const res = document.getElementById('tarResultado');
+
+        if (!d.existe) {
+            res.innerHTML = `
+                <div class="gcard nueva">
+                    <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Tarjeta regalo</span><span class="gcard-pill off">Sin activar</span></div>
+                    <div class="gcard-saldo" id="tarPreviewImporte">—</div>
+                    <div class="gcard-sub">Elige el importe para activarla</div>
+                    <div class="gcard-code">${esc(d.codigo)}</div>
+                </div>
+                <div class="tar-form">
+                    <div class="field">
+                        <label>Importe (€)</label>
+                        <input class="inp" type="number" id="tarImporte" min="0" step="1" inputmode="decimal" placeholder="0">
+                        <div class="chips" id="tarImporteChips">
+                            <button type="button" class="chip" data-v="20">20€</button>
+                            <button type="button" class="chip" data-v="40">40€</button>
+                            <button type="button" class="chip" data-v="50">50€</button>
+                            <button type="button" class="chip" data-v="100">100€</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Comprador (opcional)</label>
+                        <input class="inp" type="text" id="tarComprador" placeholder="Ej: Ana, regalo para su hermano">
+                    </div>
+                    <button class="sbtn sbtn-gold sbtn-full" id="btnTarActivar" onclick="activarTarjeta()">✅ Activar tarjeta</button>
+                </div>`;
+            const importe = document.getElementById('tarImporte');
+            const actualizar = () => {
+                const v = parseFloat(importe.value) || 0;
+                document.getElementById('tarPreviewImporte').textContent = v > 0 ? euros(v) : '—';
+                document.getElementById('btnTarActivar').textContent = v > 0 ? `✅ Activar tarjeta de ${euros(v)}` : '✅ Activar tarjeta';
+            };
+            importe.addEventListener('input', actualizar);
+            document.getElementById('tarImporteChips').addEventListener('click', e => {
+                const c = e.target.closest('.chip');
+                if (!c) return;
+                importe.value = c.dataset.v;
+                actualizar();
+            });
+            importe.focus();
+            return;
+        }
+
+        const t = d.tarjeta;
+        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+        const vacia = d.saldo <= 0.005;
+        res.innerHTML = `
+            <div class="gcard ${vacia ? 'vacia' : ''}">
+                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Tarjeta regalo</span>
+                    <span class="gcard-pill ${vacia ? '' : 'ok'}">${vacia ? 'Gastada' : 'Activa'}</span></div>
+                <div class="gcard-saldo">${euros(d.saldo)}</div>
+                <div class="gcard-sub">Activada el ${fecha(t.activada)} con ${euros(t.importe_inicial)}${t.comprador ? ' · ' + esc(t.comprador) : ''}</div>
+                <div class="gcard-code">${esc(t.codigo)}</div>
+            </div>
+            <div style="text-align:center; margin-top:-8px; margin-bottom: 14px">${avisoCaducidad(movs)}</div>
+
+            <div class="tar-acciones">
+                <button class="sbtn sbtn-ko" onclick="abrirFormTarjeta('canje')" ${vacia ? 'disabled' : ''}>🛒 Canjear</button>
+                <button class="sbtn sbtn-ok" onclick="abrirFormTarjeta('recarga')">➕ Recargar</button>
+            </div>
+            <div class="qform tar-form" id="tarForm">
+                <h3 id="tarFormTitulo"></h3>
+                <div class="field">
+                    <label>Importe (€)</label>
+                    <input class="inp" type="number" id="tarMonto" min="0" step="0.01" inputmode="decimal" placeholder="0">
+                    <div class="chips" id="tarMontoChips"></div>
+                </div>
+                <div class="field">
+                    <label>Concepto (opcional)</label>
+                    <input class="inp" type="text" id="tarConcepto" placeholder="Ej: Caja de sobres">
+                </div>
+                <div class="saldo-preview" id="tarPreview" style="margin: 12px 0"></div>
+                <div style="display:flex; gap:8px">
+                    <button class="sbtn sbtn-ghost" onclick="document.getElementById('tarForm').classList.remove('open')">Cancelar</button>
+                    <button class="sbtn sbtn-gold" style="flex:1" id="btnTarForm" onclick="enviarFormTarjeta()">💾 Guardar</button>
+                </div>
+            </div>
+
+            <div class="tar-historial">
+                <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
+                ${movs.map((m, i) => pintarMovTarjeta(m, i, d.esAdmin)).join('')}
+            </div>`;
+
+        res.querySelectorAll('.mv-del').forEach(btn => {
+            btn.onclick = () => anularMovTarjeta(movs[Number(btn.dataset.i)]);
+        });
+    }
+
+    function pintarMovTarjeta(m, i, esAdmin) {
+        const carga = m.tipo === 'carga';
+        const caducado = m.tipo === 'caducado';
+        let caduca = '';
+        if (m.caduca && m.restante > 0) {
+            const texto = m.restante < m.monto ? `quedan ${euros(m.restante)}, caducan el ${fecha(m.caduca)}` : `caduca el ${fecha(m.caduca)}`;
+            caduca = ` · <span class="mv-caduca ${diasHasta(m.caduca) <= 30 ? 'pronto' : ''}">${texto}</span>`;
+        }
+        return `
+            <div class="mv">
+                <div class="mv-icon ${carga ? 'carga' : caducado ? 'caducado' : 'gasto'}">${carga ? '💳' : caducado ? '⏳' : '🛒'}</div>
+                <div class="mv-info">
+                    <div class="mv-concepto">${esc(m.concepto || '—')}</div>
+                    <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}${caduca}</div>
+                </div>
+                <div class="mv-monto ${carga ? 'positivo' : caducado ? 'caducado' : 'negativo'}">${carga ? '+' : '-'}${euros(m.monto)}</div>
+                ${esAdmin && m.fila ? `<button class="mv-del" title="Borrar este movimiento (solo admin)" data-i="${i}">🗑️</button>` : ''}
+            </div>`;
+    }
+
+    function abrirFormTarjeta(tipo) {
+        const f = document.getElementById('tarForm');
+        f.dataset.tipo = tipo;
+        document.getElementById('tarFormTitulo').textContent = tipo === 'canje' ? '🛒 Canjear' : '➕ Recargar';
+        document.getElementById('tarConcepto').placeholder = tipo === 'canje' ? 'Ej: Caja de sobres' : 'Ej: Recarga por cumpleaños';
+        const saldo = tarjetaActual.saldo;
+        document.getElementById('tarMontoChips').innerHTML = tipo === 'canje'
+            ? `<button type="button" class="chip" data-v="${saldo}">Todo el saldo (${euros(saldo)})</button>`
+            : ['20', '40', '50'].map(v => `<button type="button" class="chip" data-v="${v}">${v}€</button>`).join('');
+        const monto = document.getElementById('tarMonto');
+        monto.value = '';
+        document.getElementById('tarConcepto').value = '';
+        monto.oninput = previewFormTarjeta;
+        document.getElementById('tarMontoChips').onclick = e => {
+            const c = e.target.closest('.chip');
+            if (!c) return;
+            monto.value = c.dataset.v;
+            previewFormTarjeta();
+        };
+        previewFormTarjeta();
+        f.classList.add('open');
+        monto.focus();
+    }
+
+    function previewFormTarjeta() {
+        const tipo = document.getElementById('tarForm').dataset.tipo;
+        const monto = parseFloat(document.getElementById('tarMonto').value) || 0;
+        const saldo = tarjetaActual.saldo;
+        const despues = tipo === 'canje' ? saldo - monto : saldo + monto;
+        const clase = despues < -0.005 ? 'neg' : tipo === 'canje' ? 'down' : 'up';
+        document.getElementById('tarPreview').innerHTML = `Saldo: <b>${euros(saldo)}</b>`
+            + (monto > 0 ? ` <span>→</span> <b class="${clase}">${euros(despues)}</b>` : '')
+            + (despues < -0.005 ? '<br><span class="neg">No tiene saldo suficiente</span>' : '');
+    }
+
+    async function enviarFormTarjeta() {
+        const tipo = document.getElementById('tarForm').dataset.tipo;
+        const importe = parseFloat(document.getElementById('tarMonto').value) || 0;
+        if (!(importe > 0)) { toast('⚠️ Pon un importe', 'warning'); return; }
+        if (tipo === 'canje' && importe > tarjetaActual.saldo + 0.005) {
+            toast(`⚠️ La tarjeta solo tiene ${euros(tarjetaActual.saldo)}`, 'warning');
+            return;
+        }
+        if (tipo === 'recarga') {
+            const ok = await confirmar({
+                titulo: '➕ Recargar tarjeta',
+                html: `Se cargarán <b style="color:#34d399">${euros(importe)}</b> en la tarjeta <b class="mono" style="color:white">${esc(tarjetaActual.tarjeta.codigo)}</b>.<br><br>Recuerda cobrarlo en caja.`,
+                ok: 'Recargar'
+            });
+            if (!ok) return;
+        }
+        const btn = document.getElementById('btnTarForm');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const data = await api(tipo === 'canje' ? 'tarjeta_canjear' : 'tarjeta_recargar', {
+                codigo: tarjetaActual.tarjeta.codigo, importe,
+                concepto: document.getElementById('tarConcepto').value
+            });
+            if (data.error === 'saldo_insuficiente') throw new Error(`La tarjeta solo tiene ${euros(data.saldo)}`);
+            if (data.error) throw new Error(errorDe(data));
+            toast(tipo === 'canje'
+                ? `🛒 Canjeados ${euros(importe)} · quedan ${euros(data.saldo)}`
+                : `➕ Recargados ${euros(importe)} · saldo ${euros(data.saldo)}`, 'success');
+            pintarTarjeta(data);
+            listoParaEscanear();
+            cargarTarjetas();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    async function activarTarjeta() {
+        const importe = parseFloat(document.getElementById('tarImporte').value) || 0;
+        if (!(importe > 0)) { toast('⚠️ Elige el importe de la tarjeta', 'warning'); return; }
+        const ok = await confirmar({
+            titulo: '🎁 Activar tarjeta',
+            html: `Tarjeta <b class="mono" style="color:white">${esc(tarjetaActual.codigo)}</b> con
+                   <b style="color:#34d399">${euros(importe)}</b>.<br><br>Recuerda cobrarla en caja.`,
+            ok: 'Activar'
+        });
+        if (!ok) return;
+        const btn = document.getElementById('btnTarActivar');
+        cargando(btn, true, 'Activando...');
+        try {
+            const data = await api('tarjeta_activar', {
+                codigo: tarjetaActual.codigo, importe,
+                comprador: document.getElementById('tarComprador').value
+            });
+            if (data.error) throw new Error(errorDe(data));
+            toast(`🎁 Tarjeta activada con ${euros(importe)}`, 'success');
+            pintarTarjeta(data);
+            listoParaEscanear();
+            cargarTarjetas();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    async function anularMovTarjeta(m) {
+        const ok = await confirmar({
+            titulo: '🗑️ ¿Borrar este movimiento?',
+            html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
+                   Úsalo solo para corregir errores. Se borrará de la hoja.`,
+            ok: 'Borrar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('tarjeta_anular', { fila: m.fila, codigo: tarjetaActual.tarjeta.codigo, concepto: m.concepto, monto: m.monto });
+            if (data.error) throw new Error(errorDe(data));
+            pintarTarjeta(data);
+            toast('🗑️ Movimiento borrado', 'warning');
+            cargarTarjetas();
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // =========================================
     //  SELECTOR DE JUGADOR (buscador con sugerencias y "crear nuevo")
     // =========================================
     function crearPicker(cont, onSelect) {
@@ -1429,6 +1828,10 @@
         tab.onclick = () => {
             document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t === tab));
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab.dataset.tab));
+            if (tab.dataset.tab === 'tarjetas') {
+                cargarTarjetas();
+                document.getElementById('tarCodigo').focus();
+            }
         };
     });
     document.addEventListener('keydown', e => {
