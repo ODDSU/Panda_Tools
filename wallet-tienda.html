@@ -189,6 +189,8 @@
         .picker-item .avatar { width: 32px; height: 32px; border-radius: 9px; font-size: 0.85rem; }
         .picker-item .pname { font-size: 0.85rem; }
         .picker-item .psaldo { font-size: 0.85rem; }
+        .picker-item.crear .pname { color: #fbbf24; }
+        .picker-item.crear .avatar { background: rgba(251, 191, 36, 0.12); font-size: 0.9rem; }
         .picker-empty { padding: 12px; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
 
         /* JORNADA */
@@ -381,6 +383,7 @@
                         <option value="nombre">Nombre</option>
                         <option value="reciente">Recientes</option>
                     </select>
+                    <button class="sbtn sbtn-ghost" onclick="copiarTodosLosLinks()" title="Copia la lista de links para enviárselos a cada uno por privado">🔗 Links</button>
                     <button class="sbtn sbtn-gold" onclick="dialogoNuevoJugador()">➕ Nuevo</button>
                 </div>
                 <div id="listaJugadores"><div class="spinner"></div></div>
@@ -484,8 +487,8 @@
 <script>
     // URL de la implementación de Apps Script (la misma que en wallet.html)
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywfB7iHCneKZE-_S5TdslmxKPuJm1cVwO_TwXK4vVImd74czpiPj5njWLG8Xftt7yOtA/exec';
-    // Dirección pública del wallet de los jugadores. Vacío = wallet.html en esta misma web.
-    const WALLET_URL = '';
+    // Dirección pública del wallet de los jugadores (los links serán WALLET_URL?t=token)
+    const WALLET_URL = 'https://oddsu.github.io/Timer-Panda/wallet';
 
     const MENSAJES = {
         jugador_no_encontrado: 'Ese jugador no existe en la hoja',
@@ -748,12 +751,34 @@
         if (data) pintarFicha(data);
     }
 
+    function linkDe(j) {
+        return `${WALLET_URL}?t=${encodeURIComponent(j.token)}`;
+    }
+
     function copiarLink() {
         const j = ficha.jugador;
-        if (!j.token) { toast('⚠️ Este jugador aún no tiene token. Genera los links desde el admin', 'warning'); return; }
-        const base = WALLET_URL || new URL('wallet.html', location.href).href.split('?')[0];
-        navigator.clipboard.writeText(`${base}?t=${j.token}`)
+        if (!j.token) { toast('⚠️ Este jugador aún no tiene token. Recarga el panel', 'warning'); return; }
+        navigator.clipboard.writeText(linkDe(j))
             .then(() => toast(`🔗 Link de ${j.nombre} copiado`, 'success'))
+            .catch(() => toast('⚠️ No se pudo copiar', 'danger'));
+    }
+
+    // Lista de todos los links. Cada link es personal: se envía a cada jugador por privado.
+    async function copiarTodosLosLinks() {
+        const conToken = jugadores.filter(j => j.token)
+            .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+        if (!conToken.length) { toast('📭 No hay jugadores', 'warning'); return; }
+        const ok = await confirmar({
+            titulo: '🔗 Copiar todos los links',
+            html: `Se copiará la lista con los ${conToken.length} links.<br><br>
+                   <b style="color:#fbbf24">Envíaselo a cada jugador por privado.</b>
+                   No pegues la lista en un grupo: con el link de otro, cualquiera podría ver su saldo.`,
+            ok: 'Copiar'
+        });
+        if (!ok) return;
+        const texto = conToken.map(j => `${j.nombre}: ${linkDe(j)}`).join('\n');
+        navigator.clipboard.writeText(texto)
+            .then(() => toast(`🔗 ${conToken.length} links copiados`, 'success'))
             .catch(() => toast('⚠️ No se pudo copiar', 'danger'));
     }
 
@@ -989,29 +1014,38 @@
     }
 
     // =========================================
-    //  SELECTOR DE JUGADOR (buscador con sugerencias)
+    //  SELECTOR DE JUGADOR (buscador con sugerencias y "crear nuevo")
     // =========================================
     function crearPicker(cont, onSelect) {
         cont.classList.add('picker');
-        cont.innerHTML = '<input class="inp" type="text" placeholder="Buscar jugador..." autocomplete="off"><div class="picker-list"></div>';
+        cont.innerHTML = '<input class="inp" type="text" placeholder="Buscar o crear jugador..." autocomplete="off"><div class="picker-list"></div>';
         const input = cont.querySelector('input');
         const lista = cont.querySelector('.picker-list');
         let seleccionado = null;
-        let resultados = [];
+        let opciones = [];   // jugadores encontrados + { crear: 'Nombre' } al final
         let resaltado = 0;
 
         function pintar() {
-            const q = normalizar(input.value);
-            resultados = jugadores.filter(j => normalizar(j.nombre + ' ' + j.jugador_id).includes(q)).slice(0, 8);
+            const texto = input.value.trim();
+            const q = normalizar(texto);
+            opciones = jugadores.filter(j => normalizar(j.nombre + ' ' + j.jugador_id).includes(q)).slice(0, 8);
+            // Si lo escrito no es exactamente un jugador que ya existe, se ofrece crearlo
+            if (q.length >= 2 && !jugadores.some(j => normalizar(j.nombre) === q)) {
+                opciones.push({ crear: nombrePropio(texto) });
+            }
             resaltado = 0;
-            lista.innerHTML = resultados.length
-                ? resultados.map((j, i) => `
+            lista.innerHTML = opciones.length
+                ? opciones.map((o, i) => o.crear ? `
+                    <div class="picker-item crear ${i === 0 ? 'hl' : ''}" data-i="${i}">
+                        <div class="avatar">➕</div>
+                        <div class="pinfo"><div class="pname">Crear «${esc(o.crear)}»</div><div class="pmeta">Nuevo jugador</div></div>
+                    </div>` : `
                     <div class="picker-item ${i === 0 ? 'hl' : ''}" data-i="${i}">
-                        <div class="avatar">${esc(inicial(j.nombre))}</div>
-                        <div class="pinfo"><div class="pname">${esc(j.nombre)}</div></div>
-                        <div class="psaldo ${j.saldo > 0.005 ? '' : 'cero'}">${euros(j.saldo)}</div>
+                        <div class="avatar">${esc(inicial(o.nombre))}</div>
+                        <div class="pinfo"><div class="pname">${esc(o.nombre)}</div></div>
+                        <div class="psaldo ${o.saldo > 0.005 ? '' : 'cero'}">${euros(o.saldo)}</div>
                     </div>`).join('')
-                : '<div class="picker-empty">Ningún jugador coincide</div>';
+                : '<div class="picker-empty">Escribe un nombre para buscar o crear</div>';
             lista.classList.add('open');
         }
 
@@ -1022,6 +1056,17 @@
             onSelect(j);
         }
 
+        async function usar(opcion) {
+            if (!opcion.crear) { elegir(opcion); return; }
+            lista.classList.remove('open');
+            input.disabled = true;
+            input.value = `⏳ Creando ${opcion.crear}...`;
+            const nuevo = await crearJugador(opcion.crear);
+            input.disabled = false;
+            if (nuevo) elegir(nuevo);
+            else { input.value = opcion.crear; input.focus(); }
+        }
+
         input.addEventListener('focus', () => { input.select(); pintar(); });
         input.addEventListener('input', () => {
             if (seleccionado) { seleccionado = null; onSelect(null); }
@@ -1029,27 +1074,46 @@
         });
         input.addEventListener('blur', () => setTimeout(() => lista.classList.remove('open'), 120));
         input.addEventListener('keydown', e => {
-            if (!lista.classList.contains('open') || !resultados.length) return;
+            if (!lista.classList.contains('open') || !opciones.length) return;
             if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
-                resaltado = (resaltado + (e.key === 'ArrowDown' ? 1 : -1) + resultados.length) % resultados.length;
+                resaltado = (resaltado + (e.key === 'ArrowDown' ? 1 : -1) + opciones.length) % opciones.length;
                 lista.querySelectorAll('.picker-item').forEach((el, i) => el.classList.toggle('hl', i === resaltado));
             } else if (e.key === 'Enter') {
                 e.preventDefault();
-                elegir(resultados[resaltado]);
+                usar(opciones[resaltado]);
             }
         });
         lista.addEventListener('mousedown', e => {
             const it = e.target.closest('.picker-item');
             if (!it) return;
             e.preventDefault();
-            elegir(resultados[Number(it.dataset.i)]);
+            usar(opciones[Number(it.dataset.i)]);
         });
 
         return {
             get: () => seleccionado,
             limpiar() { seleccionado = null; input.value = ''; }
         };
+    }
+
+    // Crea el jugador en la hoja y devuelve su entrada de la lista (o null si falla)
+    async function crearJugador(nombre) {
+        try {
+            const data = await api('nuevo_jugador', { nombre });
+            if (data.error) throw new Error(errorDe(data));
+            await cargarResumen();
+            toast(`🎉 ${data.jugador.nombre} creado`, 'success');
+            return jugadores.find(j => j.jugador_id === data.jugador.jugador_id) || null;
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            return null;
+        }
+    }
+
+    // "marta gómez" → "Marta Gómez"
+    function nombrePropio(s) {
+        return s.trim().replace(/\s+/g, ' ').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
     }
 
     // =========================================
