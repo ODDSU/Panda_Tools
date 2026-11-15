@@ -1808,7 +1808,8 @@
     const TICKET = {
         tienda: 'PANDA',
         sub: 'Tarjeta regalo',
-        pie: 'Presenta tu tarjeta en tienda para usar el saldo.<br>¡Gracias por tu visita!'
+        pie: 'Presenta tu tarjeta en tienda para usar el saldo.<br>¡Gracias por tu visita!',
+        ancho: 80   // ancho del papel en mm (80 o 58)
     };
 
     function quiereTicket() {
@@ -1863,6 +1864,7 @@
             <style>
                 @page { margin: 0; }
                 * { box-sizing: border-box; }
+                html, body { width: ${TICKET.ancho}mm; }
                 body { margin: 0; padding: 3mm 4mm 6mm; font-family: Arial, Helvetica, sans-serif; color: #000; background: #fff; font-size: 10pt; }
                 .c { text-align: center; }
                 .tienda { font-size: 17pt; font-weight: 900; letter-spacing: 3px; }
@@ -1908,6 +1910,11 @@
         doc.write(html);
         doc.close();
         setTimeout(() => {
+            // La "página" mide justo lo que ocupa el ticket: así no sale papel en blanco al final
+            const alto = Math.ceil(doc.body.getBoundingClientRect().height * 25.4 / 96) + 2;
+            const pagina = doc.createElement('style');
+            pagina.textContent = `@page { size: ${TICKET.ancho}mm ${alto}mm; margin: 0; }`;
+            doc.head.appendChild(pagina);
             try { marco.contentWindow.focus(); marco.contentWindow.print(); }
             catch { toast('⚠️ No se pudo abrir la impresión', 'danger'); }
             const btn = document.getElementById('tarCodigo');
