@@ -245,6 +245,42 @@
         .qform.open { display: block; }
         .qform h3 { margin: 0 0 12px; font-size: 0.85rem; color: white; }
 
+        /* CADUCIDAD */
+        .d-expiry { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 10px; }
+        .d-expiry.pronto, .mv-caduca.pronto { color: #fbbf24; opacity: 1; }
+        .mv-caduca { font-weight: 600; opacity: 0.75; }
+        .switch-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 14px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;
+        }
+        .switch-row b { color: white; font-size: 0.9rem; display: block; }
+        .switch-row small { color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
+        .switch {
+            width: 50px; height: 28px; border-radius: 14px; flex-shrink: 0; cursor: pointer; position: relative;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.12); transition: 0.25s;
+        }
+        .switch::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+            background: #94a3b8; transition: 0.25s;
+        }
+        .switch.on { background: rgba(251, 191, 36, 0.3); border-color: rgba(251, 191, 36, 0.5); }
+        .switch.on::after { left: 25px; background: #fbbf24; }
+        .switch:disabled { cursor: not-allowed; opacity: 0.6; }
+        .cfg-hint { font-size: 0.7rem; color: rgba(148,163,184,0.75); margin-top: 6px; line-height: 1.5; }
+        .cfg-preview {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px;
+            padding: 14px 16px; margin: 18px 0; font-size: 0.8rem; color: #cbd5e1; line-height: 1.7;
+        }
+        .cfg-preview b { color: white; }
+        .cfg-preview .alerta { color: #fca5a5; }
+        .cfg-preview .aviso { color: #fbbf24; }
+        .cfg-lock {
+            text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 600;
+            background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; border: 1px dashed rgba(255,255,255,0.1);
+        }
+        input.inp:disabled { opacity: 0.55; cursor: not-allowed; }
+
         /* MOVIMIENTOS (mismo estilo que el wallet del jugador) */
         .mv { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .mv:last-child { border-bottom: none; }
@@ -262,6 +298,13 @@
             background: transparent; border: 1px solid transparent; color: #475569; transition: 0.2s;
         }
         .mv-del:hover { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+        .mv-dev {
+            flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 0.68rem; font-weight: 700;
+            padding: 6px 10px; border-radius: 8px; transition: 0.2s; white-space: nowrap;
+            background: rgba(52, 211, 153, 0.1); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+        .mv-dev:hover { background: rgba(52, 211, 153, 0.2); }
+        .mv-ok { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; padding: 0 4px; }
 
         /* DIÁLOGO (confirmar / nuevo jugador) */
         .dialog-overlay {
@@ -337,6 +380,7 @@
         <p>Consulta saldos y apunta premios y canjes</p>
         <div class="staff-chip" id="staffChip" style="display:none">
             <span>👤 <span id="staffName"></span></span>
+            <button onclick="abrirCaducidad()">⏳ Caducidad</button>
             <button onclick="cerrarSesion()">Salir</button>
         </div>
     </div>
@@ -499,6 +543,10 @@
         falta_nombre: 'Escribe el nombre del jugador',
         fila_cambiada: 'La hoja ha cambiado mientras tanto. Recarga e inténtalo otra vez',
         accion_desconocida: 'El script está desactualizado: despliega una nueva versión',
+        solo_admin: 'Solo se puede cambiar entrando con la clave de admin',
+        meses_invalidos: 'Los meses tienen que estar entre 1 y 36',
+        fecha_invalida: 'Elige una fecha de inicio válida',
+        permisos_disparador: 'Guardado, pero Google necesita permiso para el repaso nocturno. Abre la hoja y usa 🐼 Wallet → Apuntar caducidades ahora una vez',
         interno: 'Error en el script de Google'
     };
 
@@ -666,8 +714,9 @@
                 <div class="d-mini">
                     <span class="g">+${euros(data.ganado)} ganado</span>
                     <span class="s">-${euros(data.gastado)} gastado</span>
-                    ${data.caducado > 0 ? `<span class="c">⏳ ${euros(data.caducado)}</span>` : ''}
+                    ${data.caducado > 0 ? `<span class="c">⏳ ${euros(data.caducado)} caducado</span>` : ''}
                 </div>
+                ${avisoCaducidad(movs)}
             </div>
 
             <div class="d-actions">
@@ -699,30 +748,85 @@
             </div>
 
             <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
-            ${movs.length ? movs.map(pintarMovimiento).join('') : '<div class="empty"><div class="ico">📭</div>Todavía no tiene movimientos</div>'}
+            ${movs.length ? movs.map((m, i) => pintarMovimiento(m, i, movs)).join('') : '<div class="empty"><div class="ico">📭</div>Todavía no tiene movimientos</div>'}
         `;
 
         document.getElementById('sheetBody').querySelectorAll('.mv-del').forEach(btn => {
             btn.onclick = () => anularMovimiento(movs[Number(btn.dataset.i)]);
         });
+        document.getElementById('sheetBody').querySelectorAll('.mv-dev').forEach(btn => {
+            btn.onclick = () => devolverCaducado(movs[Number(btn.dataset.i)]);
+        });
     }
 
-    function pintarMovimiento(m, i) {
+    // Concepto del premio con el que se devuelve una caducidad. Sirve también para saber si ya se devolvió.
+    function conceptoDevolucion(m) {
+        const d = new Date(m.fecha), p = n => String(n).padStart(2, '0');
+        return `↩️ Devolución de saldo caducado el ${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`;
+    }
+
+    function pintarMovimiento(m, i, movs) {
         const ingreso = esIngreso(m.tipo);
         const caducado = m.tipo === 'caducado';
         const clase = ingreso ? 'ingreso' : caducado ? 'caducado' : 'gasto';
         const icono = ingreso ? '💰' : caducado ? '⏳' : '🛒';
         const monto = ingreso ? 'positivo' : caducado ? 'caducado' : 'negativo';
+        // Premio con saldo vivo: cuánto queda y cuándo caduca
+        let caduca = '';
+        if (m.caduca && m.restante > 0) {
+            const texto = m.restante < m.monto
+                ? `quedan ${euros(m.restante)}, caducan el ${fecha(m.caduca)}`
+                : `caduca el ${fecha(m.caduca)}`;
+            caduca = ` · <span class="mv-caduca ${diasHasta(m.caduca) <= 30 ? 'pronto' : ''}">${texto}</span>`;
+        }
         return `
             <div class="mv">
                 <div class="mv-icon ${clase}">${icono}</div>
                 <div class="mv-info">
                     <div class="mv-concepto">${esc(m.concepto || '—')}</div>
-                    <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}</div>
+                    <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}${caduca}</div>
                 </div>
                 <div class="mv-monto ${monto}">${ingreso ? '+' : '-'}${euros(m.monto)}</div>
-                ${m.fila ? `<button class="mv-del" title="Borrar este movimiento" data-i="${i}">🗑️</button>` : '<span style="width:30px"></span>'}
+                ${accionMovimiento(m, i, movs)}
             </div>`;
+    }
+
+    // Caducidades: ↩️ Devolver (o "✓ Devuelto"). Resto de filas de la hoja: 🗑️ para corregir errores.
+    function accionMovimiento(m, i, movs) {
+        if (m.tipo === 'caducado') {
+            const devuelto = movs.some(x => esIngreso(x.tipo) && x.concepto === conceptoDevolucion(m));
+            return devuelto
+                ? '<span class="mv-ok" title="Este saldo ya se devolvió">✓ Devuelto</span>'
+                : `<button class="mv-dev" title="Devolver este saldo al jugador" data-i="${i}">↩️ Devolver</button>`;
+        }
+        return m.fila
+            ? `<button class="mv-del" title="Borrar este movimiento" data-i="${i}">🗑️</button>`
+            : '<span style="width:30px"></span>';
+    }
+
+    async function devolverCaducado(m) {
+        const j = ficha.jugador;
+        const ok = await confirmar({
+            titulo: '↩️ Devolver saldo caducado',
+            html: `Se le devolverán <b style="color:#34d399">${euros(m.monto)}</b> a <b style="color:white">${esc(j.nombre)}</b>.<br><br>
+                   Se apunta como un premio con fecha de hoy, así que tendrá de nuevo todo el plazo para gastarlo.`,
+            ok: 'Devolver'
+        });
+        if (!ok) return;
+        const data = await registrar({
+            jugador_id: j.jugador_id, tipo: 'premio', monto: m.monto,
+            concepto: conceptoDevolucion(m), fecha: hoyISO()
+        }, ficha.saldo, j.nombre);
+        if (data) pintarFicha(data);
+    }
+
+    // "⏳ 7.00€ caducan el 29 oct 2026": la parte del saldo que caduca antes
+    function avisoCaducidad(movs) {
+        const proximo = movs.filter(m => m.caduca && m.restante > 0)
+            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
+        if (!proximo) return '';
+        const pronto = diasHasta(proximo.caduca) <= 30 ? 'pronto' : '';
+        return `<div class="d-expiry ${pronto}">⏳ ${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>`;
     }
 
     function abrirQform(tipo) {
@@ -823,6 +927,146 @@
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
             return null;
+        }
+    }
+
+    // =========================================
+    //  CONFIGURACIÓN DE LA CADUCIDAD
+    // =========================================
+    let cadSimulacion = null;
+    let cadTimer = null;
+
+    async function abrirCaducidad() {
+        ficha = null;
+        document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
+        document.getElementById('sheet').classList.add('open');
+        try {
+            const data = await api('caducidad');
+            if (data.error) throw new Error(errorDe(data));
+            pintarCaducidad(data.config, data.esAdmin);
+        } catch (err) {
+            cerrarFicha();
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function pintarCaducidad(cfg, esAdmin) {
+        const off = esAdmin ? '' : 'disabled';
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">⏳</div>
+                <div class="d-name">Caducidad del saldo</div>
+                <div class="d-id" style="margin-top: 4px">Cada premio caduca unos meses después de ganarlo.<br>Los canjes gastan primero el saldo más antiguo.</div>
+            </div>
+
+            <div class="switch-row">
+                <span><b>Caducidad activada</b><small>Ahora mismo está ${cfg.activa ? 'activada' : 'desactivada'}</small></span>
+                <button type="button" class="switch ${cfg.activa ? 'on' : ''}" id="cadActiva" ${off} aria-label="Activar caducidad"></button>
+            </div>
+
+            <div class="row2">
+                <div class="field">
+                    <label>Meses de validez</label>
+                    <input class="inp" type="number" id="cadMeses" min="1" max="36" step="1" value="${cfg.meses}" ${off}>
+                    ${esAdmin ? `<div class="chips" id="cadChips">
+                        <button type="button" class="chip" data-v="3">3</button>
+                        <button type="button" class="chip" data-v="4">4</button>
+                        <button type="button" class="chip" data-v="6">6</button>
+                        <button type="button" class="chip" data-v="12">12</button>
+                    </div>` : ''}
+                </div>
+                <div class="field">
+                    <label>Empieza a contar desde</label>
+                    <input class="inp" type="date" id="cadInicio" value="${cfg.inicio}" ${off}>
+                    <div class="cfg-hint">Los premios ganados antes de esta fecha cuentan sus meses desde aquí, para que nadie pierda saldo de golpe.</div>
+                </div>
+            </div>
+
+            <div class="cfg-preview" id="cadPreview">Calculando...</div>
+
+            ${esAdmin
+                ? '<button class="sbtn sbtn-gold sbtn-full" id="btnCad" onclick="guardarCaducidad()">💾 Guardar</button>'
+                : '<div class="cfg-lock">🔒 Para cambiarlo, entra al panel con la clave de admin</div>'}
+        `;
+
+        if (esAdmin) {
+            document.getElementById('cadActiva').onclick = e => { e.currentTarget.classList.toggle('on'); simularCaducidad(); };
+            document.getElementById('cadMeses').addEventListener('input', simularCaducidad);
+            document.getElementById('cadInicio').addEventListener('change', simularCaducidad);
+            document.getElementById('cadChips').addEventListener('click', e => {
+                const c = e.target.closest('.chip');
+                if (!c) return;
+                document.getElementById('cadMeses').value = c.dataset.v;
+                simularCaducidad();
+            });
+        }
+        simularCaducidad();
+    }
+
+    function leerFormCaducidad() {
+        return {
+            activa: document.getElementById('cadActiva').classList.contains('on'),
+            meses: document.getElementById('cadMeses').value,
+            inicio: document.getElementById('cadInicio').value
+        };
+    }
+
+    // Calcula (sin guardar) qué pasaría con estos ajustes. Espera a que se deje de teclear.
+    function simularCaducidad() {
+        clearTimeout(cadTimer);
+        cadSimulacion = null;
+        const el = document.getElementById('cadPreview');
+        if (!el) return;
+        el.innerHTML = 'Calculando...';
+        cadTimer = setTimeout(async () => {
+            const cfg = leerFormCaducidad();
+            try {
+                const r = await api('simular_caducidad', cfg);
+                if (!document.getElementById('cadPreview')) return; // se cerró mientras tanto
+                if (r.error) { el.innerHTML = `<span class="alerta">⚠️ ${esc(errorDe(r))}</span>`; return; }
+                cadSimulacion = r;
+                el.innerHTML = !cfg.activa
+                    ? `Con la caducidad <b>desactivada</b> el saldo no caduca nunca.<br>
+                       <span style="opacity:0.75">Si la activas así, un premio ganado hoy caducaría el ${fecha(r.ejemplo)}.</span>`
+                    : `📅 Un premio ganado hoy caduca el <b>${fecha(r.ejemplo)}</b>.<br>`
+                      + (r.caducaYa > 0
+                          ? `<span class="alerta">⏳ Caducarían <b class="alerta">${euros(r.caducaYa)}</b> de ${r.jugadoresYa} jugador${r.jugadoresYa === 1 ? '' : 'es'} en cuanto guardes.</span><br>`
+                          : '✅ Nadie pierde saldo al guardar.<br>')
+                      + (r.proximos30 > 0
+                          ? `<span class="aviso">⚠️ ${euros(r.proximos30)} más caducarán en los próximos 30 días.</span>`
+                          : 'Nada más caduca en los próximos 30 días.');
+            } catch (err) {
+                el.innerHTML = `<span class="alerta">⚠️ ${esc(err.message)}</span>`;
+            }
+        }, 450);
+    }
+
+    async function guardarCaducidad() {
+        const cfg = leerFormCaducidad();
+        if (cfg.activa && cadSimulacion && cadSimulacion.caducaYa > 0) {
+            const ok = await confirmar({
+                titulo: '⏳ ¿Seguro?',
+                html: `Al guardar caducarán <b style="color:#fca5a5">${euros(cadSimulacion.caducaYa)}</b> de
+                       ${cadSimulacion.jugadoresYa} jugador${cadSimulacion.jugadoresYa === 1 ? '' : 'es'} y se apuntarán en la hoja.<br><br>
+                       Si no es lo que quieres, retrasa la fecha de inicio.`,
+                ok: 'Guardar igualmente', peligro: true
+            });
+            if (!ok) return;
+        }
+        const btn = document.getElementById('btnCad');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const r = await api('guardar_caducidad', cfg);
+            if (r.error === 'permisos_disparador') { toast('⚠️ ' + errorDe(r), 'warning'); }
+            else if (r.error) throw new Error(errorDe(r));
+            else toast(r.config.activa
+                ? `✅ Caducidad activada: ${r.config.meses} meses` + (r.apuntadas ? ` · ${r.apuntadas} caducidades apuntadas` : '')
+                : '✅ Caducidad desactivada', 'success');
+            cargarResumen();
+            if (r.config) pintarCaducidad(r.config, true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
         }
     }
 
@@ -1146,6 +1390,11 @@
     //  UTILIDADES
     // =========================================
     function esIngreso(tipo) { return tipo === 'ingreso' || tipo === 'premio'; }
+    function diasHasta(s) {
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        return Math.round((new Date(s) - hoy) / 86400000);
+    }
     function euros(n) { return (Number(n) || 0).toFixed(2) + '€'; }
     function inicial(nombre) { return (String(nombre).trim()[0] || '?').toUpperCase(); }
     function normalizar(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
