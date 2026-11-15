@@ -2453,6 +2453,7 @@
             <div class="tar-historial">
                 <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
                 ${movs.length ? movs.map((m, i) => pintarMovCliente(m, i)).join('') : '<div class="empty" style="padding: 18px 10px">Todavía no tiene compras</div>'}
+                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarCliente()">🗑️ Eliminar cliente (solo para pruebas o errores)</button>' : ''}
             </div>`;
 
         const importe = document.getElementById('cliImporte');
@@ -2561,6 +2562,31 @@
             if (data.error) throw new Error(errorDe(data));
             pintarCliente(data);
             toast('🗑️ Movimiento borrado', 'warning');
+            cargarClientes(true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // Solo admin: quita el cliente y todo su historial de la hoja
+    async function eliminarCliente() {
+        const d = clienteActual;
+        const ok = await confirmar({
+            titulo: '🗑️ Eliminar cliente',
+            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> y sus
+                   ${d.movimientos.length} movimiento${d.movimientos.length === 1 ? '' : 's'} de la hoja. <b style="color:#fca5a5">No se puede deshacer.</b>`
+                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : '')
+                + '<br><br>Úsalo solo para clientes de prueba o dados de alta por error. Su carné dejará de funcionar.',
+            ok: 'Eliminar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
+            clienteActual = null;
+            document.getElementById('cliResultado').innerHTML = '';
+            document.getElementById('cliBuscar').focus();
             cargarClientes(true);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
