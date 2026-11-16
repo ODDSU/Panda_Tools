@@ -308,6 +308,74 @@
             font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px;
         }
         .tb-user button:hover { color: white; background: rgba(255,255,255,0.1); }
+        .tb-mini {
+            flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 0.72rem; font-weight: 800;
+            padding: 7px 12px; border-radius: 20px; color: #6ee7b7;
+            background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); transition: 0.2s;
+        }
+        .tb-mini:hover { background: rgba(52, 211, 153, 0.2); }
+
+        /* ===== MODO MINI (ventana flotante encima del TPV) ===== */
+        body.mini-body {
+            display: block; margin: 0; padding: 8px; min-height: 0; overflow-x: hidden;
+            background: #0b0b10; color: white; font-family: 'Poppins', sans-serif; font-size: 13px;
+        }
+        body.mini-body .bg-auras, body.mini-body .shop, body.mini-body #toast-container { display: none; }
+        .mn-cab { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .mn-cab b { font-size: 0.85rem; color: #6ee7b7; white-space: nowrap; }
+        .mn-tor { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; min-width: 0; }
+        .mn-tor input { width: 110px; }
+        .mn input {
+            box-sizing: border-box; min-width: 0; padding: 8px 10px; border-radius: 9px; outline: none;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; color-scheme: dark;
+            font-family: inherit; font-size: 0.85rem;
+        }
+        .mn input:focus { border-color: #34d399; }
+        .mn-scan { display: flex; gap: 6px; }
+        .mn-scan input { flex: 1; font-size: 0.95rem; font-weight: 700; }
+        .mn-btn {
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06); color: white; cursor: pointer;
+            font-family: inherit; font-size: 0.78rem; font-weight: 700; padding: 8px 10px; border-radius: 9px; white-space: nowrap;
+        }
+        .mn-btn:hover { background: rgba(255,255,255,0.12); }
+        .mn-btn:disabled { opacity: 0.5; cursor: wait; }
+        .mn-btn.oro { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a2e; border: none; }
+        .mn-btn.azul { background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.4); color: #bfdbfe; }
+        .mn-btn.premio { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a2e; border: none; }
+        .mn-btn.seguro { background: #ef4444; color: white; border: none; }
+        .mn-sug { margin-top: 6px; }
+        .mn-sug-item {
+            display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; margin-bottom: 4px; border-radius: 9px;
+            background: rgba(255,255,255,0.04); cursor: pointer; font-size: 0.82rem;
+        }
+        .mn-sug-item:hover { background: rgba(52, 211, 153, 0.12); }
+        .mn-sug-item small { color: var(--text-muted, #94a3b8); }
+        .mn-card {
+            margin-top: 8px; padding: 10px; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(255,255,255,0.03)); border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+        .mn-f1 { display: flex; align-items: center; gap: 6px; }
+        .mn-nombre { font-weight: 800; font-size: 0.95rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mn-x { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.9rem; padding: 2px 6px; }
+        .mn-f2 { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin: 6px 0 8px; }
+        .mn-saldo small, .mn-jug small { display: block; font-size: 0.62rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .mn-saldo b { font-size: 1.35rem; font-weight: 900; color: #6ee7b7; line-height: 1.1; }
+        .mn-jug { text-align: right; }
+        .mn-jug.on small { color: #93c5fd; }
+        .mn-jug span { font-size: 0.85rem; letter-spacing: 1px; }
+        .mn-compra { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .mn-compra input { width: 100%; }
+        .mn-prev { font-size: 0.75rem; color: #cbd5e1; margin: 6px 0; min-height: 1em; }
+        .mn-prev b { color: #6ee7b7; } .mn-prev .neg { color: #fca5a5; }
+        .mn-chip { background: none; border: none; color: #6ee7b7; cursor: pointer; font-family: inherit; font-size: 0.72rem; font-weight: 700; padding: 0; text-decoration: underline; }
+        .mn-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+        .mn-btns .oro { flex: 1; }
+        .mn-precios { margin-top: 8px; }
+        .mn-precio { display: flex; justify-content: space-between; gap: 8px; font-size: 0.78rem; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .mn-precio b { color: #93c5fd; }
+        .mn-estado { margin-top: 8px; font-size: 0.78rem; font-weight: 700; min-height: 1.2em; }
+        .mn-estado.ok { color: #34d399; } .mn-estado.mal { color: #fca5a5; } .mn-estado.info { color: #fbbf24; }
+        .mn-vacio { color: #94a3b8; font-size: 0.78rem; margin-top: 8px; text-align: center; }
 
         .modos {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px;
@@ -648,6 +716,7 @@
         <div class="topbar">
             <a href="index.html" class="tb-home" title="Volver al Hub">🐼</a>
             <div class="tb-title">Fidelización</div>
+            <button class="tb-mini" onclick="abrirModoMini()" title="Ventana pequeña que se queda encima del TPV">🪟 Mini</button>
             <div class="tb-user">
                 <span>👤 <span id="staffName"></span></span>
                 <button onclick="cerrarSesion()">Salir</button>
@@ -2186,6 +2255,306 @@
     }
 
     // =========================================
+    //  MODO MINI: ventana pequeña siempre encima del TPV
+    // =========================================
+    // En Chrome/Edge se abre como ventana flotante (Picture-in-Picture), que se queda por encima
+    // de cualquier programa. La lógica sigue viviendo en esta página: la ventanita solo pinta y recoge clics.
+    let mini = null;          // { win, doc }
+    let miniCliente = null;   // datos del cliente abierto en la ventanita
+
+    async function abrirModoMini() {
+        if (mini && !mini.win.closed) { mini.win.focus(); return; }
+        cargarClientes(true);
+        cargarTorneos(true);
+        if ('documentPictureInPicture' in window) {
+            try {
+                const win = await documentPictureInPicture.requestWindow({ width: 360, height: 340 });
+                montarMini(win, true);
+                return;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        // Navegador sin ventanas flotantes: ventana pequeña normal
+        const w = window.open(location.pathname + '?mini=1', 'pandaMini', 'popup,width=380,height=560');
+        if (!w) toast('⚠️ El navegador ha bloqueado la ventana: permite las ventanas emergentes', 'warning');
+        else toast('ℹ️ Para que flote siempre encima del TPV, abre el panel en Chrome o Edge', 'warning');
+    }
+
+    function montarMini(win, copiarEstilos) {
+        const doc = win.document;
+        if (copiarEstilos) {
+            // La ventana flotante nace vacía: le pasamos las fuentes y los estilos de esta página
+            document.querySelectorAll('link[rel="stylesheet"]').forEach(l => doc.head.appendChild(l.cloneNode()));
+            [...document.styleSheets].forEach(hoja => {
+                try {
+                    const st = doc.createElement('style');
+                    st.textContent = [...hoja.cssRules].map(r => r.cssText).join('\n');
+                    doc.head.appendChild(st);
+                } catch {} // hojas externas: ya van con su <link>
+            });
+            doc.title = '🐼 Panda mini';
+        }
+        doc.body.classList.add('mini-body');
+        const cont = doc.createElement('div');
+        cont.className = 'mn';
+        cont.innerHTML = `
+            <div class="mn-cab">
+                <span>🐼</span><b>Panda mini</b>
+                <span class="mn-tor" title="Torneo en el que se ficha">⚔️ <input id="mnTorneo" placeholder="Torneo" autocomplete="off"></span>
+            </div>
+            <form class="mn-scan" id="mnForm">
+                <input id="mnBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
+                <button class="mn-btn" type="submit">🔍</button>
+            </form>
+            <div class="mn-sug" id="mnSug"></div>
+            <div id="mnCliente"></div>
+            <div class="mn-estado" id="mnEstado"></div>`;
+        doc.body.appendChild(cont);
+        mini = { win, doc };
+
+        const $ = id => doc.getElementById(id);
+        $('mnTorneo').value = document.getElementById('torNombre').value;
+        $('mnTorneo').addEventListener('input', e => { document.getElementById('torNombre').value = e.target.value; });
+        $('mnForm').addEventListener('submit', e => { e.preventDefault(); miniBuscar(); });
+        $('mnBuscar').addEventListener('input', miniSugerencias);
+        cont.addEventListener('click', miniClic);
+        cont.addEventListener('input', e => { if (e.target.id === 'mnImporte' || e.target.id === 'mnConSaldo') miniPreview(); });
+        cont.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && (e.target.id === 'mnImporte' || e.target.id === 'mnConSaldo')) { e.preventDefault(); miniCompra(); }
+            if (e.key === 'Escape') miniLimpiar();
+        });
+        win.addEventListener('pagehide', () => { mini = null; miniCliente = null; });
+        if (miniCliente) miniPintar(); // al reabrirla, sigue con el mismo cliente
+        $('mnBuscar').focus();
+    }
+
+    function mnEl(id) { return mini && mini.doc.getElementById(id); }
+
+    function miniEstado(texto, tipo = 'ok') {
+        const el = mnEl('mnEstado');
+        if (!el) return;
+        el.className = 'mn-estado ' + tipo;
+        el.textContent = texto;
+        clearTimeout(miniEstado.t);
+        miniEstado.t = setTimeout(() => { if (el.textContent === texto) el.textContent = ''; }, 6000);
+    }
+
+    function fechaCorta(s) {
+        const d = new Date(s);
+        return isNaN(d) ? '' : d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+    }
+
+    function miniLimpiar() {
+        miniCliente = null;
+        mnEl('mnCliente').innerHTML = '';
+        mnEl('mnSug').innerHTML = '';
+        const b = mnEl('mnBuscar');
+        b.value = '';
+        b.focus();
+    }
+
+    function miniSugerencias() {
+        const texto = mnEl('mnBuscar').value.trim();
+        const cont = mnEl('mnSug');
+        if (texto.length < 2 || /^\d+$/.test(texto)) { cont.innerHTML = ''; return; }
+        const q = normalizar(texto);
+        const lista = clientes.filter(c => normalizar(c.nombre).includes(q)).slice(0, 5);
+        cont.innerHTML = lista.map(c => `
+            <div class="mn-sug-item" data-id="${esc(c.cliente_id)}">
+                <span>${esc(c.nombre)}</span><small>${c.activo ? '⚔️ · ' : ''}${euros(c.saldo)}</small>
+            </div>`).join('')
+            + (lista.some(c => normalizar(c.nombre) === q) ? '' : `<div class="mn-sug-item" data-acc="alta"><span>➕ Dar de alta «${esc(nombrePropio(texto))}»</span></div>`);
+    }
+
+    function miniBuscar() {
+        const texto = mnEl('mnBuscar').value.trim();
+        if (!texto) return;
+        const codigo = normalizarCodigo(texto);
+        const porCarne = clientes.find(c => c.carne === codigo);
+        if (porCarne) return miniAbrir({ cliente_id: porCarne.cliente_id });
+        const q = normalizar(texto);
+        const exactos = clientes.filter(c => normalizar(c.nombre) === q);
+        const parecidos = clientes.filter(c => normalizar(c.nombre).includes(q));
+        if (exactos.length === 1) return miniAbrir({ cliente_id: exactos[0].cliente_id });
+        if (parecidos.length === 1) return miniAbrir({ cliente_id: parecidos[0].cliente_id });
+        if (/^\d{4,}$/.test(codigo)) return miniAbrir({ carne: codigo });
+        miniSugerencias();
+        if (!parecidos.length) miniEstado('🔍 No hay ningún cliente así', 'info');
+    }
+
+    async function miniAbrir(datos) {
+        miniEstado('Buscando...', 'info');
+        try {
+            const data = await api('cliente', datos);
+            if (data.error) throw new Error(errorDe(data));
+            miniCliente = data;
+            mnEl('mnBuscar').value = '';
+            mnEl('mnSug').innerHTML = '';
+            miniEstado('');
+            miniPintar();
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            mnEl('mnBuscar').select();
+        }
+    }
+
+    function miniPintar() {
+        const d = miniCliente, j = d.jugador;
+        const premio = j.sellos >= j.meta;
+        const precios = torneosData.precios || [];
+        mnEl('mnCliente').innerHTML = `
+            <div class="mn-card">
+                <div class="mn-f1">
+                    <span class="mn-nombre">${esc(d.cliente.nombre)}</span>
+                    <button class="mn-x" data-acc="cerrar" title="Cerrar (Esc)">✕</button>
+                </div>
+                <div class="mn-f2">
+                    <div class="mn-saldo"><small>Saldo juegos</small><b>${euros(d.saldo)}</b></div>
+                    <div class="mn-jug ${j.activo ? 'on' : ''}">
+                        <small>${j.activo ? '⚔️ Precio jugador hasta ' + fechaCorta(j.hasta) : '⚔️ Sin precio jugador'}</small>
+                        <span>${sellosTexto(j.sellos, j.meta).replace(/●/g, '🐼')} ${j.sellos}/${j.meta}</span>
+                    </div>
+                </div>
+                <div class="mn-compra">
+                    <input id="mnImporte" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Compra juegos €">
+                    <input id="mnConSaldo" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Con saldo €" ${d.saldo > 0.005 ? '' : 'disabled'}>
+                </div>
+                <div class="mn-prev" id="mnPrev"></div>
+                <div class="mn-btns">
+                    <button class="mn-btn oro" data-acc="compra">💾 Apuntar compra</button>
+                    <button class="mn-btn azul" data-acc="fichar" title="Fichar en el torneo de hoy">⚔️ Fichar</button>
+                    ${premio ? `<button class="mn-btn premio" data-acc="premio" title="${esc(j.premio)}">🎁 Premio</button>` : ''}
+                    ${precios.length ? '<button class="mn-btn" data-acc="precios" title="Precios de jugador">🃏</button>' : ''}
+                </div>
+                <div class="mn-precios" id="mnPrecios" hidden>
+                    ${j.activo ? '' : '<div class="mn-vacio">Sin precio de jugador: no ha jugado en los últimos ' + j.dias + ' días</div>'}
+                    ${precios.map(p => `<div class="mn-precio"><span>${esc(p.producto)}</span><b>${euros(p.precio_jugador)}</b></div>`).join('')}
+                </div>
+            </div>`;
+        miniPreview();
+        mnEl('mnImporte').focus();
+    }
+
+    function miniPreview() {
+        const el = mnEl('mnPrev');
+        if (!el || !miniCliente) return;
+        const saldo = miniCliente.saldo;
+        const importe = Math.round((parseFloat(mnEl('mnImporte').value) || 0) * 100) / 100;
+        const conSaldo = Math.round((parseFloat(mnEl('mnConSaldo').value) || 0) * 100) / 100;
+        const base = Math.max(0, Math.round((importe - conSaldo) * 100) / 100);
+        const cb = base > 0 && base >= cashbackCfg.minimo - 0.005 ? Math.round(base * cashbackCfg.porcentaje) / 100 : 0;
+        const todo = saldo > 0.005 ? ` · <button class="mn-chip" data-acc="todo">usar saldo</button>` : '';
+        if (!(importe > 0)) { el.innerHTML = `Cashback ${pct(cashbackCfg.porcentaje)}${todo}`; return; }
+        if (conSaldo > saldo + 0.005) { el.innerHTML = `<span class="neg">Solo tiene ${euros(saldo)}</span>`; return; }
+        if (conSaldo > importe + 0.005) { el.innerHTML = '<span class="neg">Con saldo no puede superar la compra</span>'; return; }
+        el.innerHTML = `${cb > 0 ? `Cashback <b>+${euros(cb)}</b>` : 'Sin cashback'} · saldo → <b>${euros(saldo - conSaldo + cb)}</b>${todo}`;
+    }
+
+    async function miniClic(e) {
+        const sug = e.target.closest('.mn-sug-item');
+        if (sug) {
+            if (sug.dataset.acc === 'alta') return miniAlta();
+            return miniAbrir({ cliente_id: sug.dataset.id });
+        }
+        const b = e.target.closest('[data-acc]');
+        if (!b) return;
+        const acc = b.dataset.acc;
+        if (acc === 'cerrar') miniLimpiar();
+        if (acc === 'compra') miniCompra();
+        if (acc === 'fichar') miniFichar(b);
+        if (acc === 'premio') miniPremio(b);
+        if (acc === 'precios') { const p = mnEl('mnPrecios'); p.hidden = !p.hidden; }
+        if (acc === 'todo') {
+            const imp = parseFloat(mnEl('mnImporte').value) || 0;
+            mnEl('mnConSaldo').value = (imp > 0 ? Math.min(imp, miniCliente.saldo) : miniCliente.saldo).toFixed(2);
+            miniPreview();
+        }
+    }
+
+    // Tras cada gestión: se queda el cliente a la vista y el buscador listo para el siguiente
+    function miniTrasGestion(data, texto) {
+        miniCliente = data;
+        miniPintar();
+        miniEstado(texto, 'ok');
+        mnEl('mnBuscar').focus();
+        cargarClientes(true);
+        cargarTorneos(true);
+    }
+
+    async function miniCompra() {
+        if (!miniCliente) return;
+        const importe = Math.round((parseFloat(mnEl('mnImporte').value) || 0) * 100) / 100;
+        const conSaldo = Math.round((parseFloat(mnEl('mnConSaldo').value) || 0) * 100) / 100;
+        if (!(importe > 0)) { miniEstado('⚠️ Pon el importe de juegos de mesa', 'mal'); mnEl('mnImporte').focus(); return; }
+        if (conSaldo > miniCliente.saldo + 0.005) { miniEstado(`⚠️ Solo tiene ${euros(miniCliente.saldo)}`, 'mal'); return; }
+        const btn = mini.doc.querySelector('[data-acc="compra"]');
+        btn.disabled = true;
+        try {
+            const data = await api('cliente_compra', { cliente_id: miniCliente.cliente.cliente_id, importe, con_saldo: conSaldo });
+            if (data.error === 'saldo_insuficiente') throw new Error(`Solo tiene ${euros(data.saldo)}`);
+            if (data.error === 'bajo_minimo') throw new Error(`No genera cashback (mínimo ${euros(data.minimo)})`);
+            if (data.error) throw new Error(errorDe(data));
+            miniTrasGestion(data, (data.cashback > 0 ? `✅ +${euros(data.cashback)} de cashback` : `✅ ${euros(conSaldo)} con saldo`) + ` · saldo ${euros(data.saldo)}`);
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            btn.disabled = false;
+        }
+    }
+
+    async function miniFichar(btn) {
+        btn.disabled = true;
+        try {
+            const data = await api('torneos_fichar', { cliente_id: miniCliente.cliente.cliente_id, torneo: nombreTorneo() });
+            if (data.error && data.error !== 'ya_fichado') throw new Error(errorDe(data));
+            const j = data.jugador;
+            miniTrasGestion(data, data.error === 'ya_fichado'
+                ? 'ℹ️ Ya estaba fichado en este torneo'
+                : `✅ Fichado · ${j.sellos}/${j.meta} sellos` + (j.sellos >= j.meta ? ' · 🎁 ¡premio!' : ''));
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            btn.disabled = false;
+        }
+    }
+
+    // Sin ventanas de confirmación (quedarían detrás del TPV): se pulsa dos veces
+    async function miniPremio(btn) {
+        const j = miniCliente.jugador;
+        if (!btn.classList.contains('seguro')) {
+            btn.classList.add('seguro');
+            btn.textContent = '¿Entregado? Pulsa otra vez';
+            miniEstado(`🎁 Entrégale: ${j.premio} (gasta ${j.meta} sellos)`, 'info');
+            setTimeout(() => { if (btn.isConnected) { btn.classList.remove('seguro'); btn.textContent = '🎁 Premio'; } }, 5000);
+            return;
+        }
+        btn.disabled = true;
+        try {
+            const data = await api('torneos_sellos', { cliente_id: miniCliente.cliente.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            miniTrasGestion(data, `🎁 Premio entregado: ${j.premio}`);
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            btn.disabled = false;
+        }
+    }
+
+    // Alta rápida desde la ventanita (el carné se imprime luego desde el panel)
+    async function miniAlta() {
+        const nombre = nombrePropio(mnEl('mnBuscar').value);
+        if (!nombre) return;
+        miniEstado('Creando...', 'info');
+        try {
+            const data = await api('cliente_nuevo', { nombre });
+            if (data.error) throw new Error(errorDe(data));
+            mnEl('mnBuscar').value = '';
+            mnEl('mnSug').innerHTML = '';
+            miniTrasGestion(data, `🎉 ${data.cliente.nombre} dado de alta · imprime su carné desde el panel`);
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+        }
+    }
+
+    // =========================================
     //  DIÁLOGOS
     // =========================================
     let resolverDialogo = null;
@@ -2256,8 +2625,14 @@
         else cerrarFicha();
     });
 
-    if (sesion) mostrarApp();
-    else document.getElementById('vistaLogin').style.display = 'block';
+    const esVentanaMini = new URLSearchParams(location.search).get('mini') === '1';
+    if (sesion) {
+        mostrarApp();
+        // Ventana pequeña normal (navegadores sin ventana flotante): solo la parte mini
+        if (esVentanaMini) montarMini(window, false);
+    } else {
+        document.getElementById('vistaLogin').style.display = 'block';
+    }
 </script>
 
 </body>
