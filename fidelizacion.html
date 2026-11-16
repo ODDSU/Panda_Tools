@@ -640,7 +640,38 @@
     </style>
     <style>
         /* ===== Ajustes propios de Fidelización ===== */
-        .modos { grid-template-columns: 1fr 1fr; }
+        .modos { grid-template-columns: repeat(3, 1fr); }
+        .modo.socios.active {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.06));
+            border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 6px 24px rgba(251, 191, 36, 0.15);
+        }
+        .modo.socios.active b { color: #fcd34d; }
+        .modo.socios.active .modo-ico { background: rgba(251, 191, 36, 0.18); }
+
+        /* SOCIOS */
+        .so-mes { color: var(--text-muted); font-weight: 600; font-size: 0.72rem; margin-left: 6px; }
+        .so-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .so-stat { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 12px 8px; text-align: center; }
+        .so-stat b { display: block; font-size: 1.25rem; font-weight: 900; color: #fcd34d; line-height: 1.2; }
+        .so-stat.verde b { color: #6ee7b7; } .so-stat.azul b { color: #93c5fd; } .so-stat.rojo b { color: #fca5a5; }
+        .so-stat span { display: block; font-size: 0.6rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+        .so-filtros { margin: 0 0 14px; }
+        .so-filtros .chip.on { background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.5); color: #fcd34d; }
+        .so-filtros .chip small { opacity: 0.7; margin-left: 3px; }
+        .so-badges { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: 1px; }
+        .so-badge { font-size: 0.6rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,0.06); color: #cbd5e1; }
+        .so-badge.premio { background: rgba(251, 191, 36, 0.18); color: #fcd34d; }
+        .so-badge.caduca { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+        .so-badge.activo { background: rgba(96, 165, 250, 0.15); color: #93c5fd; }
+        .so-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 14px; }
+        .so-nombre-edit { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.6; padding: 0 4px; vertical-align: 2px; }
+        .so-nombre-edit:hover { opacity: 1; }
+        .so-nota { width: 100%; box-sizing: border-box; resize: vertical; min-height: 54px; font-family: inherit; }
+        .so-acc { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 6px; }
+        @media (max-width: 600px) {
+            .so-stats { grid-template-columns: repeat(2, 1fr); }
+            .so-tiles { grid-template-columns: repeat(2, 1fr); }
+        }
         .shop-header h1, .tb-title {
             background: linear-gradient(to right, #6ee7b7, #34d399);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -714,9 +745,10 @@
             .pe-cab, .pe-fila { grid-template-columns: 1fr 64px 64px 30px; }
         }
         @media (max-width: 600px) {
-            .modo { flex-direction: row; text-align: left; padding: 8px 10px; gap: 9px; }
-            .modo-txt b { font-size: 0.9rem; }
-            .modo-txt small { font-size: 0.64rem; line-height: 1.35; }
+            .modos { gap: 4px; padding: 5px; }
+            .modo { flex-direction: column; text-align: center; padding: 8px 4px; gap: 4px; }
+            .modo-txt b { font-size: 0.85rem; }
+            .modo-txt small { font-size: 0.6rem; line-height: 1.3; white-space: normal; }
         }
     </style>
 </head>
@@ -758,6 +790,10 @@
             <button class="modo torneos" data-modo="torneos">
                 <span class="modo-ico">⚔️</span>
                 <span class="modo-txt"><b>Torneos</b><small id="modoTorInfo">Fichajes y sellos</small></span>
+            </button>
+            <button class="modo socios" data-modo="socios">
+                <span class="modo-ico">👥</span>
+                <span class="modo-txt"><b>Socios</b><small id="modoSocInfo">Lista y resumen</small></span>
             </button>
         </div>
     </div>
@@ -808,6 +844,27 @@
                 <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('cashback')">⏳ Caducidad</button>
             </div>
             <div id="listaClientes"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- ===================== MODO SOCIOS ===================== -->
+      <div id="modoSocios" class="modo-vista" style="display:none">
+        <div class="panel">
+            <h2>📊 Resumen del programa <small class="so-mes" id="soMes"></small></h2>
+            <div class="so-stats" id="soStats"><div class="spinner"></div></div>
+        </div>
+        <div class="panel">
+            <div class="toolbar">
+                <div class="search"><input class="inp" type="text" id="soBuscar" placeholder="Buscar por nombre, carné o nota..." autocomplete="off"></div>
+                <select class="inp" id="soOrden">
+                    <option value="visita">Última visita</option>
+                    <option value="saldo">Más saldo</option>
+                    <option value="nombre">Nombre</option>
+                    <option value="alta">Más nuevos</option>
+                </select>
+            </div>
+            <div class="chips so-filtros" id="soFiltros"></div>
+            <div id="listaSocios"><div class="spinner"></div></div>
         </div>
       </div>
 
@@ -970,7 +1027,7 @@
         document.getElementById('barraApp').style.display = 'none';
         document.getElementById('hero').style.display = '';
         document.getElementById('vistaLogin').style.display = 'block';
-        document.body.classList.remove('modo-cashback', 'modo-torneos');
+        document.body.classList.remove('modo-cashback', 'modo-torneos', 'modo-socios');
         cerrarFicha();
     }
 
@@ -987,15 +1044,17 @@
     }
 
     function setModo(modo) {
-        if (modo !== 'torneos') modo = 'cashback';
+        if (modo !== 'torneos' && modo !== 'socios') modo = 'cashback';
         document.body.classList.toggle('modo-cashback', modo === 'cashback');
         document.body.classList.toggle('modo-torneos', modo === 'torneos');
+        document.body.classList.toggle('modo-socios', modo === 'socios');
         document.querySelectorAll('.modo').forEach(b => b.classList.toggle('active', b.dataset.modo === modo));
         document.getElementById('modoCashback').style.display = modo === 'cashback' ? '' : 'none';
         document.getElementById('modoTorneos').style.display = modo === 'torneos' ? '' : 'none';
+        document.getElementById('modoSocios').style.display = modo === 'socios' ? '' : 'none';
         setData('panda_fidelizacion_modo', modo);
-        // Los clientes hacen falta en los dos modos (el carné y el nombre se buscan en esa lista)
-        cargarClientes(modo !== 'cashback');
+        // Los clientes hacen falta en todos los modos (el carné y el nombre se buscan en esa lista)
+        cargarClientes(modo === 'torneos');
         if (modo === 'cashback') setTimeout(() => document.getElementById('cliBuscar').focus(), 50);
         if (modo === 'torneos') {
             cargarTorneos();
@@ -1376,9 +1435,11 @@
             document.getElementById('cliPendiente').textContent = euros(pendiente);
             document.getElementById('cliPct').textContent = pct(cashbackCfg.porcentaje);
             document.getElementById('modoCliInfo').textContent = `${clientes.length} cliente${clientes.length === 1 ? '' : 's'} · ${pct(cashbackCfg.porcentaje)}`;
+            sociosStats = data.stats || null;
             pintarListaClientes();
+            pintarSocios();
         } catch (err) {
-            if (!silencioso && document.body.classList.contains('modo-cashback')) toast('⚠️ ' + err.message, 'danger');
+            if (!silencioso && !document.body.classList.contains('modo-torneos')) toast('⚠️ ' + err.message, 'danger');
             document.getElementById('listaClientes').innerHTML = '';
         }
     }
@@ -1894,6 +1955,282 @@
     // "marta gómez" → "Marta Gómez"
     function nombrePropio(s) {
         return s.trim().replace(/\s+/g, ' ').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+    }
+
+    // =========================================
+    //  SOCIOS: lista con filtros, ficha completa y resumen del programa
+    // =========================================
+    let sociosStats = null;
+    let socioFiltro = 'todos';
+    let fichaSocio = null;   // socio abierto en la hoja (independiente de la ficha de Cashback)
+
+    function diasDesde(s) { return s ? -diasHasta(s) : Infinity; }
+
+    const FILTROS_SOCIOS = [
+        { id: 'todos', txt: 'Todos', f: () => true },
+        { id: 'premio', txt: '🎁 Premio pendiente', f: c => c.sellos >= c.meta },
+        { id: 'caduca', txt: '⏳ Saldo caduca pronto', f: c => c.caducaPronto > 0.005 },
+        { id: 'activos', txt: '⚔️ Jugadores activos', f: c => c.activo },
+        { id: 'saldo', txt: '💸 Con saldo', f: c => c.saldo > 0.005 },
+        { id: 'inactivos', txt: '💤 Inactivos (+60 días)', f: c => diasDesde(c.ultimaVisita) > 60 },
+        { id: 'nota', txt: '📝 Con nota', f: c => !!c.nota }
+    ];
+
+    function pintarSocios() {
+        const cont = document.getElementById('listaSocios');
+        if (!cont) return;
+        const s = sociosStats;
+        const mes = new Date().toLocaleDateString('es-ES', { month: 'long' });
+        document.getElementById('soMes').textContent = `(${mes})`;
+        if (s) {
+            document.getElementById('modoSocInfo').textContent = `${s.socios} socio${s.socios === 1 ? '' : 's'} · ${s.activosMes} este mes`;
+            document.getElementById('soStats').innerHTML = `
+                <div class="so-stat"><b>${s.socios}</b><span>Socios</span></div>
+                <div class="so-stat verde"><b>${s.activosMes}</b><span>Activos en ${mes}</span></div>
+                <div class="so-stat rojo"><b>${euros(s.saldoPendiente)}</b><span>Saldo pendiente</span></div>
+                <div class="so-stat"><b>${s.premiosPendientes}</b><span>Premios por recoger</span></div>
+                <div class="so-stat verde"><b>${euros(s.cashbackMes)}</b><span>Cashback dado</span></div>
+                <div class="so-stat rojo"><b>${euros(s.gastadoMes)}</b><span>Saldo gastado</span></div>
+                <div class="so-stat azul"><b>${s.fichajesMes}</b><span>Fichajes en torneos</span></div>
+                <div class="so-stat azul"><b>${s.premiosMes}</b><span>Premios entregados</span></div>`;
+        }
+
+        // Filtros con su número de socios
+        document.getElementById('soFiltros').innerHTML = FILTROS_SOCIOS.map(f => {
+            const n = clientes.filter(f.f).length;
+            return `<button type="button" class="chip ${socioFiltro === f.id ? 'on' : ''}" data-f="${f.id}">${f.txt}<small>${n}</small></button>`;
+        }).join('');
+
+        const q = normalizar(document.getElementById('soBuscar').value);
+        const orden = document.getElementById('soOrden').value;
+        const filtro = FILTROS_SOCIOS.find(f => f.id === socioFiltro) || FILTROS_SOCIOS[0];
+        const lista = clientes
+            .filter(filtro.f)
+            .filter(c => !q || normalizar(c.nombre + ' ' + c.carne + ' ' + c.nota).includes(q))
+            .sort((a, b) =>
+                orden === 'saldo' ? b.saldo - a.saldo
+                : orden === 'nombre' ? a.nombre.localeCompare(b.nombre)
+                : orden === 'alta' ? String(b.alta).localeCompare(String(a.alta))
+                : String(b.ultimaVisita).localeCompare(String(a.ultimaVisita)));
+
+        cont.innerHTML = lista.length ? lista.map(c => `
+            <div class="prow" data-id="${esc(c.cliente_id)}">
+                <div class="avatar">${esc(inicial(c.nombre))}</div>
+                <div class="pinfo">
+                    <div class="pname">${esc(c.nombre)}<span class="so-badges">
+                        ${c.sellos >= c.meta ? '<span class="so-badge premio">🎁 premio</span>' : ''}
+                        ${c.activo ? '<span class="so-badge activo">⚔️</span>' : ''}
+                        ${c.caducaPronto > 0.005 ? `<span class="so-badge caduca">⏳ ${euros(c.caducaPronto)}</span>` : ''}
+                        ${c.nota ? '<span class="so-badge" title="' + esc(c.nota) + '">📝</span>' : ''}
+                    </span></div>
+                    <div class="pmeta">${c.ultimaVisita ? 'Última visita ' + fecha(c.ultimaVisita) : 'Sin visitas'} · ${c.torneos} torneo${c.torneos === 1 ? '' : 's'} · 🐼 ${c.sellos}/${c.meta}</div>
+                </div>
+                <div class="psaldo ${c.saldo > 0.005 ? '' : 'cero'}">${euros(c.saldo)}</div>
+            </div>`).join('')
+            : `<div class="empty"><div class="ico">👥</div>${clientes.length ? 'Ningún socio coincide' : 'Aún no hay socios'}</div>`;
+    }
+
+    document.getElementById('soBuscar').addEventListener('input', pintarSocios);
+    document.getElementById('soOrden').addEventListener('change', pintarSocios);
+    document.getElementById('soFiltros').addEventListener('click', e => {
+        const c = e.target.closest('.chip');
+        if (!c) return;
+        socioFiltro = c.dataset.f;
+        pintarSocios();
+    });
+    document.getElementById('listaSocios').addEventListener('click', e => {
+        const fila = e.target.closest('.prow');
+        if (fila) abrirSocio(fila.dataset.id);
+    });
+
+    // ---- Ficha completa del socio ----
+    async function abrirSocio(id) {
+        ficha = null;
+        document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
+        document.getElementById('sheet').classList.add('open');
+        try {
+            const data = await api('cliente', { cliente_id: id });
+            if (data.error) throw new Error(errorDe(data));
+            pintarSocio(data);
+        } catch (err) {
+            cerrarFicha();
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function pintarSocio(d) {
+        fichaSocio = d;
+        const c = d.cliente, j = d.jugador;
+        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+        const sinBorrar = html => html.replace(/<button class="mv-del"[\s\S]*?<\/button>/, '');
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">${esc(inicial(c.nombre))}</div>
+                <div class="d-name">${esc(c.nombre)}<button class="so-nombre-edit" onclick="editarNombreSocio()" title="Corregir el nombre">✏️</button></div>
+                <div class="d-id">Carné <span class="mono">${esc(c.carne)}</span>${c.alta ? ' · socio desde ' + fecha(c.alta) : ''}</div>
+            </div>
+            <div class="so-tiles">
+                <div class="so-stat verde"><b>${euros(d.saldo)}</b><span>Saldo</span></div>
+                <div class="so-stat verde"><b>${euros(d.ganado)}</b><span>Cashback total</span></div>
+                <div class="so-stat rojo"><b>${euros(d.gastado)}</b><span>Gastado</span></div>
+                <div class="so-stat azul"><b>${j.sellos}/${j.meta}</b><span>Sellos${j.sellos >= j.meta ? ' · 🎁' : ''}</span></div>
+                <div class="so-stat azul"><b>${j.torneos}</b><span>Torneos</span></div>
+                <div class="so-stat ${j.activo ? 'azul' : ''}"><b>${j.activo ? '⚔️ ' + fechaCorta(j.hasta) : '—'}</b><span>${j.activo ? 'Precio jugador hasta' : 'Sin precio jugador'}</span></div>
+            </div>
+            <div style="text-align:center; margin: -6px 0 12px">${avisoCaducidad(movs)}</div>
+
+            <div class="field">
+                <label>📝 Nota interna (solo la ve la tienda)</label>
+                <textarea class="inp so-nota" id="soNota" maxlength="500" placeholder="Ej: prefiere Commander, le debemos un sobre...">${esc(c.nota || '')}</textarea>
+                <button class="sbtn sbtn-ghost sbtn-sm" id="btnSoNota" style="margin-top: 6px" onclick="guardarNotaSocio()">💾 Guardar nota</button>
+            </div>
+
+            <div class="so-acc">
+                <button class="sbtn sbtn-gold sbtn-sm" onclick="socioEnCashback()">💸 Abrir en caja</button>
+                <button class="sbtn sbtn-ghost sbtn-sm" onclick="imprimirCarneSocio()">🎫 Carné</button>
+                ${c.token ? '<button class="sbtn sbtn-ghost sbtn-sm" onclick="copiarLinkSocio()">🔗 Link</button>' : ''}
+                <button class="sbtn sbtn-ghost sbtn-sm" onclick="renovarLinkSocio()">🔄 Renovar link</button>
+            </div>
+
+            <div class="tar-historial" style="max-width: none">
+                <h2 style="font-size: 0.95rem; margin: 18px 0 6px">💸 Saldo</h2>
+                ${movs.length ? movs.map((m, i) => sinBorrar(pintarMovCliente(m, i))).join('') : '<div class="empty" style="padding: 14px 10px">Sin movimientos</div>'}
+                ${j.historial.length ? `
+                    <h2 style="font-size: 0.95rem; margin: 18px 0 6px">⚔️ Torneos</h2>
+                    ${j.historial.map(a => `
+                        <div class="mv">
+                            <div class="mv-icon ${a.tipo === 'premio' ? 'gasto' : 'tor'}">${a.tipo === 'premio' ? '🎁' : '⚔️'}</div>
+                            <div class="mv-info">
+                                <div class="mv-concepto">${a.tipo === 'premio' ? 'Premio: ' + esc(a.torneo) : esc(a.torneo || 'Torneo')}</div>
+                                <div class="mv-fecha">${fecha(a.fecha)}${a.por ? ' · por ' + esc(a.por) : ''}</div>
+                            </div>
+                            <div class="mv-monto ${a.tipo === 'premio' ? 'negativo' : 'positivo'}">${a.tipo === 'premio' ? '-' + a.sellos : '+1'} 🐼</div>
+                        </div>`).join('')}` : ''}
+                <div class="cfg-hint" style="text-align:center; margin-top: 10px">Para borrar un movimiento, ábrelo en caja (💸) o en Torneos.</div>
+                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarSocio()">🗑️ Eliminar socio (solo para pruebas o errores)</button>' : ''}
+            </div>`;
+    }
+
+    // Tras cualquier cambio: se repinta la ficha y se refresca la lista
+    function socioActualizado(data, texto) {
+        pintarSocio(data);
+        toast(texto, 'success');
+        cargarClientes(true);
+    }
+
+    function editarNombreSocio() {
+        const c = fichaSocio.cliente;
+        abrirDialogo(`
+            <h3>✏️ Corregir nombre</h3>
+            <div class="field"><input class="inp" type="text" id="soNuevoNombre" value="${esc(c.nombre)}"></div>
+            <div class="dbtns" style="margin-top: 16px">
+                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
+                <button class="sbtn sbtn-gold" id="btnSoNombre">Guardar</button>
+            </div>`);
+        const input = document.getElementById('soNuevoNombre');
+        input.focus();
+        input.select();
+        const guardar = async () => {
+            const nombre = nombrePropio(input.value);
+            if (!nombre) { input.focus(); return; }
+            if (nombre === c.nombre) { cerrarDialogo(false); return; }
+            const btn = document.getElementById('btnSoNombre');
+            cargando(btn, true, 'Guardando...');
+            try {
+                const data = await api('cliente_editar', { cliente_id: c.cliente_id, nombre });
+                if (data.error) throw new Error(errorDe(data));
+                cerrarDialogo(true);
+                socioActualizado(data, `✏️ Ahora se llama ${data.cliente.nombre}`);
+            } catch (err) {
+                toast('⚠️ ' + err.message, 'danger');
+                cargando(btn, false);
+            }
+        };
+        document.getElementById('btnSoNombre').onclick = guardar;
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') guardar(); });
+    }
+
+    async function guardarNotaSocio() {
+        const btn = document.getElementById('btnSoNota');
+        cargando(btn, true, 'Guardando...');
+        try {
+            const data = await api('cliente_editar', { cliente_id: fichaSocio.cliente.cliente_id, nota: document.getElementById('soNota').value });
+            if (data.error) throw new Error(errorDe(data));
+            socioActualizado(data, '📝 Nota guardada');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+            cargando(btn, false);
+        }
+    }
+
+    function socioEnCashback() {
+        const id = fichaSocio.cliente.cliente_id;
+        cerrarFicha();
+        setModo('cashback');
+        abrirCliente({ cliente_id: id });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function imprimirCarneSocio() {
+        try {
+            imprimirTicket('Carné de cliente', await cuerpoCarneTicket(fichaSocio.cliente, disenoTicket()));
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function copiarLinkSocio() {
+        const c = fichaSocio.cliente;
+        const link = linkCarne(c.token);
+        try {
+            await navigator.clipboard.writeText(link);
+            toast('🔗 Link copiado. Mándaselo solo a él: con este link se ve y se usa su carné', 'success');
+        } catch {
+            abrirDialogo(`<h3>🔗 Link del carné</h3><div class="dmsg">Cópialo y mándaselo solo a <b style="color:white">${esc(c.nombre)}</b>:</div>
+                <input class="inp" value="${esc(link)}" onclick="this.select()" readonly>
+                <div class="dbtns" style="margin-top: 16px"><button class="sbtn sbtn-gold" onclick="cerrarDialogo(true)">Hecho</button></div>`);
+        }
+    }
+
+    async function renovarLinkSocio() {
+        const c = fichaSocio.cliente;
+        const ok = await confirmar({
+            titulo: '🔄 Nuevo link del carné',
+            html: `El link y el QR actuales de <b style="color:white">${esc(c.nombre)}</b> dejarán de funcionar.<br><br>Después imprímele el carné de nuevo.`,
+            ok: 'Crear nuevo link', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_token_nuevo', { cliente_id: c.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            socioActualizado(data, '🔄 Link renovado: imprime el carné nuevo');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function eliminarSocio() {
+        const d = fichaSocio;
+        const ok = await confirmar({
+            titulo: '🗑️ Eliminar socio',
+            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> con todo su historial (saldo y torneos). <b style="color:#fca5a5">No se puede deshacer.</b>`
+                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : ''),
+            ok: 'Eliminar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            cerrarFicha();
+            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
+            if (clienteActual && clienteActual.cliente.cliente_id === d.cliente.cliente_id) {
+                clienteActual = null;
+                document.getElementById('cliResultado').innerHTML = '';
+            }
+            cargarClientes(true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
     }
 
     // =========================================
