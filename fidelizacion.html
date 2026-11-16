@@ -385,6 +385,11 @@
         .mn-chip { background: none; border: none; color: #6ee7b7; cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 0; text-decoration: underline; }
         .mn-tor-fila { margin-top: auto; }
         .mn-card > * { flex-shrink: 0; }
+        /* Plegada: solo la barra del buscador (con el cliente y su saldo de texto guía) */
+        @media (max-height: 70px) {
+            #mnCliente, .mn-estado, .mn-sug { display: none !important; }
+            .mn-scan input::placeholder { color: #a7f3d0; font-weight: 700; }
+        }
         .mn input, .mn-btn { height: 28px; line-height: 1; }
         .mn-btn.ico { height: 22px; }
         .mn-prev { line-height: 14px; min-height: 14px; }
@@ -1270,15 +1275,17 @@
     }
 
     // Imprime el ticket desde un marco invisible, sin tocar la página del panel
-    function imprimirTicket(titulo, cuerpo) {
+    // destino: documento desde el que se imprime (la ventanita mini imprime desde sí misma,
+    // para que el diálogo de impresión salga encima del TPV)
+    function imprimirTicket(titulo, cuerpo, destino = document) {
         const html = htmlTicket(titulo, cuerpo);
-        let marco = document.getElementById('marcoTicket');
+        let marco = destino.getElementById('marcoTicket');
         if (marco) marco.remove();
-        marco = document.createElement('iframe');
+        marco = destino.createElement('iframe');
         marco.id = 'marcoTicket';
         marco.setAttribute('aria-hidden', 'true');
         marco.style.cssText = 'position:fixed; right:0; bottom:0; width:0; height:0; border:0; opacity:0; pointer-events:none';
-        document.body.appendChild(marco);
+        destino.body.appendChild(marco);
         const doc = marco.contentDocument;
         doc.open();
         doc.write(html);
@@ -1291,8 +1298,10 @@
             doc.head.appendChild(pagina);
             try { marco.contentWindow.focus(); marco.contentWindow.print(); }
             catch { toast('⚠️ No se pudo abrir la impresión', 'danger'); }
-            const btn = document.getElementById('tarCodigo');
-            if (btn) btn.focus();
+            if (destino === document) {
+                const btn = document.getElementById('tarCodigo');
+                if (btn) btn.focus();
+            }
         }, 200);
     }
 
@@ -2325,8 +2334,14 @@
         cont.innerHTML = `
             <form class="mn-scan" id="mnForm">
                 <input id="mnBuscar" placeholder="🔍 Carné o nombre" autocomplete="off" spellcheck="false">
+                <button class="mn-btn" type="button" data-acc="imprimir" title="Imprimir ticket del cliente">🖨️</button>
+                <button class="mn-btn" type="button" data-acc="plegar" id="mnPlegar" title="Plegar: se queda en una barra fina y se abre al pasar el ratón">▁</button>
                 <button class="mn-btn" type="button" data-acc="cerrar" title="Limpiar (Esc)">✕</button>
             </form>
+            <div class="mn-sug" id="mnImprimir" hidden>
+                <div class="mn-sug-item" data-acc="imp-resguardo"><span>🧾 Resguardo de saldo</span><small>saldo, sellos y última compra</small></div>
+                <div class="mn-sug-item" data-acc="imp-carne"><span>🎫 Carné</span><small>con código de barras y QR</small></div>
+            </div>
             <div class="mn-sug" id="mnSug"></div>
             <div id="mnCliente">${MINI_VACIO}</div>
             <div class="mn-estado" id="mnEstado"></div>`;
@@ -2348,12 +2363,22 @@
             if (e.key === 'Escape') {
                 // Primero se cierra lo que esté abierto encima; si no hay nada, se limpia
                 const p = mnEl('mnPrecios');
-                if (p && !p.hidden) p.hidden = true;
+                if (!mnEl('mnImprimir').hidden) mnEl('mnImprimir').hidden = true;
+                else if (p && !p.hidden) p.hidden = true;
                 else if (mnEl('mnSug').innerHTML) mnEl('mnSug').innerHTML = '';
                 else miniLimpiar();
             }
         });
-        win.addEventListener('pagehide', () => { mini = null; miniCliente = null; });
+        // Plegado: al salir el ratón se pliega (tras un momento) y al entrar o al escanear se abre
+        doc.documentElement.addEventListener('mouseleave', () => {
+            if (!miniPlegable) return;
+            clearTimeout(miniTimerPlegar);
+            miniTimerPlegar = setTimeout(miniPlegar, 700);
+        });
+        doc.documentElement.addEventListener('mouseenter', () => { if (miniPlegable) miniDesplegar(); });
+        doc.addEventListener('pointerdown', () => { if (miniPlegable) miniDesplegar(); });
+        doc.addEventListener('keydown', () => { if (miniPlegable) miniDesplegar(); });
+        win.addEventListener('pagehide', () => { mini = null; miniCliente = null; miniPlegable = false; });
         if (miniCliente) miniPintar(); // al reabrirla, sigue con el mismo cliente
         $('mnBuscar').focus();
     }
@@ -2378,6 +2403,8 @@
         miniCliente = null;
         mnEl('mnCliente').innerHTML = MINI_VACIO;
         mnEl('mnSug').innerHTML = '';
+        mnEl('mnImprimir').hidden = true;
+        miniResumenBarra();
         const b = mnEl('mnBuscar');
         b.value = '';
         b.focus();
@@ -2461,6 +2488,7 @@
                 </div>
             </div>`;
         miniPreview();
+        miniResumenBarra();
         mnEl('mnImporte').focus();
     }
 
@@ -2483,11 +2511,19 @@
         const sug = e.target.closest('.mn-sug-item');
         if (sug) {
             if (sug.dataset.acc === 'alta') return miniAlta();
+            if (sug.dataset.acc === 'imp-resguardo' || sug.dataset.acc === 'imp-carne') return miniImprimir(sug.dataset.acc);
             return miniAbrir({ cliente_id: sug.dataset.id });
         }
         const b = e.target.closest('[data-acc]');
         if (!b) return;
         const acc = b.dataset.acc;
+        if (acc !== 'imprimir') mnEl('mnImprimir').hidden = true;
+        if (acc === 'imprimir') {
+            if (!miniCliente) { miniEstado('Abre primero un cliente para imprimir su ticket', 'info'); return; }
+            mnEl('mnSug').innerHTML = '';
+            mnEl('mnImprimir').hidden = !mnEl('mnImprimir').hidden;
+        }
+        if (acc === 'plegar') miniCambiarPlegado();
         if (acc === 'cerrar') miniLimpiar();
         if (acc === 'compra') miniCompra();
         if (acc === 'fichar') miniFichar(b);
@@ -2564,6 +2600,102 @@
             miniEstado('⚠️ ' + err.message, 'mal');
             btn.disabled = false;
         }
+    }
+
+    // ---- Imprimir desde la ventanita ----
+    // Resguardo con el saldo del cliente (como el de las tarjetas regalo, pero de cashback y torneos)
+    function cuerpoResguardoCliente(d) {
+        const c = d.cliente, j = d.jugador;
+        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+        const ult = movs[0];
+        const carne = String(c.carne || '');
+        const oculto = carne.length > 4 ? '****' + carne.slice(-4) : carne;
+        const ahora = new Date();
+        const cuando = ahora.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            + ' ' + ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        const suma = ult && (ult.tipo === 'cashback' || ult.tipo === 'ingreso');
+        return `
+            ${cabeceraTicket().replace(esc(TICKET.sub), 'Cliente')}
+            <div class="fila"><span>Cliente</span><span>${esc(c.nombre)}</span></div>
+            <div class="fila"><span>Carné</span><span class="mono">${esc(oculto)}</span></div>
+            <div class="fila"><span>Fecha</span><span>${cuando}</span></div>
+            ${ult ? `
+                <div class="sep"></div>
+                <div class="fila"><span>${esc(ult.concepto || 'Movimiento')}</span><b>${suma ? '+' : '-'}${euros(ult.monto)}</b></div>
+                <div class="nota">${fecha(ult.fecha)}</div>` : ''}
+            <div class="sep"></div>
+            <div class="c">
+                <div class="lbl">Saldo para juegos de mesa</div>
+                <div class="saldo">${euros(d.saldo)}</div>
+                ${caducaTicket(d)}
+            </div>
+            <div class="sep"></div>
+            <div class="fila"><span>Sellos de torneo</span><b>${j.sellos} de ${j.meta}</b></div>
+            ${j.activo ? `<div class="fila"><span>Precio de jugador TCG</span><b>hasta el ${fecha(j.hasta)}</b></div>` : ''}
+            ${j.sellos >= j.meta ? `<div class="c nota" style="margin-top: 2mm"><b>¡Tienes premio! ${esc(j.premio)}</b></div>` : ''}
+            <div class="sep"></div>
+            <div class="c pie">Mira tu saldo cuando quieras escaneando el QR de tu carné.<br>¡Gracias por tu visita!</div>`;
+    }
+
+    async function miniImprimir(que) {
+        mnEl('mnImprimir').hidden = true;
+        if (!miniCliente) return;
+        try {
+            if (que === 'imp-carne') {
+                imprimirTicket('Carné de cliente', await cuerpoCarneTicket(miniCliente.cliente, disenoTicket()), mini.doc);
+            } else {
+                imprimirTicket('Resguardo', cuerpoResguardoCliente(miniCliente), mini.doc);
+            }
+            miniEstado('🖨️ Enviado a la impresora', 'ok');
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+        }
+    }
+
+    // ---- Plegado: barra fina mientras no se usa ----
+    // Chrome solo deja cambiar el tamaño de la ventana flotante con un clic o una tecla.
+    // Se intenta también al pasar el ratón; si Chrome no lo deja, se abre con un clic o al escanear.
+    const MINI_ALTO_BARRA = 40;
+    let miniPlegable = false;
+    let miniAltoAbierto = 220;
+    let miniTimerPlegar = null;
+
+    function miniPlegada() { return !!mini && mini.win.innerHeight <= MINI_ALTO_BARRA + 30; }
+
+    function miniPlegar() {
+        if (!mini || miniPlegada()) return;
+        miniAltoAbierto = mini.win.innerHeight;
+        try { mini.win.resizeBy(0, MINI_ALTO_BARRA - mini.win.innerHeight); } catch {}
+    }
+
+    function miniDesplegar() {
+        clearTimeout(miniTimerPlegar);
+        if (!mini || !miniPlegada()) return;
+        try { mini.win.resizeBy(0, Math.max(miniAltoAbierto, 200) - mini.win.innerHeight); } catch {}
+    }
+
+    function miniCambiarPlegado() {
+        miniPlegable = !miniPlegable;
+        const b = mnEl('mnPlegar');
+        b.textContent = miniPlegable ? '📌' : '▁';
+        b.title = miniPlegable ? 'Fijar abierta (dejar de plegarse)' : 'Plegar: se queda en una barra fina y se abre al pasar el ratón';
+        if (miniPlegable) {
+            miniPlegar();
+            setTimeout(() => {
+                if (mini && !miniPlegada()) miniEstado('⚠️ Este navegador no deja cambiar el tamaño de la ventana', 'mal');
+            }, 300);
+        } else {
+            miniDesplegar();
+        }
+    }
+
+    // Lo que se ve en la barra plegada: el cliente abierto y su saldo
+    function miniResumenBarra() {
+        const b = mnEl('mnBuscar');
+        if (!b) return;
+        b.placeholder = miniCliente
+            ? `🔍 ${miniCliente.cliente.nombre} · ${euros(miniCliente.saldo)}`
+            : '🔍 Carné o nombre';
     }
 
     // Alta rápida desde la ventanita (el carné se imprime luego desde el panel)
