@@ -319,33 +319,31 @@
         /* Todo cabe en la ventana: nada empuja hacia abajo, las listas se abren por encima */
         html:has(body.mini-body) { height: 100%; overflow: hidden; }
         body.mini-body {
-            display: block; margin: 0; padding: 8px; min-height: 0; height: 100%; max-width: none; overflow: hidden;
-            box-sizing: border-box; background: #0b0b10; color: white; font-family: 'Poppins', sans-serif; font-size: 13px;
+            display: block; margin: 0; padding: 6px; min-height: 0; height: 100%; max-width: none; overflow: hidden;
+            box-sizing: border-box; background: #0b0b10; color: white; font-family: 'Poppins', sans-serif; font-size: 12px;
         }
-        .mn { height: 100%; display: flex; flex-direction: column; gap: 6px; position: relative; }
-        .mn-cab, .mn-scan, .mn-estado { flex-shrink: 0; }
+        body.mini-body .bg-auras, body.mini-body .shop, body.mini-body #toast-container { display: none; }
+        .mn { height: 100%; display: flex; flex-direction: column; gap: 5px; position: relative; }
+        .mn-scan, .mn-estado { flex-shrink: 0; }
         #mnCliente { flex: 1; min-height: 0; display: flex; flex-direction: column; }
         .mn-vacio-grande {
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-            border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px; color: #94a3b8; font-size: 0.78rem; text-align: center; padding: 10px;
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+            border: 1px dashed rgba(255,255,255,0.1); border-radius: 10px; color: #94a3b8; font-size: 0.75rem; text-align: center; padding: 6px;
         }
-        .mn-vacio-grande span { font-size: 1.6rem; }
-        body.mini-body .bg-auras, body.mini-body .shop, body.mini-body #toast-container { display: none; }
-        .mn-cab { display: flex; align-items: center; gap: 6px; }
-        .mn-cab b { font-size: 0.85rem; color: #6ee7b7; white-space: nowrap; }
-        .mn-tor { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; min-width: 0; }
-        .mn-tor input { width: 110px; }
+        .mn-vacio-grande span { font-size: 1.2rem; }
+
         .mn input {
-            box-sizing: border-box; min-width: 0; padding: 6px 9px; border-radius: 9px; outline: none;
+            box-sizing: border-box; min-width: 0; padding: 5px 8px; border-radius: 8px; outline: none;
             background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; color-scheme: dark;
-            font-family: inherit; font-size: 0.85rem;
+            font-family: inherit; font-size: 0.82rem;
         }
         .mn input:focus { border-color: #34d399; }
-        .mn-scan { display: flex; gap: 6px; }
-        .mn-scan input { flex: 1; font-size: 0.95rem; font-weight: 700; }
+        .mn input::placeholder { color: #64748b; }
+        .mn-scan { display: flex; gap: 4px; margin: 0; }
+        .mn-scan input { flex: 1; font-size: 0.88rem; font-weight: 700; }
         .mn-btn {
             border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06); color: white; cursor: pointer;
-            font-family: inherit; font-size: 0.78rem; font-weight: 700; padding: 7px 9px; border-radius: 9px; white-space: nowrap;
+            font-family: inherit; font-size: 0.75rem; font-weight: 700; padding: 5px 8px; border-radius: 8px; white-space: nowrap;
         }
         .mn-btn:hover { background: rgba(255,255,255,0.12); }
         .mn-btn:disabled { opacity: 0.5; cursor: wait; }
@@ -353,47 +351,54 @@
         .mn-btn.azul { background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.4); color: #bfdbfe; }
         .mn-btn.premio { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a2e; border: none; }
         .mn-btn.seguro { background: #ef4444; color: white; border: none; }
+        .mn-btn.ico { padding: 2px 6px; font-size: 0.85rem; }
+
         .mn-sug {
-            position: absolute; left: 0; right: 0; top: 78px; z-index: 5; padding: 4px; border-radius: 10px;
+            position: absolute; left: 0; right: 0; top: 34px; z-index: 5; padding: 3px; border-radius: 9px;
             background: #15151d; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 12px 30px rgba(0,0,0,0.6);
         }
         .mn-sug:empty { display: none; }
         .mn-sug-item {
-            display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; margin-bottom: 4px; border-radius: 9px;
-            background: rgba(255,255,255,0.04); cursor: pointer; font-size: 0.82rem;
+            display: flex; justify-content: space-between; gap: 8px; padding: 5px 8px; margin-bottom: 2px; border-radius: 7px;
+            background: rgba(255,255,255,0.04); cursor: pointer; font-size: 0.78rem;
         }
         .mn-sug-item:hover { background: rgba(52, 211, 153, 0.12); }
-        .mn-sug-item small { color: var(--text-muted, #94a3b8); }
+        .mn-sug-item small { color: #94a3b8; }
+
+        /* Ficha: nombre + saldo · jugador + sellos · compra · fichar */
         .mn-card {
-            flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; padding: 8px 10px; border-radius: 12px;
+            flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; border-radius: 10px;
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(255,255,255,0.03)); border: 1px solid rgba(52, 211, 153, 0.25);
         }
-        .mn-f1 { display: flex; align-items: center; gap: 6px; }
-        .mn-nombre { font-weight: 800; font-size: 0.95rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .mn-x { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.9rem; padding: 2px 6px; }
-        .mn-f2 { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin: 3px 0 6px; }
-        .mn-saldo small, .mn-jug small { display: block; font-size: 0.62rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .mn-saldo b { font-size: 1.2rem; font-weight: 900; color: #6ee7b7; line-height: 1.1; }
-        .mn-jug { text-align: right; }
-        .mn-jug.on small { color: #93c5fd; }
-        .mn-jug span { font-size: 0.85rem; letter-spacing: 1px; }
-        .mn-compra { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .mn-compra input { width: 100%; }
-        .mn-prev { font-size: 0.75rem; color: #cbd5e1; margin: 4px 0 6px; min-height: 1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mn-f1 { display: flex; align-items: baseline; gap: 6px; }
+        .mn-nombre { font-weight: 800; font-size: 0.9rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mn-saldo { font-size: 1.1rem; font-weight: 900; color: #6ee7b7; line-height: 1; white-space: nowrap; }
+        .mn-f2 { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #94a3b8; font-weight: 700; min-height: 22px; }
+        .mn-f2.on .mn-jug { color: #93c5fd; }
+        .mn-jug { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+        .mn-sellos { margin-left: auto; white-space: nowrap; letter-spacing: 0.5px; color: #cbd5e1; }
+        .mn-x { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.85rem; padding: 0 4px; }
+        .mn-fila { display: flex; gap: 4px; align-items: center; }
+        .mn-fila input { flex: 1; width: 0; }
+        .mn-prev { font-size: 0.7rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mn-prev b { color: #6ee7b7; } .mn-prev .neg { color: #fca5a5; }
-        .mn-chip { background: none; border: none; color: #6ee7b7; cursor: pointer; font-family: inherit; font-size: 0.72rem; font-weight: 700; padding: 0; text-decoration: underline; }
-        .mn-btns { display: flex; gap: 6px; flex-wrap: nowrap; margin-top: auto; }
-        .mn-btns .oro { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .mn-chip { background: none; border: none; color: #6ee7b7; cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 0; text-decoration: underline; }
+        .mn-tor-fila { margin-top: auto; }
+        .mn-card > * { flex-shrink: 0; }
+        .mn input, .mn-btn { height: 28px; line-height: 1; }
+        .mn-btn.ico { height: 22px; }
+        .mn-prev { line-height: 14px; min-height: 14px; }
+
         .mn-precios {
-            position: absolute; left: 6px; right: 6px; top: 38px; bottom: 6px; z-index: 4; overflow: auto;
-            background: #101016; border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 10px; padding: 8px 10px;
+            position: absolute; inset: 4px; z-index: 4; overflow: auto;
+            background: #101016; border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 9px; padding: 6px 8px;
         }
-        .mn-precios-cab { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 800; color: #93c5fd; margin-bottom: 4px; }
-        .mn-precio { display: flex; justify-content: space-between; gap: 8px; font-size: 0.78rem; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .mn-precios-cab { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; font-weight: 800; color: #93c5fd; margin-bottom: 2px; }
+        .mn-precio { display: flex; justify-content: space-between; gap: 8px; font-size: 0.74rem; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .mn-precio b { color: #93c5fd; }
-        .mn-estado { font-size: 0.78rem; font-weight: 700; min-height: 1.2em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mn-estado { font-size: 0.72rem; font-weight: 700; min-height: 1.1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mn-estado.ok { color: #34d399; } .mn-estado.mal { color: #fca5a5; } .mn-estado.info { color: #fbbf24; }
-        .mn-vacio { color: #94a3b8; font-size: 0.78rem; margin-top: 8px; text-align: center; }
+        .mn-vacio { color: #94a3b8; font-size: 0.72rem; margin: 0 0 4px; }
 
         .modos {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px;
@@ -2277,7 +2282,7 @@
     // =========================================
     // En Chrome/Edge se abre como ventana flotante (Picture-in-Picture), que se queda por encima
     // de cualquier programa. La lógica sigue viviendo en esta página: la ventanita solo pinta y recoge clics.
-    const MINI_VACIO = '<div class="mn-vacio-grande"><span>🐼</span>Escanea un carné o escribe un nombre<br>Esc limpia la ventana</div>';
+    const MINI_VACIO = '<div class="mn-vacio-grande"><span>🐼</span>Escanea un carné o escribe un nombre</div>';
     let mini = null;          // { win, doc }
     let miniCliente = null;   // datos del cliente abierto en la ventanita
 
@@ -2287,7 +2292,7 @@
         cargarTorneos(true);
         if ('documentPictureInPicture' in window) {
             try {
-                const win = await documentPictureInPicture.requestWindow({ width: 360, height: 320 });
+                const win = await documentPictureInPicture.requestWindow({ width: 300, height: 220 });
                 montarMini(win, true);
                 return;
             } catch (err) {
@@ -2318,13 +2323,9 @@
         const cont = doc.createElement('div');
         cont.className = 'mn';
         cont.innerHTML = `
-            <div class="mn-cab">
-                <span>🐼</span><b>Panda mini</b>
-                <span class="mn-tor" title="Torneo en el que se ficha">⚔️ <input id="mnTorneo" placeholder="Torneo" autocomplete="off"></span>
-            </div>
             <form class="mn-scan" id="mnForm">
-                <input id="mnBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
-                <button class="mn-btn" type="submit">🔍</button>
+                <input id="mnBuscar" placeholder="🔍 Carné o nombre" autocomplete="off" spellcheck="false">
+                <button class="mn-btn" type="button" data-acc="cerrar" title="Limpiar (Esc)">✕</button>
             </form>
             <div class="mn-sug" id="mnSug"></div>
             <div id="mnCliente">${MINI_VACIO}</div>
@@ -2333,14 +2334,17 @@
         mini = { win, doc };
 
         const $ = id => doc.getElementById(id);
-        $('mnTorneo').value = document.getElementById('torNombre').value;
-        $('mnTorneo').addEventListener('input', e => { document.getElementById('torNombre').value = e.target.value; });
         $('mnForm').addEventListener('submit', e => { e.preventDefault(); miniBuscar(); });
         $('mnBuscar').addEventListener('input', miniSugerencias);
         cont.addEventListener('click', miniClic);
-        cont.addEventListener('input', e => { if (e.target.id === 'mnImporte' || e.target.id === 'mnConSaldo') miniPreview(); });
+        cont.addEventListener('input', e => {
+            if (e.target.id === 'mnImporte' || e.target.id === 'mnConSaldo') miniPreview();
+            // El torneo es el mismo que el de la pestaña Torneos del panel
+            if (e.target.id === 'mnTorneo') document.getElementById('torNombre').value = e.target.value;
+        });
         cont.addEventListener('keydown', e => {
             if (e.key === 'Enter' && (e.target.id === 'mnImporte' || e.target.id === 'mnConSaldo')) { e.preventDefault(); miniCompra(); }
+            if (e.key === 'Enter' && e.target.id === 'mnTorneo') { e.preventDefault(); miniFichar(mini.doc.querySelector('[data-acc="fichar"]')); }
             if (e.key === 'Escape') {
                 // Primero se cierra lo que esté abierto encima; si no hay nada, se limpia
                 const p = mnEl('mnPrecios');
@@ -2432,25 +2436,23 @@
             <div class="mn-card">
                 <div class="mn-f1">
                     <span class="mn-nombre">${esc(d.cliente.nombre)}</span>
-                    <button class="mn-x" data-acc="cerrar" title="Cerrar (Esc)">✕</button>
+                    <span class="mn-saldo" title="Saldo de cashback (juegos de mesa)">${euros(d.saldo)}</span>
                 </div>
-                <div class="mn-f2">
-                    <div class="mn-saldo"><small>Saldo juegos</small><b>${euros(d.saldo)}</b></div>
-                    <div class="mn-jug ${j.activo ? 'on' : ''}">
-                        <small>${j.activo ? '⚔️ Precio jugador hasta ' + fechaCorta(j.hasta) : '⚔️ Sin precio jugador'}</small>
-                        <span>${sellosTexto(j.sellos, j.meta).replace(/●/g, '🐼')} ${j.sellos}/${j.meta}</span>
-                    </div>
+                <div class="mn-f2 ${j.activo ? 'on' : ''}">
+                    <span class="mn-jug">${j.activo ? '⚔️ Precio jugador hasta ' + fechaCorta(j.hasta) : '⚔️ Sin precio jugador'}</span>
+                    <span class="mn-sellos" title="Sellos: ${j.sellos} de ${j.meta}">${sellosTexto(j.sellos, j.meta).replace(/●/g, '🐼')}</span>
+                    ${premio ? `<button class="mn-btn premio ico" data-acc="premio" title="Dar premio: ${esc(j.premio)}">🎁</button>` : ''}
+                    ${precios.length ? '<button class="mn-btn ico" data-acc="precios" title="Precios de jugador">🃏</button>' : ''}
                 </div>
-                <div class="mn-compra">
-                    <input id="mnImporte" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Compra juegos €">
-                    <input id="mnConSaldo" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Con saldo €" ${d.saldo > 0.005 ? '' : 'disabled'}>
+                <div class="mn-fila">
+                    <input id="mnImporte" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Juegos €" title="Importe en juegos de mesa">
+                    <input id="mnConSaldo" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Saldo €" title="Pagado con saldo" ${d.saldo > 0.005 ? '' : 'disabled'}>
+                    <button class="mn-btn oro" data-acc="compra" title="Apuntar compra (Enter)">💾</button>
                 </div>
                 <div class="mn-prev" id="mnPrev"></div>
-                <div class="mn-btns">
-                    <button class="mn-btn oro" data-acc="compra" title="Apuntar compra (Enter)">💾 Apuntar</button>
-                    <button class="mn-btn azul" data-acc="fichar" title="Fichar en el torneo de hoy">⚔️ Fichar</button>
-                    ${premio ? `<button class="mn-btn premio" data-acc="premio" title="Dar premio: ${esc(j.premio)}">🎁</button>` : ''}
-                    ${precios.length ? '<button class="mn-btn" data-acc="precios" title="Precios de jugador">🃏</button>' : ''}
+                <div class="mn-fila mn-tor-fila">
+                    <input id="mnTorneo" placeholder="Torneo de hoy" autocomplete="off" value="${esc(document.getElementById('torNombre').value)}" title="Torneo en el que se ficha">
+                    <button class="mn-btn azul" data-acc="fichar" title="Fichar en el torneo (Enter)">⚔️ Fichar</button>
                 </div>
                 <div class="mn-precios" id="mnPrecios" hidden>
                     <div class="mn-precios-cab"><span>🃏 Precios de jugador</span><button class="mn-x" data-acc="precios" title="Cerrar">✕</button></div>
