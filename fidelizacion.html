@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="pulido">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🐼 Fidelización</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -751,8 +752,127 @@
             .modo-txt small { font-size: 0.6rem; line-height: 1.3; white-space: normal; }
         }
     </style>
+    <style>
+        /* =========================================================
+           INTERFAZ "PRO": mismos colores y fondo de siempre,
+           con tipografía, iconos, botones y listas más profesionales.
+           Todo cuelga de html.pulido: quitando esa clase vuelve la interfaz anterior.
+           ========================================================= */
+        html.pulido body, html.pulido button, html.pulido input, html.pulido select, html.pulido textarea,
+        html.pulido .modo, html.pulido .sbtn, html.pulido .chip, html.pulido .tipo-btn, html.pulido .shop-tab {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        html.pulido body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        /* Iconos de línea */
+        .ic { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+        h2 .ic { width: 18px; height: 18px; margin-right: 9px; opacity: 0.9; }
+        .sbtn .ic, .tb-mini .ic, .cli-nuevo .ic { width: 15px; height: 15px; }
+        html.pulido .panel h2 { display: flex; align-items: center; }
+        html.pulido body.modo-cashback .panel h2 .ic { color: #6ee7b7; }
+        html.pulido body.modo-torneos .panel h2 .ic { color: #93c5fd; }
+        html.pulido body.modo-socios .panel h2 .ic { color: #fcd34d; }
+
+        /* Títulos: mismo degradado, letra más firme */
+        html.pulido .shop-header h1, html.pulido .tb-title { font-weight: 800; letter-spacing: -0.02em; }
+        html.pulido .shop-badge { letter-spacing: 0.14em; font-weight: 600; }
+        html.pulido .panel h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 18px; }
+        html.pulido .tb-user { font-weight: 500; }
+        html.pulido .tb-mini { display: inline-flex; align-items: center; gap: 6px; border-radius: 10px; font-weight: 600; }
+
+        /* Selector de modos: icono en caja, texto más limpio */
+        html.pulido .modo { gap: 12px; }
+        html.pulido .modo-ico { width: 40px; height: 40px; border-radius: 11px; color: #94a3b8; }
+        html.pulido .modo-ico .ic { width: 20px; height: 20px; }
+        html.pulido .modo.active .modo-ico { transform: none; }
+        html.pulido .modo.cashback.active .modo-ico { color: #6ee7b7; }
+        html.pulido .modo.torneos.active .modo-ico { color: #93c5fd; }
+        html.pulido .modo.socios.active .modo-ico { color: #fcd34d; }
+        html.pulido .modo-txt b { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .modo-txt small { font-weight: 500; }
+
+        /* Paneles: mismo cristal, bordes y radios más finos */
+        html.pulido .panel { border-radius: 16px; padding: 22px 24px; }
+        html.pulido .cfg-hint { font-weight: 500; }
+
+        /* Cifras */
+        html.pulido .stat, html.pulido .so-stat { border-radius: 14px; }
+        html.pulido .stat-value, html.pulido .so-stat b { font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+        html.pulido .stat-label, html.pulido .so-stat span { font-weight: 600; letter-spacing: 0.08em; }
+
+        /* Campos */
+        html.pulido input.inp, html.pulido select.inp, html.pulido textarea.inp { border-radius: 11px; font-weight: 500; }
+        html.pulido .scan input.inp, html.pulido #cliBuscar, html.pulido #torBuscar { font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.01em; }
+        html.pulido .field label, html.pulido .lbl { font-weight: 600; letter-spacing: 0.01em; }
+        html.pulido .toolbar .search::before {
+            content: ''; width: 16px; height: 16px; left: 14px; opacity: 0.7;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") center / contain no-repeat;
+        }
+
+        /* Botones: mismos colores, sin MAYÚSCULAS */
+        html.pulido .sbtn { text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 0.86rem; border-radius: 11px; }
+        html.pulido .sbtn-sm { font-size: 0.78rem; border-radius: 9px; }
+        html.pulido .sbtn-gold { font-weight: 700; }
+        html.pulido .sbtn-gold:hover { transform: translateY(-1px); }
+        html.pulido .chip { border-radius: 9px; font-weight: 600; }
+        html.pulido .cli-nuevo { display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; font-weight: 500; }
+
+        /* Listas de clientes, socios y fichados: filas limpias en vez de tarjetas */
+        html.pulido .prow {
+            background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); border-radius: 0;
+            margin: 0; padding: 12px 10px; gap: 12px;
+        }
+        html.pulido .prow:last-child { border-bottom: none; }
+        html.pulido .prow:hover { background: rgba(255,255,255,0.04); border-radius: 12px; border-bottom-color: transparent; transform: none; }
+        html.pulido .avatar { border-radius: 50%; width: 38px; height: 38px; font-size: 0.9rem; font-weight: 700; }
+        html.pulido .pname { font-weight: 600; font-size: 0.92rem; }
+        html.pulido .pmeta { font-weight: 500; }
+        html.pulido .psaldo { font-weight: 700; font-variant-numeric: tabular-nums; }
+        html.pulido .so-badge { border-radius: 6px; font-weight: 600; }
+
+        /* Ficha del cliente: mismos degradados, tipografía más cuidada */
+        html.pulido .gcard { border-radius: 18px; }
+        html.pulido .gcard-brand { letter-spacing: 0.14em; font-weight: 700; }
+        html.pulido .gcard-pill { border-radius: 7px; font-weight: 700; }
+        html.pulido .gcard-nombre { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .gcard-saldo { font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+        html.pulido .gcard-sub { font-weight: 500; }
+        html.pulido .gcard-code { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; letter-spacing: 0.15em; font-size: 0.85rem; }
+        html.pulido .cli-compra, html.pulido .jug-estado { box-sizing: border-box; border-radius: 14px; }
+        html.pulido .cli-compra h3 { font-weight: 600; }
+        html.pulido .je-top b { font-weight: 700; }
+        html.pulido .saldo-preview { font-weight: 600; }
+
+        /* Movimientos */
+        html.pulido .mv-icon { border-radius: 50%; }
+        html.pulido .mv-concepto { font-weight: 500; }
+        html.pulido .mv-monto { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+        /* Hoja lateral y diálogos */
+        html.pulido .d-head .avatar { border-radius: 50%; }
+        html.pulido .d-name { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .d-saldo { font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+        html.pulido .dialog h3 { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .toast { font-weight: 500; }
+    </style>
 </head>
 <body>
+<!-- Iconos de línea (estilo Lucide) para el tema pulido -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-cartera" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
+    <symbol id="i-espadas" viewBox="0 0 24 24"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" y1="14" x2="9" y2="18"/><line x1="7" y1="17" x2="4" y2="20"/><line x1="3" y1="19" x2="5" y2="21"/></symbol>
+    <symbol id="i-personas" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-alta" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></symbol>
+    <symbol id="i-ajustes" viewBox="0 0 24 24"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-grafica" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+    <symbol id="i-etiqueta" viewBox="0 0 24 24"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></symbol>
+    <symbol id="i-lapiz" viewBox="0 0 24 24"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+    <symbol id="i-flotante" viewBox="0 0 24 24"><path d="M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4"/><rect x="12" y="13" width="10" height="7" rx="2"/></symbol>
+    <symbol id="i-candado" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+</svg>
 
 <div class="bg-auras">
     <div class="aura aura-1"></div>
@@ -765,7 +885,7 @@
     <div id="hero">
         <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
         <div class="shop-header">
-            <div class="shop-badge">🏪 Panel de la tienda</div>
+            <div class="shop-badge">Panel de la tienda</div>
             <h1>🐼 Fidelización</h1>
             <p>Cashback de clientes y ventajas para jugadores</p>
         </div>
@@ -776,7 +896,7 @@
         <div class="topbar">
             <a href="index.html" class="tb-home" title="Volver al Hub">🐼</a>
             <div class="tb-title">Fidelización</div>
-            <button class="tb-mini" onclick="abrirModoMini()" title="Ventana pequeña que se queda encima del TPV">🪟 Mini</button>
+            <button class="tb-mini" onclick="abrirModoMini()" title="Ventana pequeña que se queda encima del TPV"><svg class="ic"><use href="#i-flotante"/></svg> Mini</button>
             <div class="tb-user">
                 <span>👤 <span id="staffName"></span></span>
                 <button onclick="cerrarSesion()">Salir</button>
@@ -784,15 +904,15 @@
         </div>
         <div class="modos">
             <button class="modo cashback" data-modo="cashback">
-                <span class="modo-ico">💸</span>
+                <span class="modo-ico"><svg class="ic"><use href="#i-cartera"/></svg></span>
                 <span class="modo-txt"><b>Cashback</b><small id="modoCliInfo">Compras de clientes</small></span>
             </button>
             <button class="modo torneos" data-modo="torneos">
-                <span class="modo-ico">⚔️</span>
+                <span class="modo-ico"><svg class="ic"><use href="#i-espadas"/></svg></span>
                 <span class="modo-txt"><b>Torneos</b><small id="modoTorInfo">Fichajes y sellos</small></span>
             </button>
             <button class="modo socios" data-modo="socios">
-                <span class="modo-ico">👥</span>
+                <span class="modo-ico"><svg class="ic"><use href="#i-personas"/></svg></span>
                 <span class="modo-txt"><b>Socios</b><small id="modoSocInfo">Lista y resumen</small></span>
             </button>
         </div>
@@ -800,7 +920,7 @@
 
     <!-- ===================== LOGIN ===================== -->
     <div id="vistaLogin" class="panel login" style="display:none">
-        <h2>🔒 Entrar</h2>
+        <h2><svg class="ic"><use href="#i-candado"/></svg>Entrar</h2>
         <p>Usa la clave de la tienda (la misma que en la Wallet). Se guarda en este dispositivo para no tener que ponerla cada vez.</p>
         <form onsubmit="entrar(event)">
             <div class="field">
@@ -821,14 +941,14 @@
       <!-- ===================== MODO CASHBACK ===================== -->
       <div id="modoCashback" class="modo-vista" style="display:none">
         <div class="panel scan-panel">
-            <h2>💸 Busca al cliente</h2>
+            <h2><svg class="ic"><use href="#i-buscar"/></svg>Busca al cliente</h2>
             <form class="scan" onsubmit="event.preventDefault(); buscarClienteCaja()">
                 <input class="inp" type="text" id="cliBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
                 <button class="sbtn sbtn-gold" type="submit">Buscar</button>
             </form>
             <div class="cfg-hint">Con el lector: escanea el carné. Sin carné: escribe el nombre y elige de la lista.</div>
             <div class="cli-sug" id="cliSugerencias"></div>
-            <button type="button" class="cli-nuevo" onclick="dialogoNuevoCliente()">➕ ¿Cliente nuevo? <b>Darlo de alta</b></button>
+            <button type="button" class="cli-nuevo" onclick="dialogoNuevoCliente()"><svg class="ic"><use href="#i-alta"/></svg> ¿Cliente nuevo? <b>Darlo de alta</b></button>
             <div id="cliResultado"></div>
         </div>
 
@@ -840,8 +960,8 @@
             </div>
             <div class="toolbar">
                 <div class="search"><input class="inp" type="text" id="cliFiltro" placeholder="Buscar cliente..." autocomplete="off"></div>
-                <button class="sbtn sbtn-ghost" onclick="abrirConfigCashback()">⚙️ Cashback</button>
-                <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('cashback')">⏳ Caducidad</button>
+                <button class="sbtn sbtn-ghost" onclick="abrirConfigCashback()"><svg class="ic"><use href="#i-ajustes"/></svg> Cashback</button>
+                <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('cashback')"><svg class="ic"><use href="#i-reloj"/></svg> Caducidad</button>
             </div>
             <div id="listaClientes"><div class="spinner"></div></div>
         </div>
@@ -850,7 +970,7 @@
       <!-- ===================== MODO SOCIOS ===================== -->
       <div id="modoSocios" class="modo-vista" style="display:none">
         <div class="panel">
-            <h2>📊 Resumen del programa <small class="so-mes" id="soMes"></small></h2>
+            <h2><svg class="ic"><use href="#i-grafica"/></svg>Resumen del programa <small class="so-mes" id="soMes"></small></h2>
             <div class="so-stats" id="soStats"><div class="spinner"></div></div>
         </div>
         <div class="panel">
@@ -871,7 +991,7 @@
       <!-- ===================== MODO TORNEOS ===================== -->
       <div id="modoTorneos" class="modo-vista" style="display:none">
         <div class="panel scan-panel">
-            <h2>⚔️ Fichar en el torneo</h2>
+            <h2><svg class="ic"><use href="#i-espadas"/></svg>Fichar en el torneo</h2>
             <div class="field">
                 <label>Torneo de hoy</label>
                 <input class="inp" type="text" id="torNombre" list="torNombres" placeholder="Ej: Commander viernes" autocomplete="off">
@@ -883,7 +1003,7 @@
             </form>
             <div class="cfg-hint">Escanea el carné de cada jugador al llegar: cada torneo es un sello y le da precio de jugador en TCG.</div>
             <div class="cli-sug" id="torSugerencias"></div>
-            <button type="button" class="cli-nuevo tor" onclick="dialogoNuevoCliente(true)">➕ ¿No tiene carné? <b>Darlo de alta y fichar</b></button>
+            <button type="button" class="cli-nuevo tor" onclick="dialogoNuevoCliente(true)"><svg class="ic"><use href="#i-alta"/></svg> ¿No tiene carné? <b>Darlo de alta y fichar</b></button>
             <div id="torResultado"></div>
         </div>
 
@@ -893,16 +1013,16 @@
                 <div class="stat"><div class="stat-value" id="torActivos">—</div><div class="stat-label">Jugadores activos</div></div>
                 <div class="stat"><div class="stat-value" id="torMeta">—</div><div class="stat-label">Sellos = premio</div></div>
             </div>
-            <h2>✅ Fichados hoy</h2>
+            <h2><svg class="ic"><use href="#i-check"/></svg>Fichados hoy</h2>
             <div id="listaFichados"><div class="spinner"></div></div>
         </div>
 
         <div class="panel">
             <div class="tor-cab">
-                <h2>🃏 Precios de jugador (TCG)</h2>
+                <h2><svg class="ic"><use href="#i-etiqueta"/></svg>Precios de jugador (TCG)</h2>
                 <div class="tor-cab-btns">
-                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirEditorPrecios()">✏️ Precios</button>
-                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirAjustesTorneos()">⚙️ Ajustes</button>
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirEditorPrecios()"><svg class="ic"><use href="#i-lapiz"/></svg> Precios</button>
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirAjustesTorneos()"><svg class="ic"><use href="#i-ajustes"/></svg> Ajustes</button>
                 </div>
             </div>
             <div class="cfg-hint" id="torReglas" style="margin: -6px 0 12px"></div>
