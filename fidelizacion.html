@@ -854,6 +854,217 @@
         html.pulido .d-saldo { font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
         html.pulido .dialog h3 { font-weight: 700; letter-spacing: -0.01em; }
         html.pulido .toast { font-weight: 500; }
+
+        /* ===== Distribución: caja y torneos en dos columnas ===== */
+        html.pulido .shop { max-width: 1120px; }
+        .caja { display: grid; grid-template-columns: minmax(290px, 360px) minmax(0, 1fr); gap: 16px; align-items: start; }
+        .caja-izq, .caja-der { min-width: 0; }
+        .caja-der { position: sticky; top: 150px; }
+        @media (max-width: 900px) {
+            .caja { grid-template-columns: 1fr; }
+            .caja-der { position: static; order: -1; }
+            #modoCashback .caja-der { order: 0; }
+        }
+        .prow-mini { padding: 8px 6px !important; }
+        .prow-mini .avatar { width: 30px !important; height: 30px !important; font-size: 0.75rem !important; }
+        .prow-mini .pname { font-size: 0.85rem; }
+
+        /* ===== Barra superior: buscador, estado y ajustes ===== */
+        .tb-buscar {
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-family: inherit;
+            font-size: 0.78rem; font-weight: 500; color: var(--text-muted); padding: 7px 8px 7px 12px; border-radius: 10px;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); min-width: 200px; transition: 0.2s;
+        }
+        .tb-buscar:hover { border-color: rgba(255,255,255,0.18); color: white; }
+        .tb-buscar .tb-txt { flex: 1; text-align: left; }
+        kbd {
+            display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.66rem; font-weight: 600; line-height: 1;
+            padding: 3px 6px; border-radius: 5px; color: #cbd5e1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+        }
+        .tb-sync { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+        .tb-sync:empty { display: none; }
+        .tb-sync::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.6); }
+        .tb-sync.mal { color: #fca5a5; }
+        .tb-sync.mal::before { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.6); }
+        @media (max-width: 900px) {
+            .tb-buscar { min-width: 0; }
+            .tb-buscar .tb-txt, .tb-buscar kbd, .tb-sync { display: none; }
+        }
+        @media (max-width: 600px) { .tb-mini .tb-txt { display: none; } }
+
+        /* ===== Ficha única ===== */
+        .fx-cab { display: flex; align-items: center; gap: 14px; }
+        .fx-av { width: 48px !important; height: 48px !important; font-size: 1.1rem !important; flex-shrink: 0; }
+        /* Mini carné en la cabecera de la ficha */
+        .fx-carne {
+            position: relative; overflow: hidden; flex-shrink: 0; width: 112px; height: 70px; box-sizing: border-box;
+            border-radius: 10px; padding: 7px 9px; display: flex; flex-direction: column; justify-content: space-between;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.32), rgba(245, 158, 11, 0.2));
+            border: 1px solid rgba(52, 211, 153, 0.35); box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+            transform: rotate(-3deg); transition: transform 0.25s;
+        }
+        .fx-carne-torneo { background: linear-gradient(135deg, rgba(59, 130, 246, 0.32), rgba(139, 92, 246, 0.22)); border-color: rgba(96, 165, 250, 0.35); }
+        .fx-carne-socios { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(139, 92, 246, 0.22)); border-color: rgba(251, 191, 36, 0.35); }
+        .fx-carne::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+            background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 45%, rgba(167,243,208,0.2) 50%, rgba(196,181,253,0.2) 55%, transparent 70%);
+            background-size: 250% 100%; background-position: 100% 0;
+        }
+        .fx-carne:hover { transform: rotate(0deg) scale(1.04); }
+        .fx-carne:hover::after { opacity: 1; animation: carneBrillo 1.2s ease-out; }
+        @keyframes carneBrillo { from { background-position: 100% 0; } to { background-position: -50% 0; } }
+        .fx-carne-top { display: flex; justify-content: space-between; align-items: center; }
+        .fx-carne-top span { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.16em; color: rgba(255,255,255,0.85); }
+        .fx-carne-logo { width: 20px; height: auto; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35)); }
+        .fx-carne-nombre { font-size: 0.62rem; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fx-carne-cod { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.12em; color: rgba(255,255,255,0.7); font-variant-numeric: tabular-nums; }
+        @media (max-width: 600px) { .fx-carne { width: 86px; height: 54px; padding: 5px 7px; } .fx-carne-nombre { font-size: 0.55rem; } }
+        .fx-id { flex: 1; min-width: 0; }
+        .fx-nombre { display: flex; align-items: center; gap: 6px; font-size: 1.25rem; font-weight: 700; color: white; letter-spacing: -0.01em; }
+        .fx-nombre span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .fx-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; font-variant-numeric: tabular-nums; }
+        .fx-saldo { text-align: right; flex-shrink: 0; }
+        .fx-saldo small { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        .fx-saldo b { font-size: 1.9rem; font-weight: 800; color: #6ee7b7; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+        .fx-icono { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 7px; display: inline-flex; font-size: 0.9rem; }
+        .fx-icono:hover { color: white; background: rgba(255,255,255,0.06); }
+        .fx-icono .ic { width: 15px; height: 15px; }
+        .fx-cerrar { align-self: flex-start; }
+        .fx-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+        .fx-chip {
+            display: inline-flex; align-items: center; gap: 6px; font-family: inherit; font-size: 0.74rem; font-weight: 600;
+            padding: 5px 10px; border-radius: 8px; color: #cbd5e1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+        }
+        .fx-chip .ic { width: 14px; height: 14px; }
+        .fx-chip.azul { color: #93c5fd; background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.3); }
+        .fx-chip.rojo { color: #cbd5e1; }
+        .fx-chip.rojo.pronto { color: #fbbf24; background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
+        .fx-chip.oro { cursor: pointer; color: #1a1a2e; background: linear-gradient(135deg, #fbbf24, #f59e0b); border: none; }
+        .fx-chip.oro:hover { filter: brightness(1.08); }
+        .fx-chip.nota { color: var(--text-muted); font-weight: 500; max-width: 100%; }
+        .fx-puntos { display: inline-flex; gap: 3px; }
+        .fx-puntos i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid rgba(147,197,253,0.5); }
+        .fx-puntos i.on { background: #60a5fa; border-color: #60a5fa; }
+        .fx-compra { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+        .fx-compra-campos { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+        .fx-compra-campos .field { margin: 0; }
+        .fx-compra-campos .sbtn { height: 44px; padding: 0 22px; }
+        .fx-prev { font-size: 0.8rem; color: #cbd5e1; margin-top: 10px; font-weight: 500; }
+        .fx-prev b { color: white; } .fx-prev .up { color: #34d399; } .fx-prev .down { color: #fca5a5; } .fx-prev .neg { color: #fca5a5; }
+        .fx-nota-tcg { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+        .fx-enlace { background: none; border: none; padding: 0; cursor: pointer; font-family: inherit; font-size: inherit; font-weight: 600; color: #6ee7b7; text-decoration: underline; text-underline-offset: 2px; }
+        .fx-ok { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #34d399; background: rgba(16,185,129,0.08); border: 1px solid rgba(52,211,153,0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; }
+        .fx-fichar { margin-bottom: 16px; }
+        .fx-botones { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .fx-tabs { display: flex; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 4px; }
+        .fx-tab {
+            background: none; border: none; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 600;
+            color: var(--text-muted); padding: 9px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .fx-tab small { font-size: 0.68rem; opacity: 0.7; margin-left: 2px; }
+        .fx-tab:hover { color: white; }
+        .fx-tab.on { color: white; border-bottom-color: #34d399; }
+        body.modo-torneos .fx-tab.on { border-bottom-color: #60a5fa; }
+        body.modo-socios .fx-tab.on, .sheet .fx-tab.on { border-bottom-color: #fbbf24; }
+        .fx-panel { min-height: 60px; }
+        .fx-panel .mv:first-child { padding-top: 12px; }
+        .fx-nada { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 22px 10px; }
+        .fx-mas { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+        .fx-mas-item {
+            display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 11px 14px; color: white; font-size: 1rem;
+        }
+        .fx-mas-item:hover { background: rgba(255,255,255,0.05); }
+        .fx-mas-item span { display: flex; flex-direction: column; }
+        .fx-mas-item b { font-size: 0.85rem; font-weight: 600; }
+        .fx-mas-item small { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
+        .fx-mas-item.peligro b { color: #fca5a5; }
+        .fx-vacio { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 46px 20px; color: var(--text-muted); }
+        .fx-vacio .ic { width: 30px; height: 30px; opacity: 0.5; margin-bottom: 6px; }
+        .fx-vacio b { color: #cbd5e1; font-size: 0.95rem; font-weight: 600; }
+        .fx-vacio span { font-size: 0.8rem; }
+        @media (max-width: 600px) {
+            .fx-compra-campos { grid-template-columns: 1fr 1fr; }
+            .fx-compra-campos .sbtn { grid-column: 1 / -1; }
+            .fx-saldo b { font-size: 1.5rem; }
+        }
+
+        /* ===== Aviso con "Deshacer" ===== */
+        .toast-accion { display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+        .toast-btn {
+            margin-left: auto; flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 0.78rem; font-weight: 700;
+            color: #fcd34d; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); border-radius: 8px; padding: 5px 10px;
+        }
+        .toast-btn:hover { background: rgba(251,191,36,0.22); }
+        .toast-barra { position: absolute; left: 0; bottom: 0; height: 2px; background: #34d399; animation: toastBarra 8s linear forwards; }
+        @keyframes toastBarra { from { width: 100%; } to { width: 0; } }
+
+        /* ===== Ajustes ===== */
+        .aj-grupo { font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 18px 4px 8px; }
+        .aj-item {
+            display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 13px 16px; margin-bottom: 8px; color: white;
+        }
+        .aj-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+        .aj-ico { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #6ee7b7; font-size: 1.05rem; }
+        .aj-ico .ic { width: 18px; height: 18px; }
+        .aj-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .aj-txt b { font-size: 0.9rem; font-weight: 600; }
+        .aj-txt small { font-size: 0.74rem; color: var(--text-muted); font-weight: 500; margin-top: 1px; }
+        .aj-flecha { color: var(--text-muted); font-size: 1.4rem; }
+        .aj-volver { background: none; border: none; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); padding: 0 0 10px; }
+        .aj-volver:hover { color: white; }
+
+        /* ===== Buscador global ===== */
+        .paleta-overlay { position: fixed; inset: 0; z-index: 3000; display: none; align-items: flex-start; justify-content: center; padding: 12vh 16px 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); }
+        .paleta-overlay.open { display: flex; }
+        .paleta { width: 100%; max-width: 560px; background: #111117; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,0.7); overflow: hidden; animation: scaleUp 0.18s ease-out; }
+        .paleta-busca { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); }
+        .paleta-busca .ic { width: 18px; height: 18px; }
+        .paleta-busca input { flex: 1; background: none; border: none; outline: none; color: white; font-family: inherit; font-size: 1rem; font-weight: 500; }
+        .paleta-lista { max-height: 50vh; overflow-y: auto; padding: 6px; }
+        .paleta-grupo { font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 8px 10px 4px; }
+        .paleta-item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 10px; cursor: pointer; }
+        .paleta-item .avatar { width: 34px; height: 34px; border-radius: 50%; font-size: 0.8rem; }
+        .paleta-item.sel, .paleta-item:hover { background: rgba(52,211,153,0.1); }
+        .paleta-donde { display: none; font-size: 0.7rem; color: #6ee7b7; font-weight: 600; white-space: nowrap; }
+        .paleta-item.sel .paleta-donde { display: inline; }
+        .paleta-item.sel .psaldo { display: none; }
+        .paleta-pie { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.7rem; color: var(--text-muted); }
+        .paleta-pie kbd { margin: 0 1px; }
+
+        /* ===== Socios en tabla (pantalla ancha) ===== */
+        .so-cab { display: none; }
+        .so-col { display: none; }
+        @media (min-width: 901px) {
+            .so-cab, .so-fila { display: grid !important; grid-template-columns: 38px minmax(0, 1fr) 130px 80px 110px 90px; gap: 12px; align-items: center; }
+            .so-cab { padding: 0 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 4px; }
+            .so-cab button {
+                background: none; border: none; cursor: pointer; font-family: inherit; text-align: left; padding: 0;
+                font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+            }
+            .so-cab button:hover, .so-cab button.on { color: white; }
+            .so-cab button.on::after { content: ' ↓'; }
+            .so-cab button:last-child { text-align: right; }
+            .so-col { display: block; font-size: 0.8rem; color: #cbd5e1; font-weight: 500; font-variant-numeric: tabular-nums; }
+            .so-num { font-weight: 600; }
+            .so-movil { display: none; }
+            .so-fila .psaldo { text-align: right; }
+        }
+
+        /* ===== Esqueletos de carga ===== */
+        .esq { display: flex; flex-direction: column; gap: 10px; }
+        .esq-fila { display: flex; align-items: center; gap: 12px; }
+        .esq-l, .esq-circ {
+            display: block; height: 12px; border-radius: 6px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.11) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%; animation: esqBrillo 1.3s ease-in-out infinite;
+        }
+        .esq-s { height: 9px; margin-top: 6px; }
+        .esq-circ { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; }
+        .esq-chip { width: 90px; height: 24px; }
+        .esq-cifra { display: flex; flex-direction: column; justify-content: center; min-height: 58px; }
+        @keyframes esqBrillo { from { background-position: 200% 0; } to { background-position: -200% 0; } }
     </style>
 </head>
 <body>
@@ -896,7 +1107,10 @@
         <div class="topbar">
             <a href="index.html" class="tb-home" title="Volver al Hub">🐼</a>
             <div class="tb-title">Fidelización</div>
-            <button class="tb-mini" onclick="abrirModoMini()" title="Ventana pequeña que se queda encima del TPV"><svg class="ic"><use href="#i-flotante"/></svg> Mini</button>
+            <button class="tb-buscar" onclick="abrirPaleta()" title="Buscar un socio desde cualquier pestaña (Ctrl+K o F2)"><svg class="ic"><use href="#i-buscar"/></svg><span class="tb-txt">Buscar socio</span><kbd>Ctrl K</kbd></button>
+            <span class="tb-sync" id="tbSync" title="Última vez que se guardó o leyó la hoja"></span>
+            <button class="tb-mini" onclick="abrirAjustes()" title="Ajustes del cashback, la caducidad, los torneos, los precios y los tickets"><svg class="ic"><use href="#i-ajustes"/></svg><span class="tb-txt"> Ajustes</span></button>
+            <button class="tb-mini" onclick="abrirModoMini()" title="Ventana pequeña que se queda encima del TPV"><svg class="ic"><use href="#i-flotante"/></svg><span class="tb-txt"> Mini</span></button>
             <div class="tb-user">
                 <span>👤 <span id="staffName"></span></span>
                 <button onclick="cerrarSesion()">Salir</button>
@@ -938,32 +1152,28 @@
     <!-- ===================== APP ===================== -->
     <div id="vistaApp" style="display:none">
 
-      <!-- ===================== MODO CASHBACK ===================== -->
+      <!-- ===================== MODO CASHBACK (pantalla de caja) ===================== -->
       <div id="modoCashback" class="modo-vista" style="display:none">
-        <div class="panel scan-panel">
-            <h2><svg class="ic"><use href="#i-buscar"/></svg>Busca al cliente</h2>
-            <form class="scan" onsubmit="event.preventDefault(); buscarClienteCaja()">
-                <input class="inp" type="text" id="cliBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
-                <button class="sbtn sbtn-gold" type="submit">Buscar</button>
-            </form>
-            <div class="cfg-hint">Con el lector: escanea el carné. Sin carné: escribe el nombre y elige de la lista.</div>
-            <div class="cli-sug" id="cliSugerencias"></div>
-            <button type="button" class="cli-nuevo" onclick="dialogoNuevoCliente()"><svg class="ic"><use href="#i-alta"/></svg> ¿Cliente nuevo? <b>Darlo de alta</b></button>
-            <div id="cliResultado"></div>
-        </div>
-
-        <div class="panel">
-            <div class="stats" style="animation: none">
-                <div class="stat"><div class="stat-value" id="cliTotal">—</div><div class="stat-label">Clientes</div></div>
-                <div class="stat"><div class="stat-value" id="cliPendiente">—</div><div class="stat-label">Saldo pendiente</div></div>
-                <div class="stat"><div class="stat-value" id="cliPct">—</div><div class="stat-label">Cashback</div></div>
+        <div class="caja">
+          <div class="caja-izq">
+            <div class="panel scan-panel">
+                <h2><svg class="ic"><use href="#i-buscar"/></svg>Busca al cliente</h2>
+                <form class="scan" onsubmit="event.preventDefault(); buscarClienteCaja()">
+                    <input class="inp" type="text" id="cliBuscar" placeholder="Escanea el carné o escribe el nombre" autocomplete="off" spellcheck="false">
+                    <button class="sbtn sbtn-gold" type="submit">Buscar</button>
+                </form>
+                <div class="cfg-hint">Con el lector puedes escanear desde cualquier sitio. Sin carné: escribe el nombre.</div>
+                <div class="cli-sug" id="cliSugerencias"></div>
+                <button type="button" class="cli-nuevo" onclick="dialogoNuevoCliente()"><svg class="ic"><use href="#i-alta"/></svg> ¿Cliente nuevo? <b>Darlo de alta</b></button>
             </div>
-            <div class="toolbar">
-                <div class="search"><input class="inp" type="text" id="cliFiltro" placeholder="Buscar cliente..." autocomplete="off"></div>
-                <button class="sbtn sbtn-ghost" onclick="abrirConfigCashback()"><svg class="ic"><use href="#i-ajustes"/></svg> Cashback</button>
-                <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('cashback')"><svg class="ic"><use href="#i-reloj"/></svg> Caducidad</button>
+            <div class="panel">
+                <h2><svg class="ic"><use href="#i-reloj"/></svg>Atendidos hoy</h2>
+                <div id="cliRecientes"></div>
             </div>
-            <div id="listaClientes"><div class="spinner"></div></div>
+          </div>
+          <div class="caja-der">
+            <div class="panel"><div id="cliResultado"></div></div>
+          </div>
         </div>
       </div>
 
@@ -971,7 +1181,7 @@
       <div id="modoSocios" class="modo-vista" style="display:none">
         <div class="panel">
             <h2><svg class="ic"><use href="#i-grafica"/></svg>Resumen del programa <small class="so-mes" id="soMes"></small></h2>
-            <div class="so-stats" id="soStats"><div class="spinner"></div></div>
+            <div class="so-stats" id="soStats"></div>
         </div>
         <div class="panel">
             <div class="toolbar">
@@ -981,15 +1191,27 @@
                     <option value="saldo">Más saldo</option>
                     <option value="nombre">Nombre</option>
                     <option value="alta">Más nuevos</option>
+                    <option value="torneos">Más torneos</option>
+                    <option value="sellos">Más sellos</option>
                 </select>
             </div>
             <div class="chips so-filtros" id="soFiltros"></div>
-            <div id="listaSocios"><div class="spinner"></div></div>
+            <div class="so-cab" id="soCab">
+                <span></span>
+                <button type="button" data-orden="nombre">Socio</button>
+                <button type="button" data-orden="visita">Última visita</button>
+                <button type="button" data-orden="torneos">Torneos</button>
+                <button type="button" data-orden="sellos">Sellos</button>
+                <button type="button" data-orden="saldo">Saldo</button>
+            </div>
+            <div id="listaSocios"></div>
         </div>
       </div>
 
       <!-- ===================== MODO TORNEOS ===================== -->
       <div id="modoTorneos" class="modo-vista" style="display:none">
+       <div class="caja">
+        <div class="caja-izq">
         <div class="panel scan-panel">
             <h2><svg class="ic"><use href="#i-espadas"/></svg>Fichar en el torneo</h2>
             <div class="field">
@@ -1004,7 +1226,6 @@
             <div class="cfg-hint">Escanea el carné de cada jugador al llegar: cada torneo es un sello y le da precio de jugador en TCG.</div>
             <div class="cli-sug" id="torSugerencias"></div>
             <button type="button" class="cli-nuevo tor" onclick="dialogoNuevoCliente(true)"><svg class="ic"><use href="#i-alta"/></svg> ¿No tiene carné? <b>Darlo de alta y fichar</b></button>
-            <div id="torResultado"></div>
         </div>
 
         <div class="panel">
@@ -1014,20 +1235,19 @@
                 <div class="stat"><div class="stat-value" id="torMeta">—</div><div class="stat-label">Sellos = premio</div></div>
             </div>
             <h2><svg class="ic"><use href="#i-check"/></svg>Fichados hoy</h2>
-            <div id="listaFichados"><div class="spinner"></div></div>
+            <div id="listaFichados"></div>
+        </div>
         </div>
 
+        <div class="caja-der">
+        <div class="panel"><div id="torResultado"></div></div>
         <div class="panel">
-            <div class="tor-cab">
-                <h2><svg class="ic"><use href="#i-etiqueta"/></svg>Precios de jugador (TCG)</h2>
-                <div class="tor-cab-btns">
-                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirEditorPrecios()"><svg class="ic"><use href="#i-lapiz"/></svg> Precios</button>
-                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="abrirAjustesTorneos()"><svg class="ic"><use href="#i-ajustes"/></svg> Ajustes</button>
-                </div>
-            </div>
+            <h2><svg class="ic"><use href="#i-etiqueta"/></svg>Precios de jugador (TCG)</h2>
             <div class="cfg-hint" id="torReglas" style="margin: -6px 0 12px"></div>
-            <div id="listaPrecios"><div class="spinner"></div></div>
+            <div id="listaPrecios"></div>
         </div>
+        </div>
+       </div>
       </div>
     </div>
 </div>
@@ -1037,6 +1257,23 @@
     <div class="sheet">
         <button class="sheet-close" onclick="cerrarFicha()">✕</button>
         <div class="sheet-body" id="sheetBody"></div>
+    </div>
+</div>
+
+<!-- BUSCADOR GLOBAL (Ctrl+K / F2) -->
+<div class="paleta-overlay" id="paleta" onclick="if (event.target === this) cerrarPaleta()">
+    <div class="paleta">
+        <div class="paleta-busca">
+            <svg class="ic"><use href="#i-buscar"/></svg>
+            <input id="paletaInput" placeholder="Buscar socio por nombre, carné o nota…" autocomplete="off" spellcheck="false">
+            <kbd>Esc</kbd>
+        </div>
+        <div class="paleta-lista" id="paletaLista"></div>
+        <div class="paleta-pie">
+            <span><kbd>↑</kbd><kbd>↓</kbd> elegir</span>
+            <span><kbd>Enter</kbd> abrir</span>
+            <span><kbd>Alt</kbd>+<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> pestañas</span>
+        </div>
     </div>
 </div>
 
@@ -1097,11 +1334,18 @@
 
     async function api(accion, datos = {}) {
         // Sin cabeceras: así el navegador no hace la petición previa (CORS) que Apps Script no admite
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ ...datos, accion, clave: sesion.clave, por: sesion.por })
-        });
-        if (!res.ok) throw new Error('No se pudo conectar con Google');
+        let res;
+        try {
+            res = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ ...datos, accion, clave: sesion.clave, por: sesion.por })
+            });
+        } catch (err) {
+            syncFallo = true; pintarSync();
+            throw new Error('No se pudo conectar con Google');
+        }
+        if (!res.ok) { syncFallo = true; pintarSync(); throw new Error('No se pudo conectar con Google'); }
+        syncFallo = false; ultimaSync = Date.now(); pintarSync();
         const data = await res.json();
         if (data.error === 'no_autorizado') {
             cerrarSesion();
@@ -1550,17 +1794,12 @@
             clientes = data.clientes || [];
             cashbackCfg = data.config || cashbackCfg;
             cashbackAdmin = !!data.esAdmin;
-            const pendiente = clientes.reduce((s, c) => s + c.saldo, 0);
-            document.getElementById('cliTotal').textContent = clientes.length;
-            document.getElementById('cliPendiente').textContent = euros(pendiente);
-            document.getElementById('cliPct').textContent = pct(cashbackCfg.porcentaje);
             document.getElementById('modoCliInfo').textContent = `${clientes.length} cliente${clientes.length === 1 ? '' : 's'} · ${pct(cashbackCfg.porcentaje)}`;
             sociosStats = data.stats || null;
-            pintarListaClientes();
             pintarSocios();
+            if (document.getElementById('paleta').classList.contains('open')) pintarPaleta();
         } catch (err) {
             if (!silencioso && !document.body.classList.contains('modo-torneos')) toast('⚠️ ' + err.message, 'danger');
-            document.getElementById('listaClientes').innerHTML = '';
         }
     }
 
@@ -1578,15 +1817,6 @@
             </div>`;
     }
 
-    function pintarListaClientes() {
-        const q = normalizar(document.getElementById('cliFiltro').value);
-        const lista = clientes
-            .filter(c => normalizar(c.nombre + ' ' + c.carne).includes(q))
-            .sort((a, b) => String(b.ultimo).localeCompare(String(a.ultimo)) || a.nombre.localeCompare(b.nombre));
-        const cont = document.getElementById('listaClientes');
-        cont.innerHTML = lista.length ? lista.map(filaCliente).join('')
-            : `<div class="empty"><div class="ico">${q ? '🔍' : '💸'}</div>${q ? 'Ningún cliente coincide' : 'Aún no hay clientes. Da de alta el primero'}</div>`;
-    }
 
     // Sugerencias mientras se escribe un nombre en el buscador de arriba
     function pintarSugerencias() {
@@ -1600,12 +1830,10 @@
     }
 
     document.getElementById('cliBuscar').addEventListener('input', pintarSugerencias);
-    document.getElementById('cliFiltro').addEventListener('input', pintarListaClientes);
-    ['cliSugerencias', 'listaClientes'].forEach(id => document.getElementById(id).addEventListener('click', e => {
+    ['cliSugerencias', 'cliRecientes'].forEach(id => document.getElementById(id).addEventListener('click', e => {
         const fila = e.target.closest('.prow');
         if (!fila) return;
         abrirCliente({ cliente_id: fila.dataset.id });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }));
 
     // Enter en el buscador: carné escaneado, o el único cliente que encaja con el nombre
@@ -1628,85 +1856,20 @@
 
     async function abrirCliente(datos) {
         const res = document.getElementById('cliResultado');
-        res.innerHTML = '<div class="spinner"></div>';
+        res.innerHTML = esqueletoFicha();
         try {
             const data = await api('cliente', datos);
             if (data.error) throw new Error(errorDe(data));
             document.getElementById('cliBuscar').value = '';
             document.getElementById('cliSugerencias').innerHTML = '';
-            pintarCliente(data);
+            montarFicha(data, 'caja');
         } catch (err) {
-            res.innerHTML = '';
+            vaciarFicha('caja');
             toast('⚠️ ' + err.message, 'danger');
             document.getElementById('cliBuscar').select();
         }
     }
 
-    function pintarCliente(d, recien = '') {
-        clienteActual = d;
-        if (d.config) cashbackCfg = d.config;
-        const c = d.cliente;
-        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
-        const res = document.getElementById('cliResultado');
-        res.innerHTML = `
-            <div class="gcard cli">
-                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Cliente</span>
-                    <span class="gcard-pill ok">${pct(cashbackCfg.porcentaje)} cashback</span></div>
-                <div class="gcard-nombre">${esc(c.nombre)}</div>
-                <div class="gcard-saldo">${euros(d.saldo)}</div>
-                <div class="gcard-sub">${euros(d.ganado)} de cashback en total${c.alta ? ' · cliente desde ' + fecha(c.alta) : ''}</div>
-                <div class="gcard-code">${esc(c.carne)}</div>
-            </div>
-            <div style="text-align:center; margin-top:-8px; margin-bottom: 14px">${avisoCaducidad(movs)}</div>
-
-            ${bloqueJugador(d)}
-
-            <div class="cli-compra">
-                <h3>🛒 Apuntar compra de juegos de mesa</h3>
-                <div class="cfg-hint" style="margin: -6px 0 12px">El TCG no da cashback ni se paga con este saldo.</div>
-                <div class="row2">
-                    <div class="field">
-                        <label>Importe en juegos de mesa (€)</label>
-                        <input class="inp" type="number" id="cliImporte" min="0" step="0.01" inputmode="decimal" placeholder="0">
-                    </div>
-                    <div class="field">
-                        <label>Pagado con saldo (€)</label>
-                        <input class="inp" type="number" id="cliConSaldo" min="0" step="0.01" inputmode="decimal" placeholder="0" ${d.saldo > 0.005 ? '' : 'disabled'}>
-                        ${d.saldo > 0.005 ? `<div class="chips"><button type="button" class="chip" id="cliTodoSaldo">Usar todo (${euros(d.saldo)})</button></div>` : ''}
-                    </div>
-                </div>
-                <div class="saldo-preview" id="cliPreview" style="margin: 12px 0"></div>
-                <button class="sbtn sbtn-gold sbtn-full" id="btnCliCompra" onclick="enviarCompraCliente()">💾 Apuntar compra</button>
-            </div>
-
-            <div class="cli-extra">
-                <button class="sbtn sbtn-ghost sbtn-sm ${recien === 'carne' ? 'sbtn-ticket recien' : ''}" onclick="imprimirCarne()">🎫 Imprimir carné</button>
-                ${c.token ? `<button class="sbtn sbtn-ghost sbtn-sm" onclick="copiarLinkCarne()" title="Copiar el link de su carné digital">🔗 Link</button>
-                <button class="sbtn sbtn-ghost sbtn-sm" onclick="renovarLinkCarne()" title="Si ha perdido el móvil o el ticket">🔄 Renovar</button>` : ''}
-            </div>
-
-            <div class="tar-historial">
-                <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
-                ${movs.length ? movs.map((m, i) => pintarMovCliente(m, i)).join('') : '<div class="empty" style="padding: 18px 10px">Todavía no tiene compras</div>'}
-                ${historialTorneos(d)}
-                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarCliente()">🗑️ Eliminar cliente (solo para pruebas o errores)</button>' : ''}
-            </div>`;
-
-        const importe = document.getElementById('cliImporte');
-        const conSaldo = document.getElementById('cliConSaldo');
-        importe.addEventListener('input', previewCompraCliente);
-        conSaldo.addEventListener('input', previewCompraCliente);
-        [importe, conSaldo].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') enviarCompraCliente(); }));
-        const todo = document.getElementById('cliTodoSaldo');
-        if (todo) todo.onclick = () => {
-            const imp = parseFloat(importe.value) || 0;
-            conSaldo.value = (imp > 0 ? Math.min(imp, d.saldo) : d.saldo).toFixed(2);
-            previewCompraCliente();
-        };
-        res.querySelectorAll('.mv-del').forEach(btn => { btn.onclick = () => anularMovCliente(movs[Number(btn.dataset.i)]); });
-        previewCompraCliente();
-        importe.focus();
-    }
 
     function pintarMovCliente(m, i) {
         const cb = m.tipo === 'cashback';
@@ -1737,23 +1900,6 @@
         return { importe, conSaldo, base, cashback };
     }
 
-    function previewCompraCliente() {
-        const el = document.getElementById('cliPreview');
-        const saldo = clienteActual.saldo;
-        const { importe, conSaldo, base, cashback } = calcularCompra();
-        if (!(importe > 0)) {
-            el.innerHTML = `Cada compra devuelve un <b class="cb-gana">${pct(cashbackCfg.porcentaje)}</b>`
-                + (cashbackCfg.minimo > 0 ? ` a partir de ${euros(cashbackCfg.minimo)}` : '');
-            return;
-        }
-        if (conSaldo > saldo + 0.005) { el.innerHTML = `<span class="neg">Solo tiene ${euros(saldo)} de saldo</span>`; return; }
-        if (conSaldo > importe + 0.005) { el.innerHTML = '<span class="neg">Pagado con saldo no puede ser más que la compra</span>'; return; }
-        const despues = saldo - conSaldo + cashback;
-        el.innerHTML = (cashback > 0
-                ? `Cashback: <b class="cb-gana">+${euros(cashback)}</b>`
-                : `<span>Sin cashback${base > 0 && cashbackCfg.minimo > 0 ? ` (mínimo ${euros(cashbackCfg.minimo)})` : ''}</span>`)
-            + ` <span>·</span> Saldo: <b>${euros(saldo)}</b> <span>→</span> <b class="${despues >= saldo ? 'up' : 'down'}">${euros(despues)}</b>`;
-    }
 
     async function enviarCompraCliente() {
         const { importe, conSaldo, base, cashback } = calcularCompra();
@@ -1771,10 +1917,15 @@
             if (data.error === 'saldo_insuficiente') throw new Error(`Solo tiene ${euros(data.saldo)} de saldo`);
             if (data.error === 'bajo_minimo') throw new Error(`Esta compra no genera cashback (mínimo ${euros(data.minimo)})`);
             if (data.error) throw new Error(errorDe(data));
-            toast((data.cashback > 0 ? `💸 +${euros(data.cashback)} de cashback` : `🛒 ${euros(conSaldo)} pagados con saldo`)
-                + ` · saldo ${euros(data.saldo)}`, 'success');
-            pintarCliente(data);
-            cargarClientes(true);
+            const id = clienteActual.cliente.cliente_id;
+            toastDeshacer((data.cashback > 0 ? `+${euros(data.cashback)} de cashback` : `${euros(conSaldo)} pagados con saldo`)
+                + ` · saldo ${euros(data.saldo)}`, async () => {
+                const r = await api('cliente_deshacer', { cliente_id: id, filas: data.deshacer || [] });
+                if (r.error) throw new Error(errorDe(r));
+                refrescarCliente(r);
+                toast('↩️ Compra deshecha', 'warning');
+            });
+            refrescarCliente(data);
             document.getElementById('cliBuscar').focus(); // listo para el siguiente cliente
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
@@ -1782,52 +1933,7 @@
         }
     }
 
-    async function anularMovCliente(m) {
-        const quedaria = clienteActual.saldo + (m.tipo === 'cashback' ? -m.monto : m.monto);
-        const ok = await confirmar({
-            titulo: '🗑️ ¿Borrar este movimiento?',
-            html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
-                   Úsalo para corregir errores o si el cliente devuelve la compra. Se borrará de la hoja.`
-                + (quedaria < -0.005 ? `<br><br>⚠️ Ya ha gastado ese saldo: le quedará en <b style="color:#fca5a5">${euros(quedaria)}</b>
-                   (lo descontará de su próximo cashback).` : ''),
-            ok: 'Borrar', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_anular', { fila: m.fila, cliente_id: clienteActual.cliente.cliente_id, concepto: m.concepto, monto: m.monto });
-            if (data.error) throw new Error(errorDe(data));
-            pintarCliente(data);
-            toast('🗑️ Movimiento borrado', 'warning');
-            cargarClientes(true);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
-    // Solo admin: quita el cliente y todo su historial de la hoja
-    async function eliminarCliente() {
-        const d = clienteActual;
-        const ok = await confirmar({
-            titulo: '🗑️ Eliminar cliente',
-            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> y sus
-                   ${d.movimientos.length} movimiento${d.movimientos.length === 1 ? '' : 's'} de la hoja. <b style="color:#fca5a5">No se puede deshacer.</b>`
-                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : '')
-                + '<br><br>Úsalo solo para clientes de prueba o dados de alta por error. Su carné dejará de funcionar.',
-            ok: 'Eliminar', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
-            if (data.error) throw new Error(errorDe(data));
-            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
-            clienteActual = null;
-            document.getElementById('cliResultado').innerHTML = '';
-            document.getElementById('cliBuscar').focus();
-            cargarClientes(true);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
     async function dialogoNuevoCliente(ficharAlCrear = false) {
         const escrito = document.getElementById(ficharAlCrear ? 'torBuscar' : 'cliBuscar').value.trim();
@@ -1882,9 +1988,9 @@
                 }
                 document.getElementById('cliBuscar').value = '';
                 document.getElementById('cliSugerencias').innerHTML = '';
-                pintarCliente(data, imprimir ? '' : 'carne');
+                montarFicha(data, 'caja');
                 cargarClientes(true);
-                if (imprimir) imprimirCarne(true);
+                if (imprimir) imprimirCarneDe(data);
             } catch (err) {
                 toast('⚠️ ' + err.message, 'danger');
                 if (btn) cargando(btn, false);
@@ -1958,48 +2064,8 @@
         return q.createSvgTag(4, 0);
     }
 
-    async function copiarLinkCarne() {
-        const c = clienteActual && clienteActual.cliente;
-        if (!c || !c.token) return;
-        const link = linkCarne(c.token);
-        try {
-            await navigator.clipboard.writeText(link);
-            toast('🔗 Link copiado. Mándaselo solo a él: con este link se ve y se usa su carné', 'success');
-        } catch {
-            abrirDialogo(`<h3>🔗 Link del carné</h3><div class="dmsg">Cópialo y mándaselo solo a <b style="color:white">${esc(c.nombre)}</b>:</div>
-                <input class="inp" value="${esc(link)}" onclick="this.select()" readonly>
-                <div class="dbtns" style="margin-top: 16px"><button class="sbtn sbtn-gold" onclick="cerrarDialogo(true)">Hecho</button></div>`);
-        }
-    }
 
-    async function renovarLinkCarne() {
-        const c = clienteActual && clienteActual.cliente;
-        if (!c) return;
-        const ok = await confirmar({
-            titulo: '🔄 Nuevo link del carné',
-            html: `El link y el QR actuales de <b style="color:white">${esc(c.nombre)}</b> dejarán de funcionar.<br><br>
-                   Úsalo si ha perdido el móvil o el ticket, o si alguien más tiene su link. Después imprímele el carné de nuevo.`,
-            ok: 'Crear nuevo link', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_token_nuevo', { cliente_id: c.cliente_id });
-            if (data.error) throw new Error(errorDe(data));
-            toast('🔄 Link renovado: imprime el carné nuevo', 'success');
-            pintarCliente(data, 'carne');
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
-    async function imprimirCarne() {
-        if (!clienteActual) return;
-        try {
-            imprimirTicket('Carné de cliente', await cuerpoCarneTicket(clienteActual.cliente, disenoTicket()));
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
     // ---- Ajustes del cashback (solo admin) ----
     async function abrirConfigCashback() {
@@ -2065,7 +2131,7 @@
             toast(`✅ Cashback: ${pct(data.config.porcentaje)}`, 'success');
             cerrarFicha();
             cargarClientes();
-            if (clienteActual) pintarCliente(clienteActual);
+            if (clienteActual) montarFicha(clienteActual, 'caja', { sinFoco: true });
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
             cargando(btn, false);
@@ -2131,10 +2197,13 @@
                 orden === 'saldo' ? b.saldo - a.saldo
                 : orden === 'nombre' ? a.nombre.localeCompare(b.nombre)
                 : orden === 'alta' ? String(b.alta).localeCompare(String(a.alta))
+                : orden === 'torneos' ? b.torneos - a.torneos
+                : orden === 'sellos' ? b.sellos - a.sellos
                 : String(b.ultimaVisita).localeCompare(String(a.ultimaVisita)));
 
+        document.querySelectorAll('#soCab [data-orden]').forEach(b => b.classList.toggle('on', b.dataset.orden === orden));
         cont.innerHTML = lista.length ? lista.map(c => `
-            <div class="prow" data-id="${esc(c.cliente_id)}">
+            <div class="prow so-fila" data-id="${esc(c.cliente_id)}">
                 <div class="avatar">${esc(inicial(c.nombre))}</div>
                 <div class="pinfo">
                     <div class="pname">${esc(c.nombre)}<span class="so-badges">
@@ -2143,14 +2212,23 @@
                         ${c.caducaPronto > 0.005 ? `<span class="so-badge caduca">⏳ ${euros(c.caducaPronto)}</span>` : ''}
                         ${c.nota ? '<span class="so-badge" title="' + esc(c.nota) + '">📝</span>' : ''}
                     </span></div>
-                    <div class="pmeta">${c.ultimaVisita ? 'Última visita ' + fecha(c.ultimaVisita) : 'Sin visitas'} · ${c.torneos} torneo${c.torneos === 1 ? '' : 's'} · 🐼 ${c.sellos}/${c.meta}</div>
+                    <div class="pmeta so-movil">${c.ultimaVisita ? 'Última visita ' + fecha(c.ultimaVisita) : 'Sin visitas'} · ${c.torneos} torneo${c.torneos === 1 ? '' : 's'} · ${c.sellos}/${c.meta} sellos</div>
                 </div>
+                <div class="so-col">${c.ultimaVisita ? fecha(c.ultimaVisita) : '—'}</div>
+                <div class="so-col so-num">${c.torneos}</div>
+                <div class="so-col">${puntosSellos(c.sellos, c.meta)}</div>
                 <div class="psaldo ${c.saldo > 0.005 ? '' : 'cero'}">${euros(c.saldo)}</div>
             </div>`).join('')
             : `<div class="empty"><div class="ico">👥</div>${clientes.length ? 'Ningún socio coincide' : 'Aún no hay socios'}</div>`;
     }
 
     document.getElementById('soBuscar').addEventListener('input', pintarSocios);
+    document.getElementById('soCab').addEventListener('click', e => {
+        const b = e.target.closest('[data-orden]');
+        if (!b) return;
+        document.getElementById('soOrden').value = b.dataset.orden;
+        pintarSocios();
+    });
     document.getElementById('soOrden').addEventListener('change', pintarSocios);
     document.getElementById('soFiltros').addEventListener('click', e => {
         const c = e.target.closest('.chip');
@@ -2166,122 +2244,21 @@
     // ---- Ficha completa del socio ----
     async function abrirSocio(id) {
         ficha = null;
-        document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
+        document.getElementById('sheetBody').innerHTML = esqueletoFicha();
         document.getElementById('sheet').classList.add('open');
         try {
             const data = await api('cliente', { cliente_id: id });
             if (data.error) throw new Error(errorDe(data));
-            pintarSocio(data);
+            montarFicha(data, 'socios');
         } catch (err) {
             cerrarFicha();
             toast('⚠️ ' + err.message, 'danger');
         }
     }
 
-    function pintarSocio(d) {
-        fichaSocio = d;
-        const c = d.cliente, j = d.jugador;
-        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
-        const sinBorrar = html => html.replace(/<button class="mv-del"[\s\S]*?<\/button>/, '');
-        document.getElementById('sheetBody').innerHTML = `
-            <div class="d-head">
-                <div class="avatar">${esc(inicial(c.nombre))}</div>
-                <div class="d-name">${esc(c.nombre)}<button class="so-nombre-edit" onclick="editarNombreSocio()" title="Corregir el nombre">✏️</button></div>
-                <div class="d-id">Carné <span class="mono">${esc(c.carne)}</span>${c.alta ? ' · socio desde ' + fecha(c.alta) : ''}</div>
-            </div>
-            <div class="so-tiles">
-                <div class="so-stat verde"><b>${euros(d.saldo)}</b><span>Saldo</span></div>
-                <div class="so-stat verde"><b>${euros(d.ganado)}</b><span>Cashback total</span></div>
-                <div class="so-stat rojo"><b>${euros(d.gastado)}</b><span>Gastado</span></div>
-                <div class="so-stat azul"><b>${j.sellos}/${j.meta}</b><span>Sellos${j.sellos >= j.meta ? ' · 🎁' : ''}</span></div>
-                <div class="so-stat azul"><b>${j.torneos}</b><span>Torneos</span></div>
-                <div class="so-stat ${j.activo ? 'azul' : ''}"><b>${j.activo ? '⚔️ ' + fechaCorta(j.hasta) : '—'}</b><span>${j.activo ? 'Precio jugador hasta' : 'Sin precio jugador'}</span></div>
-            </div>
-            <div style="text-align:center; margin: -6px 0 12px">${avisoCaducidad(movs)}</div>
 
-            <div class="field">
-                <label>📝 Nota interna (solo la ve la tienda)</label>
-                <textarea class="inp so-nota" id="soNota" maxlength="500" placeholder="Ej: prefiere Commander, le debemos un sobre...">${esc(c.nota || '')}</textarea>
-                <button class="sbtn sbtn-ghost sbtn-sm" id="btnSoNota" style="margin-top: 6px" onclick="guardarNotaSocio()">💾 Guardar nota</button>
-            </div>
 
-            <div class="so-acc">
-                <button class="sbtn sbtn-gold sbtn-sm" onclick="socioEnCashback()">💸 Abrir en caja</button>
-                <button class="sbtn sbtn-ghost sbtn-sm" onclick="imprimirCarneSocio()">🎫 Carné</button>
-                ${c.token ? '<button class="sbtn sbtn-ghost sbtn-sm" onclick="copiarLinkSocio()">🔗 Link</button>' : ''}
-                <button class="sbtn sbtn-ghost sbtn-sm" onclick="renovarLinkSocio()">🔄 Renovar link</button>
-            </div>
 
-            <div class="tar-historial" style="max-width: none">
-                <h2 style="font-size: 0.95rem; margin: 18px 0 6px">💸 Saldo</h2>
-                ${movs.length ? movs.map((m, i) => sinBorrar(pintarMovCliente(m, i))).join('') : '<div class="empty" style="padding: 14px 10px">Sin movimientos</div>'}
-                ${j.historial.length ? `
-                    <h2 style="font-size: 0.95rem; margin: 18px 0 6px">⚔️ Torneos</h2>
-                    ${j.historial.map(a => `
-                        <div class="mv">
-                            <div class="mv-icon ${a.tipo === 'premio' ? 'gasto' : 'tor'}">${a.tipo === 'premio' ? '🎁' : '⚔️'}</div>
-                            <div class="mv-info">
-                                <div class="mv-concepto">${a.tipo === 'premio' ? 'Premio: ' + esc(a.torneo) : esc(a.torneo || 'Torneo')}</div>
-                                <div class="mv-fecha">${fecha(a.fecha)}${a.por ? ' · por ' + esc(a.por) : ''}</div>
-                            </div>
-                            <div class="mv-monto ${a.tipo === 'premio' ? 'negativo' : 'positivo'}">${a.tipo === 'premio' ? '-' + a.sellos : '+1'} 🐼</div>
-                        </div>`).join('')}` : ''}
-                <div class="cfg-hint" style="text-align:center; margin-top: 10px">Para borrar un movimiento, ábrelo en caja (💸) o en Torneos.</div>
-                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarSocio()">🗑️ Eliminar socio (solo para pruebas o errores)</button>' : ''}
-            </div>`;
-    }
-
-    // Tras cualquier cambio: se repinta la ficha y se refresca la lista
-    function socioActualizado(data, texto) {
-        pintarSocio(data);
-        toast(texto, 'success');
-        cargarClientes(true);
-    }
-
-    function editarNombreSocio() {
-        const c = fichaSocio.cliente;
-        abrirDialogo(`
-            <h3>✏️ Corregir nombre</h3>
-            <div class="field"><input class="inp" type="text" id="soNuevoNombre" value="${esc(c.nombre)}"></div>
-            <div class="dbtns" style="margin-top: 16px">
-                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
-                <button class="sbtn sbtn-gold" id="btnSoNombre">Guardar</button>
-            </div>`);
-        const input = document.getElementById('soNuevoNombre');
-        input.focus();
-        input.select();
-        const guardar = async () => {
-            const nombre = nombrePropio(input.value);
-            if (!nombre) { input.focus(); return; }
-            if (nombre === c.nombre) { cerrarDialogo(false); return; }
-            const btn = document.getElementById('btnSoNombre');
-            cargando(btn, true, 'Guardando...');
-            try {
-                const data = await api('cliente_editar', { cliente_id: c.cliente_id, nombre });
-                if (data.error) throw new Error(errorDe(data));
-                cerrarDialogo(true);
-                socioActualizado(data, `✏️ Ahora se llama ${data.cliente.nombre}`);
-            } catch (err) {
-                toast('⚠️ ' + err.message, 'danger');
-                cargando(btn, false);
-            }
-        };
-        document.getElementById('btnSoNombre').onclick = guardar;
-        input.addEventListener('keydown', e => { if (e.key === 'Enter') guardar(); });
-    }
-
-    async function guardarNotaSocio() {
-        const btn = document.getElementById('btnSoNota');
-        cargando(btn, true, 'Guardando...');
-        try {
-            const data = await api('cliente_editar', { cliente_id: fichaSocio.cliente.cliente_id, nota: document.getElementById('soNota').value });
-            if (data.error) throw new Error(errorDe(data));
-            socioActualizado(data, '📝 Nota guardada');
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-            cargando(btn, false);
-        }
-    }
 
     function socioEnCashback() {
         const id = fichaSocio.cliente.cliente_id;
@@ -2291,67 +2268,9 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    async function imprimirCarneSocio() {
-        try {
-            imprimirTicket('Carné de cliente', await cuerpoCarneTicket(fichaSocio.cliente, disenoTicket()));
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
-    async function copiarLinkSocio() {
-        const c = fichaSocio.cliente;
-        const link = linkCarne(c.token);
-        try {
-            await navigator.clipboard.writeText(link);
-            toast('🔗 Link copiado. Mándaselo solo a él: con este link se ve y se usa su carné', 'success');
-        } catch {
-            abrirDialogo(`<h3>🔗 Link del carné</h3><div class="dmsg">Cópialo y mándaselo solo a <b style="color:white">${esc(c.nombre)}</b>:</div>
-                <input class="inp" value="${esc(link)}" onclick="this.select()" readonly>
-                <div class="dbtns" style="margin-top: 16px"><button class="sbtn sbtn-gold" onclick="cerrarDialogo(true)">Hecho</button></div>`);
-        }
-    }
 
-    async function renovarLinkSocio() {
-        const c = fichaSocio.cliente;
-        const ok = await confirmar({
-            titulo: '🔄 Nuevo link del carné',
-            html: `El link y el QR actuales de <b style="color:white">${esc(c.nombre)}</b> dejarán de funcionar.<br><br>Después imprímele el carné de nuevo.`,
-            ok: 'Crear nuevo link', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_token_nuevo', { cliente_id: c.cliente_id });
-            if (data.error) throw new Error(errorDe(data));
-            socioActualizado(data, '🔄 Link renovado: imprime el carné nuevo');
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
-    async function eliminarSocio() {
-        const d = fichaSocio;
-        const ok = await confirmar({
-            titulo: '🗑️ Eliminar socio',
-            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> con todo su historial (saldo y torneos). <b style="color:#fca5a5">No se puede deshacer.</b>`
-                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : ''),
-            ok: 'Eliminar', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
-            if (data.error) throw new Error(errorDe(data));
-            cerrarFicha();
-            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
-            if (clienteActual && clienteActual.cliente.cliente_id === d.cliente.cliente_id) {
-                clienteActual = null;
-                document.getElementById('cliResultado').innerHTML = '';
-            }
-            cargarClientes(true);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
     // =========================================
     //  TORNEOS: FICHAJES, SELLOS Y PRECIOS DE JUGADOR
@@ -2426,46 +2345,7 @@
         return `<div class="sellos">${h}</div>`;
     }
 
-    // Estado de jugador dentro de la ficha del cliente (cashback) o tras fichar
-    function bloqueJugador(d) {
-        const j = d.jugador;
-        if (!j) return '';
-        const premio = j.sellos >= j.meta;
-        return `
-            <div class="jug-estado ${j.activo ? 'on' : ''}">
-                <div class="je-top">
-                    <b>⚔️ ${j.activo ? 'Jugador activo' : 'Sin torneos recientes'}</b>
-                    <small>${j.activo ? `Precio de jugador en TCG hasta el ${fecha(j.hasta)}`
-                        : j.ultima ? `Último torneo el ${fecha(j.ultima)}: ficha en uno para tener precio de jugador`
-                        : 'Todavía no ha fichado en ningún torneo'}</small>
-                </div>
-                ${sellosHTML(j.sellos, j.meta)}
-                <div class="je-sub">${j.sellos} de ${j.meta} sellos · ${esc(j.premio)}</div>
-                <div class="je-acc">
-                    ${premio ? `<button class="sbtn sbtn-gold sbtn-sm" onclick="canjearSellos()">🎁 Dar premio</button>` : ''}
-                    ${j.activo ? '<button class="sbtn sbtn-ghost sbtn-sm" onclick="verPreciosJugador()">🃏 Precios jugador</button>' : ''}
-                </div>
-            </div>`;
-    }
 
-    // Historial de torneos del cliente (fichajes y premios), con 🗑️ para corregir
-    function historialTorneos(d) {
-        const j = d.jugador;
-        torHistorial = j ? j.historial : [];
-        if (!torHistorial.length) return '';
-        return `
-            <h2 style="font-size: 0.95rem; margin: 18px 0 6px">⚔️ Torneos</h2>
-            ${torHistorial.map((a, i) => `
-                <div class="mv">
-                    <div class="mv-icon ${a.tipo === 'premio' ? 'gasto' : 'tor'}">${a.tipo === 'premio' ? '🎁' : '⚔️'}</div>
-                    <div class="mv-info">
-                        <div class="mv-concepto">${a.tipo === 'premio' ? 'Premio: ' + esc(a.torneo) : esc(a.torneo || 'Torneo')}</div>
-                        <div class="mv-fecha">${fecha(a.fecha)}${a.por ? ' · por ' + esc(a.por) : ''}</div>
-                    </div>
-                    <div class="mv-monto ${a.tipo === 'premio' ? 'negativo' : 'positivo'}">${a.tipo === 'premio' ? '-' + a.sellos : '+1'} 🐼</div>
-                    <button class="mv-del" title="Borrar (si se fichó o canjeó por error)" onclick="anularTorneo(${i})">🗑️</button>
-                </div>`).join('')}`;
-    }
 
     // ---- Fichar ----
     function nombreTorneo() {
@@ -2526,20 +2406,26 @@
 
     async function fichar(datos) {
         const res = document.getElementById('torResultado');
-        res.innerHTML = '<div class="spinner"></div>';
+        res.innerHTML = esqueletoFicha();
         try {
             const data = await api('torneos_fichar', { ...datos, torneo: nombreTorneo() });
             if (data.error && data.error !== 'ya_fichado') throw new Error(errorDe(data));
             const j = data.jugador;
             if (data.error === 'ya_fichado') toast(`ℹ️ ${data.cliente.nombre} ya estaba fichado en este torneo`, 'warning');
-            else toast(`✅ ${data.cliente.nombre} fichado · ${j.sellos}/${j.meta} sellos` + (j.sellos >= j.meta ? ' · 🎁 ¡tiene premio!' : ''), 'success');
+            else {
+                const id = data.cliente.cliente_id, d = data.deshacer;
+                toastDeshacer(`${data.cliente.nombre} fichado · ${j.sellos}/${j.meta} sellos` + (j.sellos >= j.meta ? ' · ¡tiene premio!' : ''), async () => {
+                    const r = await api('torneos_anular', { fila: d.fila, cliente_id: id, tipo: d.tipo });
+                    if (r.error) throw new Error(errorDe(r));
+                    refrescarCliente(r);
+                    toast('↩️ Fichaje deshecho', 'warning');
+                });
+            }
             document.getElementById('torBuscar').value = '';
             document.getElementById('torSugerencias').innerHTML = '';
-            pintarJugador(data);
-            cargarTorneos(true);
-            cargarClientes(true);
+            refrescarCliente(data, 'torneo');
         } catch (err) {
-            res.innerHTML = '';
+            vaciarFicha('torneo');
             toast('⚠️ ' + err.message, 'danger');
             document.getElementById('torBuscar').select();
         }
@@ -2548,86 +2434,21 @@
 
     async function abrirJugador(id) {
         const res = document.getElementById('torResultado');
-        res.innerHTML = '<div class="spinner"></div>';
+        res.innerHTML = esqueletoFicha();
         try {
             const data = await api('cliente', { cliente_id: id });
             if (data.error) throw new Error(errorDe(data));
-            pintarJugador(data);
+            montarFicha(data, 'torneo');
         } catch (err) {
             res.innerHTML = '';
             toast('⚠️ ' + err.message, 'danger');
         }
     }
 
-    // Ficha corta del jugador en la pestaña de torneos
-    function pintarJugador(d) {
-        jugadorVisto = d;
-        const j = d.jugador;
-        document.getElementById('torResultado').innerHTML = `
-            <div class="gcard jug">
-                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Jugador</span>
-                    <span class="gcard-pill ${j.activo ? 'ok' : ''}">${j.activo ? 'Activo' : 'Inactivo'}</span></div>
-                <div class="gcard-nombre">${esc(d.cliente.nombre)}</div>
-                <div class="gcard-sub">${j.torneos} torneo${j.torneos === 1 ? '' : 's'} jugado${j.torneos === 1 ? '' : 's'}${j.activo ? ' · precio de jugador hasta el ' + fecha(j.hasta) : ''}</div>
-            </div>
-            ${bloqueJugador(d)}
-            <div class="tar-historial">${historialTorneos(d)}</div>`;
-    }
 
-    // Refresca la ficha que esté a la vista (cashback o torneos) con los datos nuevos
-    function refrescarFichas(data) {
-        if (document.body.classList.contains('modo-torneos')) pintarJugador(data);
-        else pintarCliente(data);
-        cargarTorneos(true);
-        cargarClientes(true);
-    }
 
-    function clienteEnPantalla() {
-        return document.body.classList.contains('modo-torneos') ? jugadorVisto : clienteActual;
-    }
 
-    async function canjearSellos() {
-        const d = clienteEnPantalla();
-        if (!d) return;
-        const j = d.jugador;
-        const ok = await confirmar({
-            titulo: '🎁 Dar premio',
-            html: `<b style="color:white">${esc(d.cliente.nombre)}</b> tiene ${j.sellos} sellos.<br><br>
-                   Entrégale: <b style="color:#fcd34d">${esc(j.premio)}</b><br>Se gastarán ${j.meta} sellos.`,
-            ok: 'Premio entregado'
-        });
-        if (!ok) return;
-        try {
-            const data = await api('torneos_sellos', { cliente_id: d.cliente.cliente_id });
-            if (data.error === 'faltan_sellos') throw new Error(`Solo tiene ${data.sellos} de ${data.meta} sellos`);
-            if (data.error) throw new Error(errorDe(data));
-            toast(`🎁 Premio entregado a ${data.cliente.nombre}`, 'success');
-            refrescarFichas(data);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
-    async function anularTorneo(i) {
-        const d = clienteEnPantalla();
-        const a = torHistorial[i];
-        if (!d || !a) return;
-        const ok = await confirmar({
-            titulo: '🗑️ ¿Borrar?',
-            html: `${a.tipo === 'premio' ? 'Premio' : 'Fichaje'} de <b style="color:white">${esc(d.cliente.nombre)}</b> del ${fecha(a.fecha)}${a.torneo ? ' (' + esc(a.torneo) + ')' : ''}.<br><br>
-                   ${a.tipo === 'premio' ? 'Le volverán los sellos que gastó.' : 'Perderá ese sello.'}`,
-            ok: 'Borrar', peligro: true
-        });
-        if (!ok) return;
-        try {
-            const data = await api('torneos_anular', { fila: a.fila, cliente_id: d.cliente.cliente_id, tipo: a.tipo });
-            if (data.error) throw new Error(errorDe(data));
-            toast('🗑️ Borrado', 'warning');
-            refrescarFichas(data);
-        } catch (err) {
-            toast('⚠️ ' + err.message, 'danger');
-        }
-    }
 
     // ---- Precios de jugador ----
     function verPreciosJugador() {
@@ -2742,6 +2563,682 @@
             cargando(btn, false);
         }
     }
+
+    // =========================================
+    //  FICHA ÚNICA DEL SOCIO (la misma en caja, torneo y socios)
+    // =========================================
+    const FICHA_DESTINO = { caja: 'cliResultado', torneo: 'torResultado', socios: 'sheetBody' };
+    const fichas = { caja: null, torneo: null, socios: null };          // socio abierto en cada sitio
+    const fichaPestana = { caja: 'saldo', torneo: 'torneos', socios: 'saldo' };
+
+    function I(n) { return `<svg class="ic"><use href="#i-${n}"/></svg>`; }
+
+    function movsOrdenados(d) {
+        return [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+    }
+    function proximoCaduca(movs) {
+        return movs.filter(m => m.caduca && m.restante > 0).sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
+    }
+    function fichadoHoy(j) {
+        const hoy = hoyISO();
+        return (j.historial || []).some(a => a.tipo === 'asistencia' && String(a.fecha).slice(0, 10) === hoy);
+    }
+    function puntosSellos(n, meta) {
+        const llenos = Math.min(n, meta);
+        return `<span class="fx-puntos">${'<i class="on"></i>'.repeat(llenos)}${'<i></i>'.repeat(Math.max(0, meta - llenos))}</span>`;
+    }
+
+    function fichaVacia(ctx) {
+        return ctx === 'torneo'
+            ? `<div class="fx-vacio">${I('espadas')}<b>Ningún jugador abierto</b><span>Escanea un carné para ficharlo, o elige uno de los fichados hoy</span></div>`
+            : `<div class="fx-vacio">${I('buscar')}<b>Ningún cliente abierto</b><span>Escanea un carné o busca por nombre. <kbd>Ctrl K</kbd> busca desde cualquier sitio</span></div>`;
+    }
+    function vaciarFicha(ctx) {
+        fichas[ctx] = null;
+        if (ctx === 'caja') clienteActual = null;
+        if (ctx === 'torneo') jugadorVisto = null;
+        if (ctx === 'socios') { fichaSocio = null; cerrarFicha(); return; }
+        document.getElementById(FICHA_DESTINO[ctx]).innerHTML = fichaVacia(ctx);
+    }
+
+    function fichaHTML(d, ctx) {
+        const c = d.cliente, j = d.jugador;
+        const movs = movsOrdenados(d);
+        const premio = j.sellos >= j.meta;
+        const caduca = proximoCaduca(movs);
+        const legible = String(c.carne || '').replace(/(.{4})(?=.)/g, '$1 ');
+        const tab = fichaPestana[ctx];
+
+        let accion = '';
+        if (ctx === 'caja') accion = `
+            <div class="fx-compra">
+                <div class="fx-compra-campos">
+                    <div class="field"><label>Compra en juegos de mesa</label>
+                        <input class="inp" type="number" id="cliImporte" min="0" step="0.01" inputmode="decimal" placeholder="0,00 €"></div>
+                    <div class="field"><label>Pagado con saldo</label>
+                        <input class="inp" type="number" id="cliConSaldo" min="0" step="0.01" inputmode="decimal" placeholder="0,00 €" ${d.saldo > 0.005 ? '' : 'disabled'}></div>
+                    <button class="sbtn sbtn-gold" id="btnCliCompra" data-facc="compra" title="Apuntar (Enter)">Apuntar</button>
+                </div>
+                <div class="fx-prev" id="cliPreview"></div>
+                <div class="fx-nota-tcg">El TCG no da cashback ni se paga con este saldo.</div>
+            </div>`;
+        if (ctx === 'torneo') accion = fichadoHoy(j)
+            ? `<div class="fx-ok">${I('check')} Fichado hoy · ${j.sellos} de ${j.meta} sellos</div>`
+            : `<button class="sbtn sbtn-gold sbtn-full fx-fichar" data-facc="fichar">${I('espadas')} Fichar en ${esc(document.getElementById('torNombre').value.trim() || 'el torneo de hoy')}</button>`;
+        if (ctx === 'socios') accion = `
+            <div class="fx-botones">
+                <button class="sbtn sbtn-gold sbtn-sm" data-facc="caja">${I('cartera')} Abrir en caja</button>
+                <button class="sbtn sbtn-ghost sbtn-sm" data-facc="carne">🎫 Imprimir carné</button>
+            </div>`;
+
+        return `
+            <div class="fx" data-ctx="${ctx}">
+                <div class="fx-cab">
+                    <div class="fx-carne fx-carne-${ctx}" title="Carné ${esc(legible)}">
+                        <div class="fx-carne-top"><span>PANDA</span>${LOGO_PANDA.replace('class="tj-logo"', 'class="fx-carne-logo"')}</div>
+                        <div class="fx-carne-nombre">${esc(c.nombre)}</div>
+                        <div class="fx-carne-cod">•••• ${esc(String(c.carne || '').slice(-4))}</div>
+                    </div>
+                    <div class="fx-id">
+                        <div class="fx-nombre"><span>${esc(c.nombre)}</span>
+                            <button class="fx-icono" data-facc="nombre" title="Corregir el nombre">${I('lapiz')}</button></div>
+                        <div class="fx-sub">Carné ${esc(legible)}${c.alta ? ' · socio desde ' + fecha(c.alta) : ''}</div>
+                    </div>
+                    <div class="fx-saldo"><small>Saldo</small><b>${euros(d.saldo)}</b></div>
+                    ${ctx !== 'socios' ? `<button class="fx-icono fx-cerrar" data-facc="cerrar" title="Cerrar (Esc)">✕</button>` : ''}
+                </div>
+                <div class="fx-chips">
+                    <span class="fx-chip ${j.activo ? 'azul' : ''}">${I('espadas')} ${j.activo ? 'Precio jugador hasta el ' + fechaCorta(j.hasta) : 'Sin precio jugador'}</span>
+                    <span class="fx-chip" title="${j.sellos} de ${j.meta} sellos · ${esc(j.premio)}">${puntosSellos(j.sellos, j.meta)} ${j.sellos}/${j.meta}</span>
+                    ${premio ? `<button class="fx-chip oro" data-facc="premio" title="Entregar el premio y gastar ${j.meta} sellos">🎁 Dar premio · ${esc(j.premio)}</button>` : ''}
+                    ${caduca ? `<span class="fx-chip rojo ${diasHasta(caduca.caduca) <= 30 ? 'pronto' : ''}">${I('reloj')} ${euros(caduca.restante)} caducan el ${fechaCorta(caduca.caduca)}</span>` : ''}
+                    ${c.nota ? `<span class="fx-chip nota" title="${esc(c.nota)}">📝 ${esc(c.nota.length > 40 ? c.nota.slice(0, 40) + '…' : c.nota)}</span>` : ''}
+                </div>
+                ${accion}
+                <div class="fx-tabs">
+                    <button class="fx-tab ${tab === 'saldo' ? 'on' : ''}" data-ftab="saldo">Saldo <small>${movs.length}</small></button>
+                    <button class="fx-tab ${tab === 'torneos' ? 'on' : ''}" data-ftab="torneos">Torneos <small>${j.historial.length}</small></button>
+                    <button class="fx-tab ${tab === 'nota' ? 'on' : ''}" data-ftab="nota">Nota${c.nota ? ' <small>•</small>' : ''}</button>
+                    <button class="fx-tab ${tab === 'mas' ? 'on' : ''}" data-ftab="mas">Más</button>
+                </div>
+                <div class="fx-panel">${fichaPanel(d, ctx, tab)}</div>
+            </div>`;
+    }
+
+    function fichaPanel(d, ctx, tab) {
+        const c = d.cliente, j = d.jugador;
+        if (tab === 'torneos') {
+            if (!j.historial.length) return '<div class="fx-nada">Todavía no ha fichado en ningún torneo</div>';
+            return j.historial.map((a, i) => `
+                <div class="mv">
+                    <div class="mv-icon ${a.tipo === 'premio' ? 'gasto' : 'tor'}">${a.tipo === 'premio' ? '🎁' : I('espadas')}</div>
+                    <div class="mv-info">
+                        <div class="mv-concepto">${a.tipo === 'premio' ? 'Premio: ' + esc(a.torneo) : esc(a.torneo || 'Torneo')}</div>
+                        <div class="mv-fecha">${fecha(a.fecha)}${a.por ? ' · por ' + esc(a.por) : ''}</div>
+                    </div>
+                    <div class="mv-monto ${a.tipo === 'premio' ? 'negativo' : 'positivo'}">${a.tipo === 'premio' ? '−' + a.sellos : '+1'} sello${a.tipo === 'premio' && a.sellos !== 1 ? 's' : ''}</div>
+                    <button class="mv-del" data-borrar="torneo:${i}" title="Borrar (si se fichó o se dio el premio por error)">🗑️</button>
+                </div>`).join('');
+        }
+        if (tab === 'nota') return `
+            <textarea class="inp so-nota" id="fxNota-${ctx}" maxlength="500" placeholder="Solo la ve la tienda. Ej: prefiere Commander, le debemos un sobre...">${esc(c.nota || '')}</textarea>
+            <button class="sbtn sbtn-ghost sbtn-sm" data-facc="guardar-nota" style="margin-top: 8px">Guardar nota</button>`;
+        if (tab === 'mas') return `
+            <div class="so-tiles">
+                <div class="so-stat verde"><b>${euros(d.ganado)}</b><span>Cashback total</span></div>
+                <div class="so-stat rojo"><b>${euros(d.gastado)}</b><span>Gastado</span></div>
+                <div class="so-stat azul"><b>${j.torneos}</b><span>Torneos</span></div>
+            </div>
+            <div class="fx-mas">
+                <button class="fx-mas-item" data-facc="carne">🎫<span><b>Imprimir carné</b><small>Con código de barras y QR</small></span></button>
+                ${c.token ? `<button class="fx-mas-item" data-facc="link">🔗<span><b>Copiar link del carné digital</b><small>Para mandárselo por privado</small></span></button>` : ''}
+                <button class="fx-mas-item" data-facc="renovar">🔄<span><b>Renovar link</b><small>Si ha perdido el móvil o el ticket</small></span></button>
+                ${(torneosData.precios || []).length ? `<button class="fx-mas-item" data-facc="precios">🃏<span><b>Precios de jugador</b><small>${j.activo ? 'Le tocan hasta el ' + fecha(j.hasta) : 'No le tocan ahora mismo'}</small></span></button>` : ''}
+                ${d.esAdmin ? `<button class="fx-mas-item peligro" data-facc="eliminar">🗑️<span><b>Eliminar socio</b><small>Solo para pruebas o errores · no se puede deshacer</small></span></button>` : ''}
+            </div>`;
+        // Saldo
+        const movs = movsOrdenados(d);
+        d._movs = movs;
+        return movs.length ? movs.map((m, i) => pintarMovCliente(m, i).replace('class="mv-del"', `class="mv-del" data-borrar="mov:${i}"`)).join('')
+            : '<div class="fx-nada">Todavía no tiene movimientos de saldo</div>';
+    }
+
+    function montarFicha(d, ctx, opciones = {}) {
+        fichas[ctx] = d;
+        if (ctx === 'caja') { clienteActual = d; if (d.config) cashbackCfg = d.config; anotarReciente(d); }
+        if (ctx === 'torneo') jugadorVisto = d;
+        if (ctx === 'socios') fichaSocio = d;
+        const cont = document.getElementById(FICHA_DESTINO[ctx]);
+        cont.innerHTML = fichaHTML(d, ctx);
+        if (ctx === 'caja') {
+            const importe = document.getElementById('cliImporte');
+            const conSaldo = document.getElementById('cliConSaldo');
+            [importe, conSaldo].forEach(i => {
+                i.addEventListener('input', previewCompraCliente);
+                i.addEventListener('keydown', e => { if (e.key === 'Enter') enviarCompraCliente(); });
+            });
+            previewCompraCliente();
+            if (!opciones.sinFoco) importe.focus();
+        }
+    }
+
+    // Tras un cambio: se repinta el socio allí donde esté abierto y se refrescan listas y cifras
+    function refrescarCliente(data, abrirEn) {
+        const id = data.cliente.cliente_id;
+        if (abrirEn) montarFicha(data, abrirEn, { sinFoco: true });
+        ['caja', 'torneo', 'socios'].forEach(ctx => {
+            if (ctx === abrirEn || !fichas[ctx] || fichas[ctx].cliente.cliente_id !== id) return;
+            if (ctx === 'socios' && !document.getElementById('sheet').classList.contains('open')) return;
+            montarFicha(data, ctx, { sinFoco: true });
+        });
+        cargarClientes(true);
+        cargarTorneos(true);
+    }
+
+    // Todos los clics dentro de cualquier ficha
+    function clicFicha(e) {
+        const fx = e.target.closest('.fx');
+        if (!fx) return;
+        const ctx = fx.dataset.ctx, d = fichas[ctx];
+        if (!d) return;
+        const tab = e.target.closest('[data-ftab]');
+        if (tab) {
+            fichaPestana[ctx] = tab.dataset.ftab;
+            fx.querySelectorAll('.fx-tab').forEach(t => t.classList.toggle('on', t === tab));
+            fx.querySelector('.fx-panel').innerHTML = fichaPanel(d, ctx, tab.dataset.ftab);
+            return;
+        }
+        const borrar = e.target.closest('[data-borrar]');
+        if (borrar) {
+            const [tipo, i] = borrar.dataset.borrar.split(':');
+            if (tipo === 'mov') borrarMovimiento(ctx, d._movs[Number(i)]);
+            else borrarTorneo(ctx, d.jugador.historial[Number(i)]);
+            return;
+        }
+        const b = e.target.closest('[data-facc]');
+        if (!b) return;
+        switch (b.dataset.facc) {
+            case 'compra': enviarCompraCliente(); break;
+            case 'todo': {
+                const imp = parseFloat(document.getElementById('cliImporte').value) || 0;
+                document.getElementById('cliConSaldo').value = (imp > 0 ? Math.min(imp, d.saldo) : d.saldo).toFixed(2);
+                previewCompraCliente();
+                break;
+            }
+            case 'fichar': fichar({ cliente_id: d.cliente.cliente_id }); break;
+            case 'premio': darPremio(d); break;
+            case 'nombre': editarNombre(d); break;
+            case 'guardar-nota': guardarNota(d, document.getElementById('fxNota-' + ctx).value); break;
+            case 'carne': imprimirCarneDe(d); break;
+            case 'link': copiarLinkDe(d); break;
+            case 'renovar': renovarLinkDe(d); break;
+            case 'precios': verPreciosJugador(); break;
+            case 'eliminar': eliminarSocioDe(d); break;
+            case 'caja': socioEnCashback(); break;
+            case 'cerrar': vaciarFicha(ctx); if (ctx === 'caja') document.getElementById('cliBuscar').focus(); break;
+        }
+    }
+    Object.values(FICHA_DESTINO).forEach(id => document.getElementById(id).addEventListener('click', clicFicha));
+
+    // ---- Acciones de la ficha ----
+    function previewCompraCliente() {
+        const el = document.getElementById('cliPreview');
+        if (!el || !clienteActual) return;
+        const saldo = clienteActual.saldo;
+        const { importe, conSaldo, base, cashback } = calcularCompra();
+        const todo = saldo > 0.005 ? ` · <button type="button" class="fx-enlace" data-facc="todo">usar todo el saldo (${euros(saldo)})</button>` : '';
+        if (!(importe > 0)) {
+            el.innerHTML = `Devuelve un <b class="cb-gana">${pct(cashbackCfg.porcentaje)}</b> en saldo`
+                + (cashbackCfg.minimo > 0 ? ` a partir de ${euros(cashbackCfg.minimo)}` : '') + todo;
+            return;
+        }
+        if (conSaldo > saldo + 0.005) { el.innerHTML = `<span class="neg">Solo tiene ${euros(saldo)} de saldo</span>`; return; }
+        if (conSaldo > importe + 0.005) { el.innerHTML = '<span class="neg">Lo pagado con saldo no puede superar la compra</span>'; return; }
+        const despues = saldo - conSaldo + cashback;
+        el.innerHTML = (cashback > 0 ? `Cashback <b class="cb-gana">+${euros(cashback)}</b>`
+                : `Sin cashback${base > 0 && cashbackCfg.minimo > 0 ? ` (mínimo ${euros(cashbackCfg.minimo)})` : ''}`)
+            + ` · saldo <b>${euros(saldo)}</b> → <b class="${despues >= saldo ? 'up' : 'down'}">${euros(despues)}</b>` + todo;
+    }
+
+    async function darPremio(d) {
+        const j = d.jugador, id = d.cliente.cliente_id;
+        try {
+            const data = await api('torneos_sellos', { cliente_id: id });
+            if (data.error === 'faltan_sellos') throw new Error(`Solo tiene ${data.sellos} de ${data.meta} sellos`);
+            if (data.error) throw new Error(errorDe(data));
+            const dh = data.deshacer;
+            toastDeshacer(`Premio entregado: ${j.premio}`, async () => {
+                const r = await api('torneos_anular', { fila: dh.fila, cliente_id: id, tipo: dh.tipo });
+                if (r.error) throw new Error(errorDe(r));
+                refrescarCliente(r);
+                toast('↩️ Premio deshecho: le vuelven los sellos', 'warning');
+            });
+            refrescarCliente(data);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function borrarMovimiento(ctx, m) {
+        const d = fichas[ctx];
+        if (!m || !d) return;
+        const quedaria = d.saldo + (m.tipo === 'cashback' ? -m.monto : m.monto);
+        const ok = await confirmar({
+            titulo: '🗑️ ¿Borrar este movimiento?',
+            html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
+                   Úsalo para corregir errores o si el cliente devuelve la compra. Se borrará de la hoja.`
+                + (quedaria < -0.005 ? `<br><br>⚠️ Ya ha gastado ese saldo: le quedará en <b style="color:#fca5a5">${euros(quedaria)}</b>.` : ''),
+            ok: 'Borrar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_anular', { fila: m.fila, cliente_id: d.cliente.cliente_id, concepto: m.concepto, monto: m.monto });
+            if (data.error) throw new Error(errorDe(data));
+            refrescarCliente(data);
+            toast('🗑️ Movimiento borrado', 'warning');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function borrarTorneo(ctx, a) {
+        const d = fichas[ctx];
+        if (!a || !d) return;
+        const ok = await confirmar({
+            titulo: '🗑️ ¿Borrar?',
+            html: `${a.tipo === 'premio' ? 'Premio' : 'Fichaje'} de <b style="color:white">${esc(d.cliente.nombre)}</b> del ${fecha(a.fecha)}${a.torneo ? ' (' + esc(a.torneo) + ')' : ''}.<br><br>
+                   ${a.tipo === 'premio' ? 'Le volverán los sellos que gastó.' : 'Perderá ese sello.'}`,
+            ok: 'Borrar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('torneos_anular', { fila: a.fila, cliente_id: d.cliente.cliente_id, tipo: a.tipo });
+            if (data.error) throw new Error(errorDe(data));
+            refrescarCliente(data);
+            toast('🗑️ Borrado', 'warning');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    function editarNombre(d) {
+        const c = d.cliente;
+        abrirDialogo(`
+            <h3>Corregir nombre</h3>
+            <div class="field"><input class="inp" type="text" id="soNuevoNombre" value="${esc(c.nombre)}"></div>
+            <div class="dbtns" style="margin-top: 16px">
+                <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
+                <button class="sbtn sbtn-gold" id="btnSoNombre">Guardar</button>
+            </div>`);
+        const input = document.getElementById('soNuevoNombre');
+        input.focus();
+        input.select();
+        const guardar = async () => {
+            const nombre = nombrePropio(input.value);
+            if (!nombre) { input.focus(); return; }
+            if (nombre === c.nombre) { cerrarDialogo(false); return; }
+            const btn = document.getElementById('btnSoNombre');
+            cargando(btn, true, 'Guardando...');
+            try {
+                const data = await api('cliente_editar', { cliente_id: c.cliente_id, nombre });
+                if (data.error) throw new Error(errorDe(data));
+                cerrarDialogo(true);
+                refrescarCliente(data);
+                toast(`✏️ Ahora se llama ${data.cliente.nombre}`, 'success');
+            } catch (err) {
+                toast('⚠️ ' + err.message, 'danger');
+                cargando(btn, false);
+            }
+        };
+        document.getElementById('btnSoNombre').onclick = guardar;
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') guardar(); });
+    }
+
+    async function guardarNota(d, nota) {
+        try {
+            const data = await api('cliente_editar', { cliente_id: d.cliente.cliente_id, nota });
+            if (data.error) throw new Error(errorDe(data));
+            refrescarCliente(data);
+            toast('📝 Nota guardada', 'success');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function imprimirCarneDe(d) {
+        try {
+            imprimirTicket('Carné de cliente', await cuerpoCarneTicket(d.cliente, disenoTicket()));
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function copiarLinkDe(d) {
+        const c = d.cliente;
+        const link = linkCarne(c.token);
+        try {
+            await navigator.clipboard.writeText(link);
+            toast('🔗 Link copiado. Mándaselo solo a él: con este link se ve y se usa su carné', 'success');
+        } catch {
+            abrirDialogo(`<h3>Link del carné</h3><div class="dmsg">Cópialo y mándaselo solo a <b style="color:white">${esc(c.nombre)}</b>:</div>
+                <input class="inp" value="${esc(link)}" onclick="this.select()" readonly>
+                <div class="dbtns" style="margin-top: 16px"><button class="sbtn sbtn-gold" onclick="cerrarDialogo(true)">Hecho</button></div>`);
+        }
+    }
+
+    async function renovarLinkDe(d) {
+        const c = d.cliente;
+        const ok = await confirmar({
+            titulo: 'Nuevo link del carné',
+            html: `El link y el QR actuales de <b style="color:white">${esc(c.nombre)}</b> dejarán de funcionar.<br><br>Después imprímele el carné de nuevo.`,
+            ok: 'Crear nuevo link', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_token_nuevo', { cliente_id: c.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            refrescarCliente(data);
+            toast('🔄 Link renovado: imprime el carné nuevo', 'success');
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    async function eliminarSocioDe(d) {
+        const ok = await confirmar({
+            titulo: '🗑️ Eliminar socio',
+            html: `Se borrará a <b style="color:white">${esc(d.cliente.nombre)}</b> con todo su historial (saldo y torneos). <b style="color:#fca5a5">No se puede deshacer.</b>`
+                + (d.saldo > 0.005 ? `<br><br>⚠️ Todavía tiene <b style="color:#6ee7b7">${euros(d.saldo)}</b> de saldo.` : ''),
+            ok: 'Eliminar', peligro: true
+        });
+        if (!ok) return;
+        try {
+            const data = await api('cliente_eliminar', { cliente_id: d.cliente.cliente_id });
+            if (data.error) throw new Error(errorDe(data));
+            toast(`🗑️ ${data.eliminado} eliminado`, 'warning');
+            ['caja', 'torneo', 'socios'].forEach(ctx => {
+                if (fichas[ctx] && fichas[ctx].cliente.cliente_id === d.cliente.cliente_id) vaciarFicha(ctx);
+            });
+            recientes = recientes.filter(r => r.id !== d.cliente.cliente_id);
+            guardarRecientes();
+            cargarClientes(true);
+            cargarTorneos(true);
+        } catch (err) {
+            toast('⚠️ ' + err.message, 'danger');
+        }
+    }
+
+    // Para el alta desde la caja (mantiene el nombre de antes)
+    function imprimirCarne() { if (clienteActual) imprimirCarneDe(clienteActual); }
+
+    // =========================================
+    //  DESHACER: la acción se hace al momento y se puede revertir unos segundos
+    // =========================================
+    function toastDeshacer(msg, deshacer) {
+        const cont = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast success toast-accion';
+        t.innerHTML = `<span>${esc(msg)}</span><button type="button" class="toast-btn">Deshacer</button><i class="toast-barra"></i>`;
+        let usado = false;
+        const cerrar = () => { t.style.transition = '0.3s'; t.style.transform = 'translateX(100%)'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); };
+        t.querySelector('.toast-btn').onclick = async () => {
+            if (usado) return;
+            usado = true;
+            t.querySelector('.toast-btn').textContent = 'Deshaciendo…';
+            try { await deshacer(); } catch (err) { toast('⚠️ No se pudo deshacer: ' + err.message, 'danger'); }
+            cerrar();
+        };
+        cont.appendChild(t);
+        setTimeout(() => { if (!usado) cerrar(); }, 8000);
+    }
+
+    // =========================================
+    //  ATENDIDOS HOY (columna izquierda de la caja)
+    // =========================================
+    let recientes = [];
+    function cargarRecientes() {
+        const r = getData('panda_atendidos', null);
+        recientes = r && r.dia === hoyISO() ? r.lista : [];
+        pintarRecientes();
+    }
+    function guardarRecientes() { setData('panda_atendidos', { dia: hoyISO(), lista: recientes }); pintarRecientes(); }
+    function anotarReciente(d) {
+        const c = d.cliente;
+        const hora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        recientes = [{ id: c.cliente_id, nombre: c.nombre, saldo: d.saldo, hora }, ...recientes.filter(r => r.id !== c.cliente_id)].slice(0, 8);
+        guardarRecientes();
+    }
+    function pintarRecientes() {
+        const cont = document.getElementById('cliRecientes');
+        if (!cont) return;
+        cont.innerHTML = recientes.length ? recientes.map(r => `
+            <div class="prow prow-mini" data-id="${esc(r.id)}">
+                <div class="avatar">${esc(inicial(r.nombre))}</div>
+                <div class="pinfo"><div class="pname">${esc(r.nombre)}</div><div class="pmeta">a las ${esc(r.hora)}</div></div>
+                <div class="psaldo ${r.saldo > 0.005 ? '' : 'cero'}">${euros(r.saldo)}</div>
+            </div>`).join('')
+            : '<div class="fx-nada">Aquí aparecerán los clientes que atiendas hoy</div>';
+    }
+
+    // =========================================
+    //  AJUSTES: toda la configuración en un sitio
+    // =========================================
+    function abrirAjustes() {
+        ficha = null;
+        const t = torneosData.config;
+        const n = (torneosData.precios || []).length;
+        const item = (ico, titulo, desc, que) => `
+            <button class="aj-item" onclick="desdeAjustes('${que}')">
+                <span class="aj-ico">${ico}</span>
+                <span class="aj-txt"><b>${titulo}</b><small>${desc}</small></span>
+                <span class="aj-flecha">›</span>
+            </button>`;
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">${I('ajustes')}</div>
+                <div class="d-name">Ajustes</div>
+                <div class="d-id">${cashbackAdmin ? 'Configuración del programa de fidelización' : '🔒 Solo lectura: para cambiar algo, entra con la clave de admin'}</div>
+            </div>
+            <div class="aj-grupo">Cashback</div>
+            ${item(I('cartera'), 'Cashback', `${pct(cashbackCfg.porcentaje)} de cada compra${cashbackCfg.minimo > 0 ? ' · mínimo ' + euros(cashbackCfg.minimo) : ''}`, 'cashback')}
+            ${item(I('reloj'), 'Caducidad del saldo', 'Cuánto dura el saldo de cashback', 'caducidad')}
+            <div class="aj-grupo">Torneos</div>
+            ${item(I('espadas'), 'Torneos y sellos', `${t.dias} días de jugador activo · ${t.meta} sellos = ${esc(t.premio)}`, 'torneos')}
+            ${item(I('etiqueta'), 'Precios de jugador', n ? `${n} producto${n === 1 ? '' : 's'} con precio de jugador` : 'Aún no hay precios', 'precios')}
+            <div class="aj-grupo">Impresión</div>
+            ${item('🎫', 'Diseño de los tickets', disenoTicket() === 'basico' ? 'Básico (solo texto)' : 'Tarjeta con el panda', 'tickets')}`;
+        document.getElementById('sheet').classList.add('open');
+    }
+
+    async function desdeAjustes(que) {
+        if (que === 'cashback') await abrirConfigCashback();
+        if (que === 'caducidad') await abrirCaducidad('cashback');
+        if (que === 'torneos') abrirAjustesTorneos();
+        if (que === 'precios') abrirEditorPrecios();
+        if (que === 'tickets') abrirTicketsAjustes();
+        const body = document.getElementById('sheetBody');
+        if (document.getElementById('sheet').classList.contains('open') && !body.querySelector('.aj-volver')) {
+            body.insertAdjacentHTML('afterbegin', '<button class="aj-volver" onclick="abrirAjustes()">‹ Ajustes</button>');
+        }
+    }
+
+    function abrirTicketsAjustes() {
+        ficha = null;
+        const actual = disenoTicket();
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">🎫</div>
+                <div class="d-name">Diseño de los tickets</div>
+                <div class="d-id">Para los carnés impresos. Se guarda en este ordenador (es el mismo ajuste que en la Wallet).</div>
+            </div>
+            <div class="tipo-toggle" id="ajDiseno">
+                <button type="button" class="tipo-btn diseno ${actual === 'tarjeta' ? 'on' : ''}" data-v="tarjeta"><span class="t-ico">🐼</span>Tarjeta con panda</button>
+                <button type="button" class="tipo-btn diseno ${actual === 'basico' ? 'on' : ''}" data-v="basico"><span class="t-ico">📝</span>Básico</button>
+            </div>
+            <button class="sbtn sbtn-ghost sbtn-full" style="margin-top: 16px" id="ajPrueba">🖨️ Imprimir un carné de prueba</button>`;
+        document.getElementById('sheet').classList.add('open');
+        document.getElementById('ajDiseno').addEventListener('click', e => {
+            const b = e.target.closest('.tipo-btn');
+            if (!b) return;
+            try { localStorage.setItem('panda_ticket_diseno', b.dataset.v); } catch {}
+            document.querySelectorAll('#ajDiseno .tipo-btn').forEach(x => x.classList.toggle('on', x === b));
+            toast('✅ Diseño guardado', 'success');
+        });
+        document.getElementById('ajPrueba').onclick = async () => {
+            try {
+                imprimirTicket('Carné de prueba', await cuerpoCarneTicket({ nombre: 'Cliente de prueba', carne: '770000000000', token: '' }, disenoTicket()));
+            } catch (err) { toast('⚠️ ' + err.message, 'danger'); }
+        };
+    }
+
+    // =========================================
+    //  BUSCADOR GLOBAL (Ctrl+K / F2), LECTOR EN CUALQUIER SITIO Y ATAJOS
+    // =========================================
+    let paletaRes = [], paletaSel = 0;
+    const DONDE = { cashback: 'en caja', torneos: 'en torneos', socios: 'en socios' };
+
+    function modoActual() {
+        return document.body.classList.contains('modo-torneos') ? 'torneos' : document.body.classList.contains('modo-socios') ? 'socios' : 'cashback';
+    }
+    function abrirPaleta(texto = '') {
+        const p = document.getElementById('paleta');
+        p.classList.add('open');
+        const input = document.getElementById('paletaInput');
+        input.value = texto;
+        paletaSel = 0;
+        pintarPaleta();
+        setTimeout(() => input.focus(), 10);
+    }
+    function cerrarPaleta() { document.getElementById('paleta').classList.remove('open'); }
+    function pintarPaleta() {
+        const q = normalizar(document.getElementById('paletaInput').value);
+        paletaRes = (q
+            ? clientes.filter(c => normalizar(c.nombre + ' ' + c.carne + ' ' + (c.nota || '')).includes(q))
+            : [...clientes].sort((a, b) => String(b.ultimaVisita).localeCompare(String(a.ultimaVisita)))).slice(0, 8);
+        if (paletaSel >= paletaRes.length) paletaSel = Math.max(0, paletaRes.length - 1);
+        const lista = document.getElementById('paletaLista');
+        lista.innerHTML = (q ? '' : '<div class="paleta-grupo">Últimas visitas</div>') + (paletaRes.length ? paletaRes.map((c, i) => `
+            <div class="paleta-item ${i === paletaSel ? 'sel' : ''}" data-i="${i}">
+                <div class="avatar">${esc(inicial(c.nombre))}</div>
+                <div class="pinfo">
+                    <div class="pname">${esc(c.nombre)}${c.sellos >= c.meta ? ' <span class="so-badge premio">🎁</span>' : ''}${c.activo ? ' <span class="so-badge activo">⚔️</span>' : ''}</div>
+                    <div class="pmeta">Carné ${esc(c.carne)} · ${c.sellos}/${c.meta} sellos</div>
+                </div>
+                <div class="psaldo ${c.saldo > 0.005 ? '' : 'cero'}">${euros(c.saldo)}</div>
+                <span class="paleta-donde">Abrir ${DONDE[modoActual()]} ↵</span>
+            </div>`).join('')
+            : `<div class="fx-nada">Nadie coincide${q ? ` · <button type="button" class="fx-enlace" id="paletaAlta">Dar de alta «${esc(nombrePropio(document.getElementById('paletaInput').value))}»</button>` : ''}</div>`);
+        const alta = document.getElementById('paletaAlta');
+        if (alta) alta.onclick = () => {
+            const nombre = document.getElementById('paletaInput').value;
+            cerrarPaleta();
+            setModo('cashback');
+            document.getElementById('cliBuscar').value = nombre;
+            dialogoNuevoCliente();
+        };
+    }
+    function elegirPaleta(c) {
+        if (!c) return;
+        cerrarPaleta();
+        abrirSocioAqui(c.cliente_id);
+    }
+    // Abre al socio en la pestaña en la que estás
+    function abrirSocioAqui(id, carne) {
+        const modo = modoActual();
+        if (modo === 'torneos') { if (id) abrirJugador(id); else fichar({ carne }); }
+        else if (modo === 'socios') { if (id) abrirSocio(id); else toast('🔍 Ese carné no es de ningún socio', 'warning'); }
+        else abrirCliente(id ? { cliente_id: id } : { carne });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('paletaInput').addEventListener('input', () => { paletaSel = 0; pintarPaleta(); });
+    document.getElementById('paletaInput').addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); paletaSel = Math.min(paletaSel + 1, paletaRes.length - 1); pintarPaleta(); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); paletaSel = Math.max(paletaSel - 1, 0); pintarPaleta(); }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            // Un carné escaneado en el buscador también vale
+            const codigo = normalizarCodigo(e.target.value);
+            const porCarne = clientes.find(c => c.carne === codigo);
+            elegirPaleta(porCarne || paletaRes[paletaSel]);
+        }
+        if (e.key === 'Escape') { e.preventDefault(); cerrarPaleta(); }
+    });
+    document.getElementById('paletaLista').addEventListener('click', e => {
+        const it = e.target.closest('.paleta-item');
+        if (it) elegirPaleta(paletaRes[Number(it.dataset.i)]);
+    });
+
+    // Lector de carnés: teclea muy rápido y acaba en Enter. Si no hay ningún campo activo, se reconoce igual.
+    const lector = { txt: '', t: 0 };
+    function carneEscaneado(codigo) {
+        codigo = normalizarCodigo(codigo);
+        const c = clientes.find(x => x.carne === codigo);
+        // En torneos, escanear es fichar (como en la puerta); en el resto, abrir su ficha
+        if (modoActual() === 'torneos') { fichar(c ? { cliente_id: c.cliente_id } : { carne: codigo }); return; }
+        abrirSocioAqui(c ? c.cliente_id : null, codigo);
+    }
+
+    document.addEventListener('keydown', e => {
+        if (!sesion || document.getElementById('vistaApp').style.display === 'none') return;
+        const paletaAbierta = document.getElementById('paleta').classList.contains('open');
+        if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') || e.key === 'F2') {
+            e.preventDefault();
+            paletaAbierta ? cerrarPaleta() : abrirPaleta();
+            return;
+        }
+        if (e.altKey && ['1', '2', '3'].includes(e.key)) {
+            e.preventDefault();
+            setModo(['cashback', 'torneos', 'socios'][Number(e.key) - 1]);
+            return;
+        }
+        const enCampo = e.target.closest && e.target.closest('input, textarea, select, [contenteditable]');
+        if (enCampo || paletaAbierta || document.getElementById('dialog').classList.contains('open')) return;
+        const ahora = Date.now();
+        if (e.key.length === 1 && /[0-9a-z]/i.test(e.key) && !e.ctrlKey && !e.altKey && !e.metaKey) {
+            if (ahora - lector.t > 80) lector.txt = '';
+            lector.txt += e.key;
+            lector.t = ahora;
+            return;
+        }
+        if (e.key === 'Enter' && lector.txt.length >= 6 && ahora - lector.t < 150) {
+            e.preventDefault();
+            const codigo = lector.txt;
+            lector.txt = '';
+            cerrarFicha();
+            carneEscaneado(codigo);
+        }
+    });
+
+    // =========================================
+    //  ESQUELETOS DE CARGA E INDICADOR DE SINCRONIZACIÓN
+    // =========================================
+    function esqueletoFicha() {
+        return `<div class="esq">
+            <div class="esq-fila"><i class="esq-circ"></i><div style="flex:1"><i class="esq-l" style="width:45%"></i><i class="esq-l esq-s" style="width:30%"></i></div><i class="esq-l" style="width:70px;height:24px"></i></div>
+            <div class="esq-fila"><i class="esq-l esq-chip"></i><i class="esq-l esq-chip"></i><i class="esq-l esq-chip"></i></div>
+            <i class="esq-l" style="height:44px"></i>
+            <i class="esq-l" style="width:60%"></i><i class="esq-l" style="width:80%"></i><i class="esq-l" style="width:50%"></i>
+        </div>`;
+    }
+    function esqueletoLista(n = 4) {
+        return `<div class="esq">${'<div class="esq-fila"><i class="esq-circ"></i><div style="flex:1"><i class="esq-l" style="width:40%"></i><i class="esq-l esq-s" style="width:25%"></i></div><i class="esq-l" style="width:56px"></i></div>'.repeat(n)}</div>`;
+    }
+    function esqueletoCifras(n = 8) {
+        return '<div class="so-stat esq-cifra"><i class="esq-l" style="width:50%;height:22px;margin:0 auto 6px"></i><i class="esq-l esq-s" style="width:70%;margin:0 auto"></i></div>'.repeat(n);
+    }
+
+    let ultimaSync = 0, syncFallo = false;
+    function pintarSync() {
+        const el = document.getElementById('tbSync');
+        if (!el) return;
+        if (syncFallo) { el.className = 'tb-sync mal'; el.textContent = 'Sin conexión'; return; }
+        if (!ultimaSync) { el.textContent = ''; return; }
+        const s = Math.round((Date.now() - ultimaSync) / 1000);
+        el.className = 'tb-sync ok';
+        el.textContent = s < 10 ? 'Sincronizado' : s < 60 ? `Hace ${s} s` : `Hace ${Math.round(s / 60)} min`;
+    }
+    setInterval(pintarSync, 5000);
 
     // =========================================
     //  MODO MINI: ventana pequeña siempre encima del TPV
@@ -3238,9 +3735,20 @@
     // =========================================
     document.addEventListener('keydown', e => {
         if (e.key !== 'Escape') return;
-        if (document.getElementById('dialog').classList.contains('open')) cerrarDialogo(false);
-        else cerrarFicha();
+        if (document.getElementById('paleta').classList.contains('open')) cerrarPaleta();
+        else if (document.getElementById('dialog').classList.contains('open')) cerrarDialogo(false);
+        else if (document.getElementById('sheet').classList.contains('open')) cerrarFicha();
+        else if (document.body.classList.contains('modo-cashback') && clienteActual && !e.target.closest('input')) vaciarFicha('caja');
     });
+
+    // Estado inicial: fichas vacías, esqueletos mientras carga y los atendidos de hoy
+    vaciarFicha('caja');
+    vaciarFicha('torneo');
+    document.getElementById('listaSocios').innerHTML = esqueletoLista(5);
+    document.getElementById('soStats').innerHTML = esqueletoCifras(8);
+    document.getElementById('listaFichados').innerHTML = esqueletoLista(3);
+    document.getElementById('listaPrecios').innerHTML = esqueletoLista(3);
+    cargarRecientes();
 
     const esVentanaMini = new URLSearchParams(location.search).get('mini') === '1';
     if (sesion) {
