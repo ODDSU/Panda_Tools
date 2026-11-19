@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="pulido">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🐼 Wallet Tienda</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -507,8 +508,441 @@
             .d-actions .sbtn { padding: 12px 6px; font-size: 0.68rem; }
         }
     </style>
+    <style>
+        /* =========================================================
+           INTERFAZ "PRO" (la misma que Fidelización): mismos colores y fondo,
+           con tipografía, iconos, botones y listas más profesionales.
+           Todo lo visual cuelga de html.pulido.
+           ========================================================= */
+        html.pulido body, html.pulido button, html.pulido input, html.pulido select, html.pulido textarea,
+        html.pulido .modo, html.pulido .sbtn, html.pulido .chip, html.pulido .tipo-btn, html.pulido .shop-tab {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        html.pulido body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        /* Iconos de línea */
+        .ic { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+        h2 .ic { width: 18px; height: 18px; margin-right: 9px; opacity: 0.9; }
+        .sbtn .ic, .tb-mini .ic { width: 15px; height: 15px; }
+        html.pulido .panel h2 { display: flex; align-items: center; }
+        html.pulido .panel h2 .ic { color: #fcd34d; }
+        html.pulido body.modo-tarjetas .panel h2 .ic { color: #d8b4fe; }
+        .h2-extra { margin-left: auto; }
+
+        /* Títulos */
+        html.pulido .shop-header h1, html.pulido .tb-title { font-weight: 800; letter-spacing: -0.02em; }
+        html.pulido .shop-badge { letter-spacing: 0.14em; font-weight: 600; }
+        html.pulido .panel h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 18px; }
+        html.pulido .tb-user { font-weight: 500; }
+        .tb-mini {
+            flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 0.72rem; padding: 7px 12px; color: #fcd34d;
+            background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 6px; border-radius: 10px; font-weight: 600;
+        }
+        .tb-mini:hover { background: rgba(251, 191, 36, 0.2); }
+        body.modo-tarjetas .tb-mini { color: #d8b4fe; background: rgba(192, 132, 252, 0.1); border-color: rgba(192, 132, 252, 0.3); }
+        body.modo-tarjetas .tb-mini:hover { background: rgba(192, 132, 252, 0.2); }
+
+        /* Selector de modos */
+        html.pulido .modo { gap: 12px; }
+        html.pulido .modo-ico { width: 40px; height: 40px; border-radius: 11px; color: #94a3b8; }
+        html.pulido .modo-ico .ic { width: 20px; height: 20px; }
+        html.pulido .modo.active .modo-ico { transform: none; }
+        html.pulido .modo.liga.active .modo-ico { color: #fcd34d; }
+        html.pulido .modo.tarjetas.active .modo-ico { color: #d8b4fe; }
+        html.pulido .modo-txt b { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .modo-txt small { font-weight: 500; }
+
+        /* Paneles, cifras y campos */
+        html.pulido .panel { border-radius: 16px; padding: 22px 24px; }
+        html.pulido .cfg-hint { font-weight: 500; }
+        html.pulido .stat { border-radius: 14px; }
+        html.pulido .stat-value { font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+        html.pulido .stat-label { font-weight: 600; letter-spacing: 0.08em; }
+        html.pulido input.inp, html.pulido select.inp { border-radius: 11px; font-weight: 500; }
+        html.pulido .scan input.inp { font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.04em; }
+        html.pulido .field label, html.pulido .lbl { font-weight: 600; letter-spacing: 0.01em; }
+        html.pulido .toolbar .search::before {
+            content: ''; width: 16px; height: 16px; left: 14px; opacity: 0.7;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") center / contain no-repeat;
+        }
+
+        /* Botones: mismos colores, sin MAYÚSCULAS */
+        html.pulido .sbtn { text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 0.86rem; border-radius: 11px; }
+        html.pulido .sbtn-sm { font-size: 0.78rem; border-radius: 9px; }
+        html.pulido .sbtn-gold { font-weight: 700; }
+        html.pulido .sbtn-gold:hover { transform: translateY(-1px); }
+        html.pulido .chip { border-radius: 9px; font-weight: 600; }
+        html.pulido .shop-tab { font-weight: 600; }
+        html.pulido .tar-nueva-ticket { display: flex; align-items: center; justify-content: center; gap: 8px; max-width: none; font-weight: 500; }
+
+        /* Listas: filas limpias en vez de tarjetas */
+        html.pulido .prow {
+            background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); border-radius: 0;
+            margin: 0; padding: 11px 10px; gap: 12px;
+        }
+        html.pulido .prow:last-child { border-bottom: none; }
+        html.pulido .prow:hover { background: rgba(255,255,255,0.04); border-radius: 12px; border-bottom-color: transparent; transform: none; }
+        html.pulido .prow.sel { background: rgba(251, 191, 36, 0.08); border-radius: 12px; border-bottom-color: transparent; box-shadow: inset 3px 0 0 #fbbf24; }
+        html.pulido body.modo-tarjetas .prow.sel { background: rgba(192, 132, 252, 0.1); box-shadow: inset 3px 0 0 #c084fc; }
+        html.pulido .avatar { border-radius: 50%; width: 38px; height: 38px; font-size: 0.9rem; font-weight: 700; }
+        html.pulido .avatar .ic { width: 17px; height: 17px; }
+        html.pulido .pname { font-weight: 600; font-size: 0.92rem; }
+        html.pulido .pmeta { font-weight: 500; }
+        html.pulido .psaldo { font-weight: 700; font-variant-numeric: tabular-nums; }
+        html.pulido .picker-item .avatar { width: 32px; height: 32px; }
+
+        /* Movimientos, hoja lateral y diálogos */
+        html.pulido .mv-icon { border-radius: 50%; color: #cbd5e1; }
+        html.pulido .mv-icon .ic { width: 16px; height: 16px; }
+        html.pulido .mv-icon.ingreso, html.pulido .mv-icon.carga { color: #34d399; }
+        html.pulido .mv-icon.gasto { color: #fca5a5; }
+        html.pulido .mv-concepto { font-weight: 500; }
+        html.pulido .mv-monto { font-weight: 700; font-variant-numeric: tabular-nums; }
+        html.pulido .mv-del { display: inline-flex; align-items: center; justify-content: center; }
+        html.pulido .mv-del .ic { width: 14px; height: 14px; }
+        html.pulido .d-head .avatar { border-radius: 50%; }
+        html.pulido .d-name { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .d-saldo { font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+        html.pulido .dialog h3 { font-weight: 700; letter-spacing: -0.01em; }
+        html.pulido .toast { font-weight: 500; }
+        html.pulido .tipo-btn .t-ico .ic { width: 22px; height: 22px; }
+        html.pulido .tipo-btn .t-ico { display: flex; justify-content: center; margin-bottom: 4px; }
+
+        /* ===== Distribución: lista a la izquierda, ficha a la derecha ===== */
+        html.pulido .shop { max-width: 1120px; }
+        .caja { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 16px; align-items: start; }
+        .caja-izq, .caja-der { min-width: 0; }
+        .caja-der { position: sticky; top: 150px; }
+        .caja-der > .panel { margin-bottom: 0; }
+        .stats-mini { gap: 8px; margin-bottom: 14px; }
+        .stats-mini .stat { padding: 12px 6px; }
+        .stats-mini .stat-value { font-size: 1.2rem; }
+        .liga-nav { display: flex; margin-bottom: 16px; }
+        .liga-nav .shop-tabs { margin: 0; flex: 0 1 380px; }
+        .panel-jornada { max-width: 760px; margin: 0 auto 16px; }
+        @media (max-width: 900px) {
+            .caja { grid-template-columns: 1fr; }
+            .caja-der { position: static; order: -1; }
+            .caja-der.vacia { display: none; }
+            .liga-nav .shop-tabs { flex: 1; }
+        }
+
+        /* Lista de jugadores como tabla ordenable */
+        .ju-cab, .ju-fila { display: grid !important; grid-template-columns: 38px minmax(0, 1fr) 76px 76px; gap: 10px; align-items: center; }
+        .ju-cab { padding: 0 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 4px; }
+        .ju-cab button {
+            background: none; border: none; cursor: pointer; font-family: inherit; text-align: left; padding: 0;
+            font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .ju-cab button:first-child { grid-column: 1 / 3; }
+        .ju-cab button:hover, .ju-cab button.on { color: white; }
+        .ju-cab button.on::after { content: ' ↓'; }
+        .ju-cab button.on.asc::after { content: ' ↑'; }
+        .ju-cab button:last-child, .ju-fila .psaldo { text-align: right; }
+        .ju-col { font-size: 0.76rem; color: #cbd5e1; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .lista-scroll { max-height: calc(100vh - 380px); min-height: 240px; overflow-y: auto; margin: 0 -6px; padding: 0 6px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+        @media (max-width: 900px) { .lista-scroll { max-height: none; } }
+
+        /* ===== Barra superior: buscador, estado y ajustes ===== */
+        .tb-buscar {
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-family: inherit;
+            font-size: 0.78rem; font-weight: 500; color: var(--text-muted); padding: 7px 8px 7px 12px; border-radius: 10px;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); min-width: 200px; transition: 0.2s;
+        }
+        .tb-buscar:hover { border-color: rgba(255,255,255,0.18); color: white; }
+        .tb-buscar .tb-txt { flex: 1; text-align: left; }
+        kbd {
+            display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.66rem; font-weight: 600; line-height: 1;
+            padding: 3px 6px; border-radius: 5px; color: #cbd5e1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+        }
+        .tb-sync { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+        .tb-sync:empty { display: none; }
+        .tb-sync::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.6); }
+        .tb-sync.mal { color: #fca5a5; }
+        .tb-sync.mal::before { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.6); }
+        @media (max-width: 900px) {
+            .tb-buscar { min-width: 0; }
+            .tb-buscar .tb-txt, .tb-buscar kbd, .tb-sync { display: none; }
+        }
+        @media (max-width: 600px) {
+            .tb-mini .tb-txt, .tb-title { display: none; }
+            .topbar { gap: 8px; justify-content: space-between; }
+            .tb-user { padding-left: 10px; }
+            .ju-cab, .ju-fila { grid-template-columns: 38px minmax(0, 1fr) 84px; }
+            .ju-col, .ju-cab button[data-orden="reciente"] { display: none; }
+        }
+
+        /* ===== Ficha única (jugador y tarjeta) ===== */
+        .fx-cab { display: flex; align-items: center; gap: 14px; }
+        .fx-av { width: 48px !important; height: 48px !important; font-size: 1.1rem !important; flex-shrink: 0; }
+        .fx-id { flex: 1; min-width: 0; }
+        .fx-nombre { display: flex; align-items: center; gap: 6px; font-size: 1.25rem; font-weight: 700; color: white; letter-spacing: -0.01em; }
+        .fx-nombre span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .fx-nombre.codigo { font-size: 1.05rem; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+        .fx-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; }
+        .fx-saldo { text-align: right; flex-shrink: 0; }
+        .fx-saldo small { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        .fx-saldo b { font-size: 1.9rem; font-weight: 800; color: #fcd34d; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+        body.modo-tarjetas .fx-saldo b { color: #e9d5ff; }
+        .fx-saldo b.cero { color: #64748b; }
+        .fx-icono { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 7px; display: inline-flex; font-size: 0.9rem; }
+        .fx-icono:hover { color: white; background: rgba(255,255,255,0.06); }
+        .fx-icono .ic { width: 15px; height: 15px; }
+        .fx-cerrar { align-self: flex-start; }
+        .fx-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+        .fx-chip {
+            display: inline-flex; align-items: center; gap: 6px; font-family: inherit; font-size: 0.74rem; font-weight: 600;
+            padding: 5px 10px; border-radius: 8px; color: #cbd5e1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+        }
+        .fx-chip .ic { width: 14px; height: 14px; }
+        .fx-chip.verde { color: #6ee7b7; background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.25); }
+        .fx-chip.morado { color: #d8b4fe; background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.3); }
+        .fx-chip.pronto { color: #fbbf24; background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
+        .fx-chip.gris { color: var(--text-muted); }
+        .fx-compra { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+        .fx-compra-campos { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+        .fx-tipo-fila { display: flex; gap: 8px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+        .fx-fecha {
+            display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); padding: 0 4px 0 10px; height: 34px;
+            border-radius: 10px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06);
+        }
+        .fx-fecha .ic { width: 14px; height: 14px; }
+        .fx-fecha input {
+            background: none; border: none; outline: none; color: #cbd5e1; color-scheme: dark;
+            font-family: inherit; font-size: 0.78rem; font-weight: 500; padding: 4px 4px;
+        }
+        .fx-compra-campos .field { margin: 0; }
+        .fx-compra-campos .sbtn { height: 44px; padding: 0 22px; }
+        .fx-compra .chips { margin-top: 10px; }
+        .fx-prev { font-size: 0.8rem; color: #cbd5e1; margin-top: 10px; font-weight: 500; min-height: 1.2em; }
+        .fx-prev b { color: white; } .fx-prev .up { color: #34d399; } .fx-prev .down { color: #fca5a5; } .fx-prev .neg { color: #fca5a5; }
+        .fx-compra .ticket-chk { margin: 10px 0 0; }
+        /* Interruptor Premio / Canje (o Canjear / Recargar) */
+        .fx-tipo { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px; }
+        .fx-tipo button {
+            display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid transparent; cursor: pointer;
+            font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 6px 12px; border-radius: 8px;
+        }
+        .fx-tipo button .ic { width: 14px; height: 14px; }
+        .fx-tipo button:hover { color: white; }
+        .fx-tipo button.on.mas { color: #34d399; background: rgba(16,185,129,0.12); border-color: rgba(52,211,153,0.35); }
+        .fx-tipo button.on.menos { color: #fca5a5; background: rgba(239,68,68,0.1); border-color: rgba(252,165,165,0.3); }
+        .fx-tipo button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .fx-tabs { display: flex; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 4px; }
+        .fx-tab {
+            background: none; border: none; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 600;
+            color: var(--text-muted); padding: 9px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .fx-tab small { font-size: 0.68rem; opacity: 0.7; margin-left: 2px; }
+        .fx-tab:hover { color: white; }
+        .fx-tab.on { color: white; border-bottom-color: #fbbf24; }
+        body.modo-tarjetas .fx-tab.on { border-bottom-color: #c084fc; }
+        .fx-panel { min-height: 60px; }
+        .fx-panel .mv:first-child { padding-top: 12px; }
+        .fx-nada { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 22px 10px; }
+        .fx-mas { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .fx-mas-item {
+            display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 11px 14px; color: white; font-size: 1rem;
+        }
+        .fx-mas-item:hover { background: rgba(255,255,255,0.05); }
+        .fx-mas-item > .ic { width: 18px; height: 18px; color: var(--text-muted); }
+        .fx-mas-item span { display: flex; flex-direction: column; }
+        .fx-mas-item b { font-size: 0.85rem; font-weight: 600; }
+        .fx-mas-item small { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
+        .fx-mas-item.peligro b, .fx-mas-item.peligro > .ic { color: #fca5a5; }
+        .fx-vacio { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 46px 20px; color: var(--text-muted); }
+        .fx-vacio .ic { width: 30px; height: 30px; opacity: 0.5; margin-bottom: 6px; }
+        .fx-vacio b { color: #cbd5e1; font-size: 0.95rem; font-weight: 600; }
+        .fx-vacio span { font-size: 0.8rem; line-height: 1.5; }
+        @media (max-width: 600px) {
+            .fx-compra-campos { grid-template-columns: 1fr; }
+            .fx-saldo b { font-size: 1.5rem; }
+        }
+
+        /* Mini tarjeta regalo en la cabecera de la ficha (como el mini carné de Fidelización) */
+        .fx-carne {
+            position: relative; overflow: hidden; flex-shrink: 0; width: 112px; height: 70px; box-sizing: border-box;
+            border-radius: 10px; padding: 7px 9px; display: flex; flex-direction: column; justify-content: space-between;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(139, 92, 246, 0.3));
+            border: 1px solid rgba(192, 132, 252, 0.4); box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+            transform: rotate(-3deg); transition: transform 0.25s;
+        }
+        .fx-carne.ticket { background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(139, 92, 246, 0.22)); border-style: dashed; }
+        .fx-carne.nueva { background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,255,255,0.25); }
+        .fx-carne.gastada { filter: grayscale(0.75); }
+        .fx-carne::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+            background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 45%, rgba(253,230,138,0.2) 50%, rgba(196,181,253,0.22) 55%, transparent 70%);
+            background-size: 250% 100%; background-position: 100% 0;
+        }
+        .fx-carne:hover { transform: rotate(0deg) scale(1.04); }
+        .fx-carne:hover::after { opacity: 1; animation: carneBrillo 1.2s ease-out; }
+        @keyframes carneBrillo { from { background-position: 100% 0; } to { background-position: -50% 0; } }
+        .fx-carne-top { display: flex; justify-content: space-between; align-items: center; }
+        .fx-carne-top span { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.16em; color: rgba(255,255,255,0.85); }
+        .fx-carne-logo { width: 20px; height: auto; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35)); }
+        .fx-carne-logo path[fill="#000"] { fill: #1a1a2e; }
+        .fx-carne-nombre { font-size: 0.6rem; font-weight: 700; color: white; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fx-carne-cod { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.12em; color: rgba(255,255,255,0.75); font-variant-numeric: tabular-nums; }
+        @media (max-width: 600px) { .fx-carne { width: 86px; height: 54px; padding: 5px 7px; } }
+
+        /* ===== Aviso con "Deshacer" ===== */
+        .toast-accion { display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+        .toast-btn {
+            margin-left: auto; flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 0.78rem; font-weight: 700;
+            color: #fcd34d; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); border-radius: 8px; padding: 5px 10px;
+        }
+        .toast-btn:hover { background: rgba(251,191,36,0.22); }
+        .toast-barra { position: absolute; left: 0; bottom: 0; height: 2px; background: #34d399; animation: toastBarra 8s linear forwards; }
+        @keyframes toastBarra { from { width: 100%; } to { width: 0; } }
+
+        /* ===== Ajustes ===== */
+        .aj-grupo { font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 18px 4px 8px; }
+        .aj-item {
+            display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 13px 16px; margin-bottom: 8px; color: white;
+        }
+        .aj-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+        .aj-ico { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fcd34d; font-size: 1.05rem; }
+        .aj-ico.morado { color: #d8b4fe; }
+        .aj-ico .ic { width: 18px; height: 18px; }
+        .aj-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .aj-txt b { font-size: 0.9rem; font-weight: 600; }
+        .aj-txt small { font-size: 0.74rem; color: var(--text-muted); font-weight: 500; margin-top: 1px; }
+        .aj-flecha { color: var(--text-muted); font-size: 1.4rem; }
+        .aj-item .switch { pointer-events: none; }
+        .aj-volver { background: none; border: none; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); padding: 0 0 10px; }
+        .aj-volver:hover { color: white; }
+
+        /* ===== Buscador global ===== */
+        .paleta-overlay { position: fixed; inset: 0; z-index: 3000; display: none; align-items: flex-start; justify-content: center; padding: 12vh 16px 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); }
+        .paleta-overlay.open { display: flex; }
+        .paleta { width: 100%; max-width: 560px; background: #111117; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,0.7); overflow: hidden; animation: scaleUp 0.18s ease-out; }
+        .paleta-busca { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); }
+        .paleta-busca .ic { width: 18px; height: 18px; }
+        .paleta-busca input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: white; font-family: inherit; font-size: 1rem; font-weight: 500; }
+        .paleta-lista { max-height: 50vh; overflow-y: auto; padding: 6px; }
+        .paleta-grupo { font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 8px 10px 4px; }
+        .paleta-item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 10px; cursor: pointer; }
+        .paleta-item .avatar { width: 34px; height: 34px; border-radius: 50%; font-size: 0.8rem; }
+        .paleta-item.sel, .paleta-item:hover { background: rgba(251,191,36,0.1); }
+        .paleta-item.tarjeta.sel, .paleta-item.tarjeta:hover { background: rgba(192,132,252,0.12); }
+        .paleta-donde { display: none; font-size: 0.7rem; color: #fcd34d; font-weight: 600; white-space: nowrap; }
+        .paleta-item.tarjeta .paleta-donde { color: #d8b4fe; }
+        .paleta-item.sel .paleta-donde { display: inline; }
+        .paleta-item.sel .psaldo { display: none; }
+        .paleta-pie { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.7rem; color: var(--text-muted); }
+        .paleta-pie kbd { margin: 0 1px; }
+        .fx-enlace { background: none; border: none; padding: 0; cursor: pointer; font-family: inherit; font-size: inherit; font-weight: 600; color: #fcd34d; text-decoration: underline; text-underline-offset: 2px; }
+
+        /* ===== Esqueletos de carga ===== */
+        .esq { display: flex; flex-direction: column; gap: 10px; }
+        .esq-fila { display: flex; align-items: center; gap: 12px; }
+        .esq-l, .esq-circ {
+            display: block; height: 12px; border-radius: 6px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.11) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%; animation: esqBrillo 1.3s ease-in-out infinite;
+        }
+        .esq-s { height: 9px; margin-top: 6px; }
+        .esq-circ { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; }
+        .esq-chip { width: 90px; height: 24px; }
+        @keyframes esqBrillo { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+        /* ===== MODO MINI (ventana flotante encima del TPV) ===== */
+        html:has(body.mini-body) { height: 100%; overflow: hidden; }
+        body.mini-body {
+            display: block; margin: 0; padding: 6px; min-height: 0; height: 100%; max-width: none; overflow: hidden;
+            box-sizing: border-box; background: #0b0b10; color: white; font-family: 'Inter', sans-serif; font-size: 12px;
+        }
+        body.mini-body .bg-auras, body.mini-body .shop, body.mini-body #toast-container { display: none; }
+        .mn { height: 100%; display: flex; flex-direction: column; gap: 5px; position: relative; }
+        .mn-scan, .mn-estado { flex-shrink: 0; }
+        #mnFicha { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+        .mn-vacio-grande {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+            border: 1px dashed rgba(255,255,255,0.1); border-radius: 10px; color: #94a3b8; font-size: 0.75rem; text-align: center; padding: 6px;
+        }
+        .mn-vacio-grande span { font-size: 1.2rem; }
+        .mn input {
+            box-sizing: border-box; min-width: 0; padding: 5px 8px; border-radius: 8px; outline: none;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; color-scheme: dark;
+            font-family: inherit; font-size: 0.82rem;
+        }
+        .mn input:focus { border-color: #fbbf24; }
+        .mn input::placeholder { color: #64748b; }
+        .mn-scan { display: flex; gap: 4px; margin: 0; }
+        .mn-scan input { flex: 1; font-size: 0.88rem; font-weight: 700; }
+        .mn-btn {
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06); color: white; cursor: pointer;
+            font-family: inherit; font-size: 0.75rem; font-weight: 700; padding: 5px 8px; border-radius: 8px; white-space: nowrap;
+        }
+        .mn-btn:hover { background: rgba(255,255,255,0.12); }
+        .mn-btn:disabled { opacity: 0.5; cursor: wait; }
+        .mn-btn.verde { background: rgba(52, 211, 153, 0.15); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
+        .mn-btn.rojo { background: rgba(239, 68, 68, 0.14); border-color: rgba(252, 165, 165, 0.35); color: #fca5a5; }
+        .mn-sug {
+            position: absolute; left: 0; right: 0; top: 34px; z-index: 5; padding: 3px; border-radius: 9px;
+            background: #15151d; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+        }
+        .mn-sug:empty { display: none; }
+        .mn-sug-item {
+            display: flex; justify-content: space-between; gap: 8px; padding: 5px 8px; margin-bottom: 2px; border-radius: 7px;
+            background: rgba(255,255,255,0.04); cursor: pointer; font-size: 0.78rem;
+        }
+        .mn-sug-item:hover { background: rgba(251, 191, 36, 0.12); }
+        .mn-sug-item small { color: #94a3b8; }
+        .mn-card {
+            flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; gap: 5px; padding: 6px 8px; border-radius: 10px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.14), rgba(255,255,255,0.03)); border: 1px solid rgba(251, 191, 36, 0.28);
+        }
+        .mn-card.tarjeta { background: linear-gradient(135deg, rgba(192, 132, 252, 0.16), rgba(255,255,255,0.03)); border-color: rgba(192, 132, 252, 0.32); }
+        .mn-card > * { flex-shrink: 0; }
+        .mn-f1 { display: flex; align-items: baseline; gap: 6px; }
+        .mn-nombre { font-weight: 800; font-size: 0.9rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mn-saldo { font-size: 1.1rem; font-weight: 900; color: #fcd34d; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .mn-card.tarjeta .mn-saldo { color: #e9d5ff; }
+        .mn-f2 { font-size: 0.72rem; color: #94a3b8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mn-fila { display: flex; gap: 4px; align-items: center; }
+        .mn-fila input { flex: 1; width: 0; }
+        .mn-prev { font-size: 0.7rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 14px; min-height: 14px; }
+        .mn-prev b { color: white; } .mn-prev .neg { color: #fca5a5; }
+        .mn-chip { background: none; border: none; color: #fcd34d; cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 0; text-decoration: underline; }
+        .mn input, .mn-btn { height: 28px; line-height: 1; }
+        .mn-estado { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; min-height: 1.1em; white-space: nowrap; overflow: hidden; }
+        .mn-estado span { overflow: hidden; text-overflow: ellipsis; }
+        .mn-estado.ok { color: #34d399; } .mn-estado.mal { color: #fca5a5; } .mn-estado.info { color: #fbbf24; }
+        @media (max-height: 70px) {
+            #mnFicha, .mn-estado, .mn-sug { display: none !important; }
+            .mn-scan input::placeholder { color: #fde68a; font-weight: 700; }
+        }
+    </style>
 </head>
 <body>
+<!-- Iconos de línea (estilo Lucide), los mismos que en Fidelización -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-trofeo" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+    <symbol id="i-regalo" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-personas" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-alta" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></symbol>
+    <symbol id="i-ajustes" viewBox="0 0 24 24"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-flotante" viewBox="0 0 24 24"><path d="M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4"/><rect x="12" y="13" width="10" height="7" rx="2"/></symbol>
+    <symbol id="i-candado" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-enlace" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></symbol>
+    <symbol id="i-impresora" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+    <symbol id="i-papelera" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+    <symbol id="i-escaner" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 7v10"/><path d="M12 7v10"/><path d="M16 7v10"/></symbol>
+    <symbol id="i-mas" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+    <symbol id="i-menos" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-bolsa" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+    <symbol id="i-moneda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></symbol>
+    <symbol id="i-devolver" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+    <symbol id="i-abrir" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+</svg>
 
 <div class="bg-auras">
     <div class="aura aura-1"></div>
@@ -521,29 +955,33 @@
     <div id="hero">
         <a href="index.html" class="back-link">⬅️ Volver al Hub</a>
         <div class="shop-header">
-            <div class="shop-badge">🏪 Panel de la tienda</div>
+            <div class="shop-badge">Panel de la tienda</div>
             <h1>🐼 Wallet Tienda</h1>
             <p>Saldos de la liga y tarjetas regalo</p>
         </div>
     </div>
 
-    <!-- BARRA FIJA: usuario + selector de modo (siempre a mano al hacer scroll) -->
+    <!-- BARRA FIJA: buscador, estado, ajustes, mini, usuario + selector de modo -->
     <div class="sticky-top" id="barraApp" style="display:none">
         <div class="topbar">
             <a href="index.html" class="tb-home" title="Volver al Hub">🐼</a>
             <div class="tb-title">Wallet Tienda</div>
+            <button class="tb-buscar" onclick="abrirPaleta()" title="Buscar un jugador o una tarjeta desde cualquier sitio (Ctrl+K o F2)"><svg class="ic"><use href="#i-buscar"/></svg><span class="tb-txt">Buscar jugador o tarjeta</span><kbd>Ctrl K</kbd></button>
+            <span class="tb-sync" id="tbSync" title="Última vez que se guardó o leyó la hoja"></span>
+            <button class="tb-mini" onclick="abrirAjustes()" title="Caducidad, diseño de los tickets y links de la liga"><svg class="ic"><use href="#i-ajustes"/></svg><span class="tb-txt"> Ajustes</span></button>
+            <button class="tb-mini" onclick="abrirModoMini()" title="Ventana pequeña que se queda encima del TPV"><svg class="ic"><use href="#i-flotante"/></svg><span class="tb-txt"> Mini</span></button>
             <div class="tb-user">
                 <span>👤 <span id="staffName"></span></span>
                 <button onclick="cerrarSesion()">Salir</button>
             </div>
         </div>
         <div class="modos">
-            <button class="modo liga" data-modo="liga">
-                <span class="modo-ico">🏆</span>
+            <button class="modo liga" data-modo="liga" title="Alt+1">
+                <span class="modo-ico"><svg class="ic"><use href="#i-trofeo"/></svg></span>
                 <span class="modo-txt"><b>Liga</b><small id="modoLigaInfo">Premios y canjes</small></span>
             </button>
-            <button class="modo tarjetas" data-modo="tarjetas">
-                <span class="modo-ico">🎁</span>
+            <button class="modo tarjetas" data-modo="tarjetas" title="Alt+2">
+                <span class="modo-ico"><svg class="ic"><use href="#i-regalo"/></svg></span>
                 <span class="modo-txt"><b>Tarjetas<span class="solo-ancho"> regalo</span></b><small id="modoTarInfo">Activar y canjear</small></span>
             </button>
         </div>
@@ -551,7 +989,7 @@
 
     <!-- ===================== LOGIN ===================== -->
     <div id="vistaLogin" class="panel login" style="display:none">
-        <h2>🔒 Entrar</h2>
+        <h2><svg class="ic"><use href="#i-candado"/></svg>Entrar</h2>
         <p>Usa la clave de la tienda. Se guarda en este dispositivo para no tener que ponerla cada vez.</p>
         <form onsubmit="entrar(event)">
             <div class="field">
@@ -571,92 +1009,47 @@
 
       <!-- ===================== MODO LIGA ===================== -->
       <div id="modoLiga" class="modo-vista">
-        <div class="stats">
-            <div class="stat"><div class="stat-value" id="stJugadores">—</div><div class="stat-label">Jugadores</div></div>
-            <div class="stat"><div class="stat-value" id="stConSaldo">—</div><div class="stat-label">Con saldo</div></div>
-            <div class="stat"><div class="stat-value" id="stTotal">—</div><div class="stat-label">Saldo total</div></div>
-        </div>
-
-        <div class="subnav">
+        <div class="liga-nav">
             <div class="shop-tabs">
-                <button class="shop-tab active" data-tab="jugadores">👥 Jugadores</button>
-                <button class="shop-tab" data-tab="movimiento">⚡ Apuntar</button>
-                <button class="shop-tab" data-tab="jornada">🏆 Jornada</button>
+                <button class="shop-tab active" data-tab="jugadores">Jugadores</button>
+                <button class="shop-tab" data-tab="jornada">Repartir jornada</button>
             </div>
-            <button class="icon-btn" onclick="abrirCaducidad()" title="Caducidad del saldo de la liga">⏳</button>
         </div>
 
-        <!-- TAB: JUGADORES -->
+        <!-- TAB: JUGADORES (lista + ficha) -->
         <div class="tab-panel active" id="tab-jugadores">
-            <div class="panel">
-                <div class="toolbar">
-                    <div class="search"><input class="inp" type="text" id="buscar" placeholder="Buscar jugador..." autocomplete="off"></div>
-                    <select class="inp" id="orden">
-                        <option value="saldo">Más saldo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="reciente">Recientes</option>
-                    </select>
-                    <button class="sbtn sbtn-ghost" onclick="copiarTodosLosLinks()" title="Copia la lista de links para enviárselos a cada uno por privado">🔗 Links</button>
-                    <button class="sbtn sbtn-gold" onclick="dialogoNuevoJugador()">➕ Nuevo</button>
+          <div class="caja">
+            <div class="caja-izq">
+                <div class="stats stats-mini">
+                    <div class="stat"><div class="stat-value" id="stJugadores">—</div><div class="stat-label">Jugadores</div></div>
+                    <div class="stat"><div class="stat-value" id="stConSaldo">—</div><div class="stat-label">Con saldo</div></div>
+                    <div class="stat"><div class="stat-value" id="stTotal">—</div><div class="stat-label">Saldo total</div></div>
                 </div>
-                <div id="listaJugadores"><div class="spinner"></div></div>
+                <div class="panel">
+                    <h2><svg class="ic"><use href="#i-personas"/></svg>Jugadores
+                        <button class="sbtn sbtn-gold sbtn-sm h2-extra" onclick="dialogoNuevoJugador()"><svg class="ic"><use href="#i-alta"/></svg> Nuevo</button>
+                    </h2>
+                    <div class="toolbar">
+                        <div class="search"><input class="inp" type="text" id="buscar" placeholder="Filtrar jugadores..." autocomplete="off"></div>
+                    </div>
+                    <div class="ju-cab" id="juCab">
+                        <button data-orden="nombre">Jugador</button>
+                        <button data-orden="reciente">Último</button>
+                        <button data-orden="saldo">Saldo</button>
+                    </div>
+                    <div class="lista-scroll" id="listaJugadores"></div>
+                </div>
             </div>
-        </div>
-
-        <!-- TAB: APUNTAR MOVIMIENTO -->
-        <div class="tab-panel" id="tab-movimiento">
-            <div class="panel">
-                <h2>⚡ Apuntar premio o canje</h2>
-                <div class="field">
-                    <label>Jugador</label>
-                    <div id="movPicker"></div>
-                </div>
-                <div class="field">
-                    <label>Tipo</label>
-                    <div class="tipo-toggle" id="movTipo">
-                        <button type="button" class="tipo-btn premio on" data-tipo="premio"><span class="t-ico">💰</span>Premio</button>
-                        <button type="button" class="tipo-btn canje" data-tipo="canje"><span class="t-ico">🛒</span>Canje</button>
-                    </div>
-                </div>
-                <div class="row2">
-                    <div class="field">
-                        <label>Cantidad (€)</label>
-                        <input class="inp" type="number" id="movMonto" min="0" step="0.5" inputmode="decimal" placeholder="0">
-                        <div class="chips" id="movChips">
-                            <button type="button" class="chip" data-v="5">5€</button>
-                            <button type="button" class="chip" data-v="10">10€</button>
-                            <button type="button" class="chip" data-v="15">15€</button>
-                            <button type="button" class="chip" data-v="20">20€</button>
-                            <button type="button" class="chip" data-v="todo" id="chipTodo" style="display:none">Todo el saldo</button>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Fecha</label>
-                        <input class="inp" type="date" id="movFecha">
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Concepto</label>
-                    <input class="inp" type="text" id="movConcepto" list="conceptos" placeholder="Ej: 1º puesto Jornada 12 · Sobres Bloomburrow">
-                    <datalist id="conceptos">
-                        <option value="1º puesto Jornada ">
-                        <option value="2º puesto Jornada ">
-                        <option value="3º puesto Jornada ">
-                        <option value="Sobres">
-                        <option value="Fundas">
-                        <option value="Caja de sobres">
-                        <option value="Canje en tienda">
-                    </datalist>
-                </div>
-                <div class="saldo-preview" id="movPreview">Elige un jugador para ver su saldo</div>
-                <button class="sbtn sbtn-gold sbtn-full" id="btnMov" onclick="enviarMovimiento()">💾 Guardar</button>
+            <div class="caja-der vacia" id="ligaDer">
+                <div class="panel" id="ligaFicha"></div>
             </div>
+          </div>
         </div>
 
         <!-- TAB: JORNADA -->
         <div class="tab-panel" id="tab-jornada">
-            <div class="panel">
-                <h2>🏆 Repartir premios de una jornada</h2>
+            <div class="panel panel-jornada">
+                <h2><svg class="ic"><use href="#i-trofeo"/></svg>Repartir premios de una jornada</h2>
                 <div class="row2">
                     <div class="field">
                         <label>Jornada</label>
@@ -672,53 +1065,80 @@
                 </div>
                 <div id="jorFilas"></div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top: 6px">
-                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="anadirFilaJornada()">➕ Añadir jugador</button>
+                    <button class="sbtn sbtn-ghost sbtn-sm" onclick="anadirFilaJornada()"><svg class="ic"><use href="#i-mas"/></svg> Añadir jugador</button>
                     <button class="sbtn sbtn-ghost sbtn-sm" onclick="podioJornada()">🥇 Podio 1º · 2º · 3º</button>
                 </div>
                 <div class="jtotal">Total a repartir: <b id="jorTotal">0.00€</b></div>
-                <button class="sbtn sbtn-gold sbtn-full" id="btnJor" onclick="enviarJornada()">🏆 Apuntar premios</button>
+                <button class="sbtn sbtn-gold sbtn-full" id="btnJor" onclick="enviarJornada()"><svg class="ic"><use href="#i-trofeo"/></svg> Apuntar premios</button>
             </div>
         </div>
-
+        <datalist id="conceptos">
+            <option value="1º puesto Jornada ">
+            <option value="2º puesto Jornada ">
+            <option value="3º puesto Jornada ">
+            <option value="Sobres">
+            <option value="Fundas">
+            <option value="Caja de sobres">
+            <option value="Canje en tienda">
+        </datalist>
       </div>
 
       <!-- ===================== MODO TARJETAS ===================== -->
       <div id="modoTarjetas" class="modo-vista" style="display:none">
-        <div id="tab-tarjetas">
-            <div class="panel scan-panel">
-                <h2>🎁 Escanea una tarjeta</h2>
-                <form class="scan" onsubmit="event.preventDefault(); abrirTarjeta()">
-                    <input class="inp" type="text" id="tarCodigo" placeholder="Escanea o escribe el código" autocomplete="off" autocapitalize="characters" spellcheck="false">
-                    <button class="sbtn sbtn-gold" type="submit">Buscar</button>
-                </form>
-                <div class="cfg-hint">Con el lector: toca el campo y escanea la tarjeta. Se busca sola.</div>
-                <button type="button" class="tar-nueva-ticket" onclick="nuevaTarjetaTicket()">🎟️ ¿Sin tarjeta física? <b>Crear tarjeta en ticket</b></button>
-                <div id="tarResultado"></div>
-            </div>
-
-            <div class="panel">
-                <div class="stats" style="animation: none">
+        <div class="caja">
+            <div class="caja-izq">
+                <div class="panel scan-panel">
+                    <h2><svg class="ic"><use href="#i-escaner"/></svg>Escanea una tarjeta</h2>
+                    <form class="scan" onsubmit="event.preventDefault(); abrirTarjeta()">
+                        <input class="inp" type="text" id="tarCodigo" placeholder="Código de la tarjeta" autocomplete="off" autocapitalize="characters" spellcheck="false">
+                        <button class="sbtn sbtn-gold" type="submit">Buscar</button>
+                    </form>
+                    <div class="cfg-hint">Con el lector puedes escanear desde cualquier pantalla: se abre sola.</div>
+                    <button type="button" class="tar-nueva-ticket" onclick="nuevaTarjetaTicket()"><svg class="ic"><use href="#i-ticket"/></svg> ¿Sin tarjeta física? <b>Crear tarjeta en ticket</b></button>
+                </div>
+                <div class="stats stats-mini">
                     <div class="stat"><div class="stat-value" id="tarActivas">—</div><div class="stat-label">Con saldo</div></div>
                     <div class="stat"><div class="stat-value" id="tarPendiente">—</div><div class="stat-label">Por canjear</div></div>
-                    <div class="stat"><div class="stat-value" id="tarVendido">—</div><div class="stat-label">Total cargado</div></div>
+                    <div class="stat"><div class="stat-value" id="tarVendido">—</div><div class="stat-label">Cargado</div></div>
                 </div>
-                <div class="toolbar">
-                    <div class="search"><input class="inp" type="text" id="tarBuscar" placeholder="Buscar por código o comprador..." autocomplete="off"></div>
-                    <button class="sbtn sbtn-ghost" onclick="abrirOpcionesTicket()">🧾 Tickets</button>
-                    <button class="sbtn sbtn-ghost" onclick="abrirCaducidad('tarjetas')">⏳ Caducidad</button>
+                <div class="panel">
+                    <h2><svg class="ic"><use href="#i-regalo"/></svg>Tarjetas</h2>
+                    <div class="toolbar">
+                        <div class="search"><input class="inp" type="text" id="tarBuscar" placeholder="Filtrar por código o comprador..." autocomplete="off"></div>
+                    </div>
+                    <div class="lista-scroll" id="listaTarjetas"></div>
                 </div>
-                <div id="listaTarjetas"><div class="spinner"></div></div>
+            </div>
+            <div class="caja-der vacia" id="tarDer">
+                <div class="panel" id="tarResultado"></div>
             </div>
         </div>
       </div>
     </div>
 </div>
 
-<!-- FICHA DEL JUGADOR -->
+<!-- HOJA LATERAL (ajustes, caducidad, tickets) -->
 <div class="sheet-overlay" id="sheet" onclick="if (event.target === this) cerrarFicha()">
     <div class="sheet">
         <button class="sheet-close" onclick="cerrarFicha()">✕</button>
         <div class="sheet-body" id="sheetBody"></div>
+    </div>
+</div>
+
+<!-- BUSCADOR GLOBAL (Ctrl+K / F2) -->
+<div class="paleta-overlay" id="paleta" onclick="if (event.target === this) cerrarPaleta()">
+    <div class="paleta">
+        <div class="paleta-busca">
+            <svg class="ic"><use href="#i-buscar"/></svg>
+            <input id="paletaInput" placeholder="Jugador, código de tarjeta o comprador…" autocomplete="off" spellcheck="false">
+            <kbd>Esc</kbd>
+        </div>
+        <div class="paleta-lista" id="paletaLista"></div>
+        <div class="paleta-pie">
+            <span><kbd>↑</kbd><kbd>↓</kbd> elegir</span>
+            <span><kbd>Enter</kbd> abrir</span>
+            <span><kbd>Alt</kbd>+<kbd>1</kbd><kbd>2</kbd> Liga · Tarjetas</span>
+        </div>
     </div>
 </div>
 
@@ -768,11 +1188,18 @@
 
     async function api(accion, datos = {}) {
         // Sin cabeceras: así el navegador no hace la petición previa (CORS) que Apps Script no admite
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ ...datos, accion, clave: sesion.clave, por: sesion.por })
-        });
-        if (!res.ok) throw new Error('No se pudo conectar con Google');
+        let res;
+        try {
+            res = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ ...datos, accion, clave: sesion.clave, por: sesion.por })
+            });
+        } catch (err) {
+            syncFallo = true; pintarSync();
+            throw new Error('No se pudo conectar con Google');
+        }
+        if (!res.ok) { syncFallo = true; pintarSync(); throw new Error('No se pudo conectar con Google'); }
+        syncFallo = false; ultimaSync = Date.now(); pintarSync();
         const data = await res.json();
         if (data.error === 'no_autorizado') {
             cerrarSesion();
@@ -854,8 +1281,10 @@
     });
 
     // =========================================
-    //  RESUMEN / LISTA DE JUGADORES
+    //  RESUMEN / LISTA DE JUGADORES (tabla ordenable)
     // =========================================
+    let ordenLiga = getData('panda_orden_liga', 'saldo');
+
     async function cargarResumen() {
         try {
             const data = await api('resumen');
@@ -875,125 +1304,245 @@
         document.getElementById('stTotal').textContent = euros(total);
         document.getElementById('modoLigaInfo').textContent = `${jugadores.length} jugadores · ${euros(total)}`;
         pintarLista();
-        actualizarPreviewMov();
     }
 
     function pintarLista() {
         const q = normalizar(document.getElementById('buscar').value);
-        const orden = document.getElementById('orden').value;
         const lista = jugadores
             .filter(j => normalizar(j.nombre + ' ' + j.jugador_id).includes(q))
             .sort((a, b) => {
-                if (orden === 'nombre') return a.nombre.localeCompare(b.nombre, 'es');
-                if (orden === 'reciente') return (b.ultimo || '').localeCompare(a.ultimo || '');
+                if (ordenLiga === 'nombre') return a.nombre.localeCompare(b.nombre, 'es');
+                if (ordenLiga === 'reciente') return String(b.ultimo || '').localeCompare(String(a.ultimo || '')) || a.nombre.localeCompare(b.nombre, 'es');
                 return b.saldo - a.saldo || a.nombre.localeCompare(b.nombre, 'es');
             });
+        document.querySelectorAll('#juCab button').forEach(b => {
+            b.classList.toggle('on', b.dataset.orden === ordenLiga);
+            b.classList.toggle('asc', b.dataset.orden === 'nombre');
+        });
 
         const cont = document.getElementById('listaJugadores');
         if (!lista.length) {
-            cont.innerHTML = `<div class="empty"><div class="ico">${q ? '🔍' : '📭'}</div>
-                ${q ? 'Ningún jugador coincide con la búsqueda' : 'Aún no hay jugadores. Pulsa ➕ Nuevo'}</div>`;
+            cont.innerHTML = `<div class="fx-nada">${q ? 'Ningún jugador coincide con la búsqueda' : 'Aún no hay jugadores. Pulsa «Nuevo»'}</div>`;
             return;
         }
         cont.innerHTML = lista.map(j => `
-            <div class="prow" data-id="${esc(j.jugador_id)}">
+            <div class="prow ju-fila" data-id="${esc(j.jugador_id)}">
                 <div class="avatar">${esc(inicial(j.nombre))}</div>
                 <div class="pinfo">
                     <div class="pname">${esc(j.nombre)}</div>
-                    <div class="pmeta">${j.ultimo ? 'Último movimiento: ' + fecha(j.ultimo) : 'Sin movimientos'}</div>
+                    <div class="pmeta">${j.movimientos ? j.movimientos + ' movimiento' + (j.movimientos === 1 ? '' : 's') : 'Sin movimientos'}</div>
                 </div>
+                <div class="ju-col">${j.ultimo ? fechaCorta(j.ultimo) : '—'}</div>
                 <div class="psaldo ${j.saldo > 0.005 ? '' : 'cero'}">${euros(j.saldo)}</div>
             </div>`).join('');
+        marcarSeleccion();
+    }
+
+    // Resalta en la lista al jugador abierto en la ficha
+    function marcarSeleccion() {
+        const id = ficha ? ficha.jugador.jugador_id : null;
+        document.querySelectorAll('#listaJugadores .prow').forEach(f => f.classList.toggle('sel', f.dataset.id === id));
     }
 
     document.getElementById('buscar').addEventListener('input', pintarLista);
-    document.getElementById('orden').addEventListener('change', pintarLista);
+    document.getElementById('juCab').addEventListener('click', e => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        ordenLiga = b.dataset.orden;
+        setData('panda_orden_liga', ordenLiga);
+        pintarLista();
+    });
     document.getElementById('listaJugadores').addEventListener('click', e => {
         const fila = e.target.closest('.prow');
         if (fila) abrirFicha(fila.dataset.id);
     });
 
     // =========================================
-    //  FICHA DEL JUGADOR
+    //  FICHA DEL JUGADOR (columna derecha): datos, premio/canje, historial
     // =========================================
-    let ficha = null;
+    let ficha = null;           // datos del jugador abierto
+    let ligaTipo = 'premio';    // lo que apunta el formulario de la ficha
+    let ligaTab = 'historial';
+
+    function I(n) { return `<svg class="ic"><use href="#i-${n}"/></svg>`; }
+
+    function vaciarFichaLiga() {
+        ficha = null;
+        document.getElementById('ligaDer').classList.add('vacia');
+        document.getElementById('ligaFicha').innerHTML = `
+            <div class="fx-vacio">${I('personas')}<b>Elige un jugador</b>
+                <span>Púlsalo en la lista o búscalo con <kbd>Ctrl K</kbd>.<br>Aquí apuntas premios y canjes y ves su historial.</span></div>`;
+        marcarSeleccion();
+    }
 
     async function abrirFicha(jugadorId) {
-        document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
-        document.getElementById('sheet').classList.add('open');
+        if (modoActual() !== 'liga') setModo('liga');
+        verTab('jugadores');
+        const der = document.getElementById('ligaDer');
+        const mismo = !!ficha && ficha.jugador.jugador_id === jugadorId;
+        der.classList.remove('vacia');
+        if (!mismo) {
+            document.getElementById('ligaFicha').innerHTML = esqueletoFicha();
+            document.querySelectorAll('#listaJugadores .prow').forEach(f => f.classList.toggle('sel', f.dataset.id === jugadorId));
+        }
+        if (window.innerWidth <= 900) window.scrollTo({ top: 0, behavior: 'smooth' });
         try {
             const data = await api('jugador', { jugador_id: jugadorId });
             if (data.error) throw new Error(errorDe(data));
-            pintarFicha(data);
+            pintarFicha(data, !mismo);
         } catch (err) {
-            cerrarFicha();
+            if (!mismo) vaciarFichaLiga();
             toast('⚠️ ' + err.message, 'danger');
         }
     }
 
     function cerrarFicha() {
         document.getElementById('sheet').classList.remove('open');
-        ficha = null;
     }
 
-    function pintarFicha(data) {
+    function movsOrdenados(movs) {
+        return [...movs].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+    }
+
+    // La parte del saldo que caduca antes: { caduca, restante }
+    function proximaCaducidad(movs) {
+        return movs.filter(m => m.caduca && m.restante > 0)
+            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0] || null;
+    }
+
+    function chipCaducidad(cad) {
+        if (!cad) return '';
+        return `<span class="fx-chip ${diasHasta(cad.caduca) <= 30 ? 'pronto' : ''}">${I('reloj')} ${euros(cad.restante)} caducan el ${fecha(cad.caduca)}</span>`;
+    }
+
+    function pintarFicha(data, nuevo = false) {
         ficha = data;
+        if (nuevo) { ligaTipo = 'premio'; ligaTab = 'historial'; }
         const j = data.jugador;
-        const movs = [...data.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
-
-        document.getElementById('sheetBody').innerHTML = `
-            <div class="d-head">
-                <div class="avatar">${esc(inicial(j.nombre))}</div>
-                <div class="d-name">${esc(j.nombre)}</div>
-                <div class="d-id">${esc(j.jugador_id)}</div>
-                <div class="d-saldo-label">Saldo disponible</div>
-                <div class="d-saldo">${euros(data.saldo)}</div>
-                <div class="d-mini">
-                    <span class="g">+${euros(data.ganado)} ganado</span>
-                    <span class="s">-${euros(data.gastado)} gastado</span>
-                    ${data.caducado > 0 ? `<span class="c">⏳ ${euros(data.caducado)} caducado</span>` : ''}
+        const movs = movsOrdenados(data.movimientos);
+        document.getElementById('ligaDer').classList.remove('vacia');
+        document.getElementById('ligaFicha').innerHTML = `
+            <div class="fx-cab">
+                <div class="avatar fx-av">${esc(inicial(j.nombre))}</div>
+                <div class="fx-id">
+                    <div class="fx-nombre"><span>${esc(j.nombre)}</span></div>
+                    <div class="fx-sub">${esc(j.jugador_id)} · ${movs.length} movimiento${movs.length === 1 ? '' : 's'}</div>
                 </div>
-                ${avisoCaducidad(movs)}
+                <div class="fx-saldo"><small>Saldo</small><b class="${data.saldo > 0.005 ? '' : 'cero'}">${euros(data.saldo)}</b></div>
+                <button class="fx-icono fx-cerrar" onclick="vaciarFichaLiga()" title="Cerrar (Esc)">✕</button>
             </div>
-
-            <div class="d-actions">
-                <button class="sbtn sbtn-ok" onclick="abrirQform('premio')">💰 Premio</button>
-                <button class="sbtn sbtn-ko" onclick="abrirQform('canje')">🛒 Canje</button>
-                <button class="sbtn sbtn-ghost" onclick="copiarLink()">🔗 Link</button>
+            <div class="fx-chips">
+                <span class="fx-chip verde">${I('trofeo')} ${euros(data.ganado)} ganado</span>
+                <span class="fx-chip">${I('bolsa')} ${euros(data.gastado)} gastado</span>
+                ${data.caducado > 0 ? `<span class="fx-chip gris">${I('reloj')} ${euros(data.caducado)} caducado</span>` : ''}
+                ${chipCaducidad(proximaCaducidad(movs))}
             </div>
-
-            <div class="qform" id="qform">
-                <h3 id="qTitulo"></h3>
-                <div class="row2">
-                    <div class="field">
-                        <label>Cantidad (€)</label>
-                        <input class="inp" type="number" id="qMonto" min="0" step="0.5" inputmode="decimal" placeholder="0">
+            <div class="fx-compra">
+                <div class="fx-tipo-fila">
+                    <div class="fx-tipo" id="ligaTipo">
+                        <button type="button" class="mas" data-tipo="premio">${I('trofeo')} Premio</button>
+                        <button type="button" class="menos" data-tipo="canje">${I('bolsa')} Canje</button>
                     </div>
-                    <div class="field">
-                        <label>Fecha</label>
-                        <input class="inp" type="date" id="qFecha" value="${hoyISO()}">
-                    </div>
+                    <label class="fx-fecha" title="Fecha del movimiento">${I('reloj')}<input type="date" id="ligaFecha" value="${hoyISO()}"></label>
                 </div>
-                <div class="field">
-                    <label>Concepto</label>
-                    <input class="inp" type="text" id="qConcepto" list="conceptos">
+                <div class="fx-compra-campos">
+                    <div class="field"><label>Cantidad (€)</label><input class="inp" type="number" id="ligaMonto" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
+                    <div class="field field-concepto"><label>Concepto</label><input class="inp" type="text" id="ligaConcepto" list="conceptos"></div>
+                    <button class="sbtn sbtn-gold" id="btnLiga" onclick="enviarLiga()">Guardar</button>
                 </div>
-                <div style="display:flex; gap:8px; margin-top: 14px">
-                    <button class="sbtn sbtn-ghost" onclick="document.getElementById('qform').classList.remove('open')">Cancelar</button>
-                    <button class="sbtn sbtn-gold" style="flex:1" id="btnQ" onclick="enviarQform()">💾 Guardar</button>
-                </div>
+                <div class="chips" id="ligaChips"></div>
+                <div class="fx-prev" id="ligaPrev"></div>
             </div>
+            <div class="fx-tabs" id="ligaTabs">
+                <button class="fx-tab" data-ftab="historial">Historial <small>${movs.length}</small></button>
+                <button class="fx-tab" data-ftab="mas">Más</button>
+            </div>
+            <div class="fx-panel" id="ligaPanel"></div>`;
 
-            <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
-            ${movs.length ? movs.map((m, i) => pintarMovimiento(m, i, movs)).join('') : '<div class="empty"><div class="ico">📭</div>Todavía no tiene movimientos</div>'}
-        `;
+        const cont = document.getElementById('ligaFicha');
+        document.getElementById('ligaTipo').onclick = e => {
+            const b = e.target.closest('button');
+            if (!b) return;
+            ligaTipo = b.dataset.tipo;
+            pintarTipoLiga();
+            document.getElementById('ligaMonto').focus();
+        };
+        document.getElementById('ligaChips').onclick = e => {
+            const c = e.target.closest('.chip');
+            if (!c) return;
+            document.getElementById('ligaMonto').value = c.dataset.v === 'todo' ? Math.max(0, ficha.saldo) : c.dataset.v;
+            previewLiga();
+        };
+        document.getElementById('ligaMonto').oninput = previewLiga;
+        ['ligaMonto', 'ligaConcepto'].forEach(id => document.getElementById(id).addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); enviarLiga(); }
+        }));
+        document.getElementById('ligaTabs').onclick = e => {
+            const b = e.target.closest('.fx-tab');
+            if (!b) return;
+            ligaTab = b.dataset.ftab;
+            pintarPanelLiga(movs);
+        };
+        cont.querySelector('#ligaPanel').onclick = e => {
+            const del = e.target.closest('.mv-del'), dev = e.target.closest('.mv-dev'), mas = e.target.closest('[data-mas]');
+            if (del) anularMovimiento(movs[Number(del.dataset.i)]);
+            if (dev) devolverCaducado(movs[Number(dev.dataset.i)]);
+            if (mas && mas.dataset.mas === 'link') copiarLink();
+            if (mas && mas.dataset.mas === 'abrir') window.open(linkDe(ficha.jugador), '_blank', 'noopener');
+        };
+        pintarTipoLiga();
+        pintarPanelLiga(movs);
+        marcarSeleccion();
+        if (nuevo && window.innerWidth > 900) document.getElementById('ligaMonto').focus();
+    }
 
-        document.getElementById('sheetBody').querySelectorAll('.mv-del').forEach(btn => {
-            btn.onclick = () => anularMovimiento(movs[Number(btn.dataset.i)]);
-        });
-        document.getElementById('sheetBody').querySelectorAll('.mv-dev').forEach(btn => {
-            btn.onclick = () => devolverCaducado(movs[Number(btn.dataset.i)]);
-        });
+    function pintarTipoLiga() {
+        document.querySelectorAll('#ligaTipo button').forEach(b => b.classList.toggle('on', b.dataset.tipo === ligaTipo));
+        document.getElementById('ligaConcepto').placeholder = ligaTipo === 'premio' ? 'Ej: 1º puesto Jornada 12' : 'Ej: Sobres Bloomburrow';
+        document.getElementById('ligaChips').innerHTML = (ligaTipo === 'premio' ? ['5', '10', '15', '20'] : ['5', '10', '20'])
+            .map(v => `<button type="button" class="chip" data-v="${v}">${v}€</button>`).join('')
+            + (ligaTipo === 'canje' && ficha.saldo > 0.005 ? `<button type="button" class="chip" data-v="todo">Todo el saldo (${euros(ficha.saldo)})</button>` : '');
+        document.getElementById('btnLiga').textContent = ligaTipo === 'premio' ? 'Añadir premio' : 'Apuntar canje';
+        previewLiga();
+    }
+
+    function previewLiga() {
+        const el = document.getElementById('ligaPrev');
+        if (!el || !ficha) return;
+        const monto = parseFloat(document.getElementById('ligaMonto').value) || 0;
+        const despues = ligaTipo === 'premio' ? ficha.saldo + monto : ficha.saldo - monto;
+        const clase = despues < -0.005 ? 'neg' : ligaTipo === 'premio' ? 'up' : 'down';
+        el.innerHTML = monto > 0
+            ? `Saldo <b>${euros(ficha.saldo)}</b> → <b class="${clase}">${euros(despues)}</b>${despues < -0.005 ? ' · <span class="neg">se quedaría en negativo</span>' : ''}`
+            : (ligaTipo === 'premio' ? 'Suma saldo al jugador' : 'Gasta saldo del jugador (primero el más antiguo)');
+    }
+
+    function pintarPanelLiga(movs) {
+        document.querySelectorAll('#ligaTabs .fx-tab').forEach(b => b.classList.toggle('on', b.dataset.ftab === ligaTab));
+        const p = document.getElementById('ligaPanel');
+        if (ligaTab === 'mas') {
+            p.innerHTML = `<div class="fx-mas">
+                <button class="fx-mas-item" data-mas="link">${I('enlace')}<span><b>Copiar su link</b><small>Para enviárselo por privado: ve su saldo y su historial</small></span></button>
+                <button class="fx-mas-item" data-mas="abrir">${I('abrir')}<span><b>Ver su wallet</b><small>Abre lo mismo que ve el jugador con su link</small></span></button>
+            </div>`;
+            return;
+        }
+        p.innerHTML = movs.length ? movs.map((m, i) => pintarMovimiento(m, i, movs)).join('') : '<div class="fx-nada">Todavía no tiene movimientos</div>';
+    }
+
+    async function enviarLiga() {
+        const montoEl = document.getElementById('ligaMonto');
+        const monto = montoEl.value;
+        if (!(parseFloat(monto) > 0)) { toast('⚠️ Pon una cantidad', 'warning'); montoEl.focus(); return; }
+        const btn = document.getElementById('btnLiga');
+        cargando(btn, true, 'Guardando...');
+        const data = await registrar({
+            jugador_id: ficha.jugador.jugador_id, tipo: ligaTipo, monto,
+            concepto: document.getElementById('ligaConcepto').value,
+            fecha: document.getElementById('ligaFecha').value
+        }, ficha.saldo, ficha.jugador.nombre);
+        if (data) pintarFicha(data);
+        else if (btn.isConnected) cargando(btn, false);
     }
 
     // Concepto del premio con el que se devuelve una caducidad. Sirve también para saber si ya se devolvió.
@@ -1006,7 +1555,7 @@
         const ingreso = esIngreso(m.tipo);
         const caducado = m.tipo === 'caducado';
         const clase = ingreso ? 'ingreso' : caducado ? 'caducado' : 'gasto';
-        const icono = ingreso ? '💰' : caducado ? '⏳' : '🛒';
+        const icono = ingreso ? I('trofeo') : caducado ? I('reloj') : I('bolsa');
         const monto = ingreso ? 'positivo' : caducado ? 'caducado' : 'negativo';
         // Premio con saldo vivo: cuánto queda y cuándo caduca
         let caduca = '';
@@ -1028,67 +1577,26 @@
             </div>`;
     }
 
-    // Caducidades: ↩️ Devolver (o "✓ Devuelto"). Resto de filas de la hoja: 🗑️ para corregir errores.
+    // Caducidades: Devolver (o "✓ Devuelto"). Resto de filas de la hoja: papelera para corregir errores.
     function accionMovimiento(m, i, movs) {
         if (m.tipo === 'caducado') {
             const devuelto = movs.some(x => esIngreso(x.tipo) && x.concepto === conceptoDevolucion(m));
             return devuelto
                 ? '<span class="mv-ok" title="Este saldo ya se devolvió">✓ Devuelto</span>'
-                : `<button class="mv-dev" title="Devolver este saldo al jugador" data-i="${i}">↩️ Devolver</button>`;
+                : `<button class="mv-dev" title="Devolver este saldo al jugador" data-i="${i}">Devolver</button>`;
         }
         return m.fila
-            ? `<button class="mv-del" title="Borrar este movimiento" data-i="${i}">🗑️</button>`
+            ? `<button class="mv-del" title="Borrar este movimiento" data-i="${i}">${I('papelera')}</button>`
             : '<span style="width:30px"></span>';
     }
 
+    // Se devuelve al momento y se puede deshacer desde el aviso
     async function devolverCaducado(m) {
         const j = ficha.jugador;
-        const ok = await confirmar({
-            titulo: '↩️ Devolver saldo caducado',
-            html: `Se le devolverán <b style="color:#34d399">${euros(m.monto)}</b> a <b style="color:white">${esc(j.nombre)}</b>.<br><br>
-                   Se apunta como un premio con fecha de hoy, así que tendrá de nuevo todo el plazo para gastarlo.`,
-            ok: 'Devolver'
-        });
-        if (!ok) return;
         const data = await registrar({
             jugador_id: j.jugador_id, tipo: 'premio', monto: m.monto,
             concepto: conceptoDevolucion(m), fecha: hoyISO()
         }, ficha.saldo, j.nombre);
-        if (data) pintarFicha(data);
-    }
-
-    // "⏳ 7.00€ caducan el 29 oct 2026": la parte del saldo que caduca antes
-    function avisoCaducidad(movs) {
-        const proximo = movs.filter(m => m.caduca && m.restante > 0)
-            .sort((a, b) => String(a.caduca).localeCompare(String(b.caduca)))[0];
-        if (!proximo) return '';
-        const pronto = diasHasta(proximo.caduca) <= 30 ? 'pronto' : '';
-        return `<div class="d-expiry ${pronto}">⏳ ${euros(proximo.restante)} caducan el ${fecha(proximo.caduca)}</div>`;
-    }
-
-    function abrirQform(tipo) {
-        const f = document.getElementById('qform');
-        f.dataset.tipo = tipo;
-        document.getElementById('qTitulo').textContent = tipo === 'premio' ? '💰 Añadir premio' : '🛒 Registrar canje';
-        document.getElementById('qConcepto').placeholder = tipo === 'premio' ? 'Ej: 1º puesto Jornada 12' : 'Ej: Sobres Bloomburrow';
-        document.getElementById('qMonto').value = '';
-        document.getElementById('qConcepto').value = '';
-        f.classList.add('open');
-        document.getElementById('qMonto').focus();
-    }
-
-    async function enviarQform() {
-        const btn = document.getElementById('btnQ');
-        const datos = {
-            jugador_id: ficha.jugador.jugador_id,
-            tipo: document.getElementById('qform').dataset.tipo,
-            monto: document.getElementById('qMonto').value,
-            concepto: document.getElementById('qConcepto').value,
-            fecha: document.getElementById('qFecha').value
-        };
-        cargando(btn, true, 'Guardando...');
-        const data = await registrar(datos, ficha.saldo, ficha.jugador.nombre);
-        cargando(btn, false);
         if (data) pintarFicha(data);
     }
 
@@ -1110,7 +1618,7 @@
             .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
         if (!conToken.length) { toast('📭 No hay jugadores', 'warning'); return; }
         const ok = await confirmar({
-            titulo: '🔗 Copiar todos los links',
+            titulo: 'Copiar todos los links',
             html: `Se copiará la lista con los ${conToken.length} links.<br><br>
                    <b style="color:#fbbf24">Envíaselo a cada jugador por privado.</b>
                    No pegues la lista en un grupo: con el link de otro, cualquiera podría ver su saldo.`,
@@ -1125,7 +1633,7 @@
 
     async function anularMovimiento(m) {
         const ok = await confirmar({
-            titulo: '🗑️ ¿Borrar este movimiento?',
+            titulo: '¿Borrar este movimiento?',
             html: `<b style="color:white">${esc(m.concepto)}</b> · ${fecha(m.fecha)} · <b style="color:white">${euros(m.monto)}</b><br><br>
                    Úsalo solo para corregir errores. Se borrará de la hoja.`,
             ok: 'Borrar', peligro: true
@@ -1142,13 +1650,14 @@
         }
     }
 
-    // Guarda un premio/canje. Si no hay saldo suficiente pregunta antes de forzarlo.
+    // Guarda un premio/canje al momento (con "Deshacer" en el aviso).
+    // Si no hay saldo suficiente pregunta antes de forzarlo.
     async function registrar(datos, saldoActual, nombre) {
         try {
             let data = await api('movimiento', datos);
             if (data.error === 'saldo_insuficiente') {
                 const ok = await confirmar({
-                    titulo: '⚠️ Saldo insuficiente',
+                    titulo: 'Saldo insuficiente',
                     html: `${esc(nombre)} solo tiene <b style="color:#fcd34d">${euros(data.saldo)}</b> y el canje es de
                            <b style="color:#fca5a5">${euros(Number(datos.monto))}</b>.<br><br>Si lo apuntas, su saldo quedará en negativo.`,
                     ok: 'Apuntar igualmente', peligro: true
@@ -1158,13 +1667,31 @@
             }
             if (data.error) throw new Error(errorDe(data));
             const signo = esIngreso(datos.tipo) ? '+' : '-';
-            toast(`✅ ${nombre}: ${signo}${euros(Number(datos.monto))} · saldo ${euros(data.saldo)}`, 'success');
+            const texto = `✅ ${nombre}: ${signo}${euros(Number(datos.monto))} · saldo ${euros(data.saldo)}`;
+            if (data.deshacer) toastDeshacer(texto, () => deshacerLiga(data.deshacer, datos.jugador_id));
+            else toast(texto, 'success');
+            miniRefrescar('jugador', datos.jugador_id, data);
             cargarResumen();
             return data;
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
             return null;
         }
+    }
+
+    // Borra lo que se acaba de apuntar en la liga (un premio, un canje o una jornada entera)
+    async function deshacerLiga(filas, jugadorId) {
+        const data = await api('liga_deshacer', { filas, jugador_id: jugadorId || '' });
+        if (data.error) throw new Error(errorDe(data));
+        toast('↩️ Deshecho' + (jugadorId ? ` · saldo ${euros(data.saldo)}` : ''), 'warning');
+        if (jugadorId) {
+            if (ficha && ficha.jugador.jugador_id === jugadorId) pintarFicha(data);
+            miniRefrescar('jugador', jugadorId, data);
+        } else {
+            refrescarFichaLiga();
+        }
+        cargarResumen();
+        return data;
     }
 
     // =========================================
@@ -1193,7 +1720,6 @@
 
     async function abrirCaducidad(ambito = 'liga') {
         cadAmbito = ambito;
-        ficha = null;
         document.getElementById('sheetBody').innerHTML = '<div class="spinner"></div>';
         document.getElementById('sheet').classList.add('open');
         try {
@@ -1335,11 +1861,11 @@
     // =========================================
     //  NUEVO JUGADOR
     // =========================================
-    async function dialogoNuevoJugador() {
+    async function dialogoNuevoJugador(nombreInicial = '') {
         abrirDialogo(`
-            <h3>➕ Nuevo jugador</h3>
+            <h3>Nuevo jugador</h3>
             <div class="dmsg">Se crea en la hoja con su token, listo para copiar su link.</div>
-            <div class="field"><label>Nombre</label><input class="inp" type="text" id="nuevoNombre" placeholder="Ej: Paco García"></div>
+            <div class="field"><label>Nombre</label><input class="inp" type="text" id="nuevoNombre" placeholder="Ej: Paco García" value="${esc(nombreInicial)}"></div>
             <div class="dbtns" style="margin-top: 18px">
                 <button class="sbtn sbtn-ghost" onclick="cerrarDialogo(false)">Cancelar</button>
                 <button class="sbtn sbtn-gold" id="btnNuevo">Crear</button>
@@ -1353,7 +1879,7 @@
             if (parecido) {
                 cerrarDialogo(false);
                 const seguir = await confirmar({
-                    titulo: '🤔 Ya existe alguien así',
+                    titulo: 'Ya existe alguien así',
                     html: `Ya hay un jugador llamado <b style="color:white">${esc(parecido.nombre)}</b>. ¿Crear otro igualmente?`,
                     ok: 'Crear otro'
                 });
@@ -1366,9 +1892,10 @@
                 if (data.error) throw new Error(errorDe(data));
                 cerrarDialogo(true);
                 toast(`🎉 ${data.jugador.nombre} creado`, 'success');
+                if (modoActual() !== 'liga') setModo('liga');
+                verTab('jugadores');
+                pintarFicha(data, true);
                 await cargarResumen();
-                document.getElementById('sheet').classList.add('open');
-                pintarFicha(data);
             } catch (err) {
                 if (btn) cargando(btn, false);
                 toast('⚠️ ' + err.message, 'danger');
@@ -1376,63 +1903,6 @@
         };
         document.getElementById('btnNuevo').onclick = crear;
         input.addEventListener('keydown', e => { if (e.key === 'Enter') crear(); });
-    }
-
-    // =========================================
-    //  TAB: APUNTAR
-    // =========================================
-    let movTipo = 'premio';
-    const movPicker = crearPicker(document.getElementById('movPicker'), () => actualizarPreviewMov());
-
-    document.getElementById('movTipo').addEventListener('click', e => {
-        const b = e.target.closest('.tipo-btn');
-        if (!b) return;
-        movTipo = b.dataset.tipo;
-        document.querySelectorAll('#movTipo .tipo-btn').forEach(x => x.classList.toggle('on', x === b));
-        document.getElementById('chipTodo').style.display = movTipo === 'canje' ? '' : 'none';
-        document.getElementById('movConcepto').placeholder = movTipo === 'premio' ? 'Ej: 1º puesto Jornada 12' : 'Ej: Sobres Bloomburrow';
-        actualizarPreviewMov();
-    });
-    document.getElementById('movChips').addEventListener('click', e => {
-        const c = e.target.closest('.chip');
-        if (!c) return;
-        const j = movPicker.get();
-        document.getElementById('movMonto').value = c.dataset.v === 'todo' ? (j ? Math.max(0, j.saldo) : '') : c.dataset.v;
-        actualizarPreviewMov();
-    });
-    document.getElementById('movMonto').addEventListener('input', actualizarPreviewMov);
-
-    function actualizarPreviewMov() {
-        const el = document.getElementById('movPreview');
-        const sel = movPicker.get();
-        const j = sel && jugadores.find(x => x.jugador_id === sel.jugador_id);
-        if (!j) { el.innerHTML = 'Elige un jugador para ver su saldo'; return; }
-        const monto = parseFloat(document.getElementById('movMonto').value) || 0;
-        const despues = movTipo === 'premio' ? j.saldo + monto : j.saldo - monto;
-        const clase = despues < -0.005 ? 'neg' : movTipo === 'premio' ? 'up' : 'down';
-        el.innerHTML = `Saldo de ${esc(j.nombre)}: <b>${euros(j.saldo)}</b>`
-            + (monto > 0 ? ` <span>→</span> <b class="${clase}">${euros(despues)}</b>` : '');
-    }
-
-    async function enviarMovimiento() {
-        const j = movPicker.get();
-        if (!j) { toast('⚠️ Elige un jugador', 'warning'); return; }
-        const monto = document.getElementById('movMonto').value;
-        if (!(parseFloat(monto) > 0)) { toast('⚠️ Pon una cantidad', 'warning'); return; }
-        const btn = document.getElementById('btnMov');
-        cargando(btn, true, 'Guardando...');
-        const data = await registrar({
-            jugador_id: j.jugador_id, tipo: movTipo, monto,
-            concepto: document.getElementById('movConcepto').value,
-            fecha: document.getElementById('movFecha').value
-        }, j.saldo, j.nombre);
-        cargando(btn, false);
-        if (data) {
-            document.getElementById('movMonto').value = '';
-            document.getElementById('movConcepto').value = '';
-            movPicker.limpiar();
-            actualizarPreviewMov();
-        }
     }
 
     // =========================================
@@ -1474,6 +1944,7 @@
         document.getElementById('jorTotal').textContent = euros(total);
     }
 
+    // Se apunta al momento; si algo estaba mal, "Deshacer" en el aviso quita toda la jornada
     async function enviarJornada() {
         const concepto = document.getElementById('jorConcepto').value.trim();
         if (!concepto) { toast('⚠️ Ponle nombre a la jornada', 'warning'); document.getElementById('jorConcepto').focus(); return; }
@@ -1490,28 +1961,20 @@
         }
         if (!premios.length) { toast('⚠️ Añade al menos un jugador con premio', 'warning'); return; }
 
-        const total = premios.reduce((s, p) => s + p.monto, 0);
-        const ok = await confirmar({
-            titulo: `🏆 ${esc(concepto)}`,
-            html: `Se apuntarán ${premios.length} premios (${euros(total)}):
-                <div class="resumen-jornada">${premios.map(p => `
-                    <div><span>${esc(p.detalle ? p.detalle + ' · ' : '')}<b style="color:white">${esc(p.nombre)}</b></span>
-                    <b style="color:#34d399">+${euros(p.monto)}</b></div>`).join('')}</div>`,
-            ok: 'Apuntar'
-        });
-        if (!ok) return;
-
         const btn = document.getElementById('btnJor');
         cargando(btn, true, 'Apuntando...');
         try {
             const data = await api('jornada', { concepto, fecha: document.getElementById('jorFecha').value, premios });
             if (data.error) throw new Error(errorDe(data) + (data.jugador_id ? ` (${data.jugador_id})` : ''));
-            toast(`🏆 ${data.apuntados} premios apuntados · ${euros(data.total)}`, 'success');
+            const texto = `🏆 ${concepto}: ${data.apuntados} premios · ${euros(data.total)}`;
+            if (data.deshacer) toastDeshacer(texto, () => deshacerLiga(data.deshacer, null));
+            else toast(texto, 'success');
             filasJornada.forEach(f => f.fila.remove());
             filasJornada = [];
             document.getElementById('jorConcepto').value = '';
             anadirFilaJornada();
             cargarResumen();
+            if (ficha && premios.some(p => p.jugador_id === ficha.jugador.jugador_id)) refrescarFichaLiga();
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
         } finally {
@@ -1519,11 +1982,21 @@
         }
     }
 
+    // Vuelve a leer al jugador abierto sin moverse de la pestaña en la que estás
+    function refrescarFichaLiga() {
+        if (!ficha) return;
+        const id = ficha.jugador.jugador_id;
+        api('jugador', { jugador_id: id })
+            .then(d => { if (!d.error && ficha && ficha.jugador.jugador_id === id) pintarFicha(d); })
+            .catch(() => {});
+    }
     // =========================================
-    //  TARJETAS REGALO
+    //  TARJETAS REGALO (lista + ficha única de la tarjeta)
     // =========================================
     let tarjetas = [];
     let tarjetaActual = null;
+    let tarTipo = 'canje';       // lo que hace el formulario de la ficha: canje o recarga
+    let tarTab = 'historial';
 
     // Tarjeta creada como ticket impreso (no de plástico). Las antiguas se reconocen por el código 88 + 10 cifras.
     function esTicket(t) {
@@ -1531,6 +2004,8 @@
     }
 
     function normalizarCodigo(c) { return String(c || '').trim().toUpperCase().replace(/\s+/g, ''); }
+    function codigoLegible(c) { return String(c).replace(/(.{4})(?=.)/g, '$1 '); }
+    function codigoDe(d) { return d ? (d.existe ? d.tarjeta.codigo : d.codigo) : null; }
 
     async function cargarTarjetas() {
         try {
@@ -1556,44 +2031,64 @@
             .sort((a, b) => (b.saldo > 0.005) - (a.saldo > 0.005) || String(b.ultimo).localeCompare(String(a.ultimo)));
         const cont = document.getElementById('listaTarjetas');
         if (!lista.length) {
-            cont.innerHTML = `<div class="empty"><div class="ico">${q ? '🔍' : '🎁'}</div>
-                ${q ? 'Ninguna tarjeta coincide' : 'Aún no hay tarjetas. Escanea una para activarla'}</div>`;
+            cont.innerHTML = `<div class="fx-nada">${q ? 'Ninguna tarjeta coincide' : 'Aún no hay tarjetas. Escanea una para activarla'}</div>`;
             return;
         }
         cont.innerHTML = lista.map(t => `
             <div class="prow" data-codigo="${esc(t.codigo)}">
-                <div class="avatar">${esTicket(t) ? '🎟️' : '🎁'}</div>
+                <div class="avatar">${I(esTicket(t) ? 'ticket' : 'regalo')}</div>
                 <div class="pinfo">
                     <div class="pname mono">${esc(t.codigo)}</div>
-                    <div class="pmeta">${esTicket(t) ? 'En ticket · ' : ''}${t.comprador ? esc(t.comprador) + ' · ' : ''}${euros(t.cargado)} cargados · ${t.ultimo ? 'último uso ' + fecha(t.ultimo) : 'sin uso'}</div>
+                    <div class="pmeta">${esTicket(t) ? 'En ticket · ' : ''}${t.comprador ? esc(t.comprador) + ' · ' : ''}${euros(t.cargado)} cargados · ${t.ultimo ? 'usada ' + fechaCorta(t.ultimo) : 'sin uso'}</div>
                 </div>
                 <div class="psaldo ${t.saldo > 0.005 ? '' : 'cero'}">${euros(t.saldo)}</div>
             </div>`).join('');
+        marcarTarjeta();
+    }
+
+    function marcarTarjeta() {
+        const c = codigoDe(tarjetaActual);
+        document.querySelectorAll('#listaTarjetas .prow').forEach(f => f.classList.toggle('sel', f.dataset.codigo === c));
     }
 
     document.getElementById('tarBuscar').addEventListener('input', pintarListaTarjetas);
     document.getElementById('listaTarjetas').addEventListener('click', e => {
         const fila = e.target.closest('.prow');
-        if (!fila) return;
-        document.getElementById('tarCodigo').value = fila.dataset.codigo;
-        abrirTarjeta();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (fila) abrirTarjeta(fila.dataset.codigo);
     });
 
-    async function abrirTarjeta() {
+    function vaciarFichaTarjeta() {
+        tarjetaActual = null;
+        tarjetaEnTicket = null;
+        document.getElementById('tarDer').classList.add('vacia');
+        document.getElementById('tarResultado').innerHTML = `
+            <div class="fx-vacio">${I('escaner')}<b>Escanea una tarjeta</b>
+                <span>O púlsala en la lista. Si el código aún no existe,<br>aquí podrás activarla con su importe.</span></div>`;
+        marcarTarjeta();
+    }
+
+    // codigo: el de la lista o el del lector; si no se pasa, el del campo de búsqueda
+    async function abrirTarjeta(codigoDirecto) {
         const input = document.getElementById('tarCodigo');
-        const codigo = normalizarCodigo(input.value);
+        const codigo = normalizarCodigo(codigoDirecto != null ? codigoDirecto : input.value);
         if (!codigo) { input.focus(); return; }
-        input.value = codigo;
-        const res = document.getElementById('tarResultado');
-        res.innerHTML = '<div class="spinner"></div>';
+        if (modoActual() !== 'tarjetas') setModo('tarjetas');
+        const mismo = codigoDe(tarjetaActual) === codigo;
+        document.getElementById('tarDer').classList.remove('vacia');
+        if (!mismo) {
+            document.getElementById('tarResultado').innerHTML = esqueletoFicha();
+            document.querySelectorAll('#listaTarjetas .prow').forEach(f => f.classList.toggle('sel', f.dataset.codigo === codigo));
+        }
+        if (window.innerWidth <= 900) window.scrollTo({ top: 0, behavior: 'smooth' });
         try {
             const data = await api('tarjeta', { codigo });
             if (data.error) throw new Error(errorDe(data));
-            pintarTarjeta(data);
+            input.value = '';
+            pintarTarjeta(data, false, !mismo);
         } catch (err) {
-            res.innerHTML = '';
+            if (!mismo) vaciarFichaTarjeta();
             toast('⚠️ ' + err.message, 'danger');
+            input.value = codigo;
             input.select();
         }
     }
@@ -1605,46 +2100,60 @@
         input.focus();
     }
 
-    function pintarTarjeta(d, recien = false) {
+    // Mini tarjeta para la cabecera de la ficha (como el mini carné de Fidelización)
+    function miniTarjetaHTML(d) {
+        const cod = String(codigoDe(d));
+        const ticket = d.existe ? esTicket(d.tarjeta) : d.codigo === tarjetaEnTicket;
+        const clase = !d.existe ? 'nueva' : [d.saldo <= 0.005 ? 'gastada' : '', ticket ? 'ticket' : ''].join(' ');
+        return `<div class="fx-carne ${clase}" title="${ticket ? 'Tarjeta en ticket' : 'Tarjeta regalo'} ${esc(cod)}">
+            <div class="fx-carne-top"><span>PANDA</span>${LOGO_PANDA.replace('class="tj-logo"', 'class="fx-carne-logo"')}</div>
+            <div class="fx-carne-nombre">${ticket ? 'Ticket' : 'Regalo'}</div>
+            <div class="fx-carne-cod">•••• ${esc(cod.slice(-4))}</div>
+        </div>`;
+    }
+
+    // recien: resalta el botón del resguardo (se acaba de guardar sin imprimir). nuevo: se abre otra tarjeta.
+    function pintarTarjeta(d, recien = false, nuevo = false) {
         tarjetaActual = d;
         const res = document.getElementById('tarResultado');
+        document.getElementById('tarDer').classList.remove('vacia');
+        marcarTarjeta();
+        const cerrar = '<button class="fx-icono fx-cerrar" onclick="vaciarFichaTarjeta()" title="Cerrar (Esc)">✕</button>';
 
         if (!d.existe) {
             const enTicket = d.codigo === tarjetaEnTicket;
             res.innerHTML = `
-                <div class="gcard nueva">
-                    <div class="gcard-top"><span class="gcard-brand">🐼 Panda · Tarjeta regalo</span><span class="gcard-pill off">${enTicket ? '🎟️ En ticket' : 'Sin activar'}</span></div>
-                    <div class="gcard-saldo" id="tarPreviewImporte">—</div>
-                    <div class="gcard-sub">${enTicket ? 'Código nuevo. Al activarla se imprime el ticket con el código de barras' : 'Elige el importe para activarla'}</div>
-                    <div class="gcard-code">${esc(d.codigo)}</div>
-                </div>
-                <div class="tar-form">
-                    <div class="field">
-                        <label>Importe (€)</label>
-                        <input class="inp" type="number" id="tarImporte" min="0" step="1" inputmode="decimal" placeholder="0">
-                        <div class="chips" id="tarImporteChips">
-                            <button type="button" class="chip" data-v="20">20€</button>
-                            <button type="button" class="chip" data-v="40">40€</button>
-                            <button type="button" class="chip" data-v="50">50€</button>
-                            <button type="button" class="chip" data-v="100">100€</button>
-                        </div>
+                <div class="fx-cab">
+                    ${miniTarjetaHTML(d)}
+                    <div class="fx-id">
+                        <div class="fx-nombre codigo"><span>${esc(codigoLegible(d.codigo))}</span></div>
+                        <div class="fx-sub">${enTicket ? 'Código nuevo: al activarla se imprime el ticket con el código de barras' : 'Esta tarjeta aún no está activada'}</div>
                     </div>
-                    <div class="field">
-                        <label>Comprador (opcional)</label>
-                        <input class="inp" type="text" id="tarComprador" placeholder="Ej: Ana, regalo para su hermano">
+                    <div class="fx-saldo"><small>Importe</small><b id="tarPreviewImporte">—</b></div>
+                    ${cerrar}
+                </div>
+                <div class="fx-chips">
+                    <span class="fx-chip ${enTicket ? 'morado' : 'pronto'}">${I(enTicket ? 'ticket' : 'regalo')} ${enTicket ? 'Tarjeta en ticket' : 'Sin activar'}</span>
+                </div>
+                <div class="fx-compra">
+                    <div class="fx-compra-campos">
+                        <div class="field"><label>Importe (€)</label><input class="inp" type="number" id="tarImporte" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+                        <div class="field field-concepto"><label>Comprador (opcional)</label><input class="inp" type="text" id="tarComprador" placeholder="Ej: Ana, regalo para su hermano"></div>
+                        <button class="sbtn sbtn-gold" id="btnTarActivar" onclick="activarTarjeta()">${enTicket ? 'Activar e imprimir' : 'Activar'}</button>
+                    </div>
+                    <div class="chips" id="tarImporteChips">
+                        ${['20', '40', '50', '100'].map(v => `<button type="button" class="chip" data-v="${v}">${v}€</button>`).join('')}
                     </div>
                     ${enTicket ? '' : checkTicket()}
-                    <button class="sbtn sbtn-gold sbtn-full" id="btnTarActivar" onclick="activarTarjeta()">${enTicket ? '🎟️ Activar e imprimir' : '✅ Activar tarjeta'}</button>
                 </div>`;
             const importe = document.getElementById('tarImporte');
             const actualizar = () => {
                 const v = parseFloat(importe.value) || 0;
                 document.getElementById('tarPreviewImporte').textContent = v > 0 ? euros(v) : '—';
-                document.getElementById('btnTarActivar').textContent = enTicket
-                    ? (v > 0 ? `🎟️ Activar e imprimir (${euros(v)})` : '🎟️ Activar e imprimir')
-                    : (v > 0 ? `✅ Activar tarjeta de ${euros(v)}` : '✅ Activar tarjeta');
+                document.getElementById('btnTarActivar').textContent = (enTicket ? 'Activar e imprimir' : 'Activar') + (v > 0 ? ` (${euros(v)})` : '');
             };
             importe.addEventListener('input', actualizar);
+            importe.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); activarTarjeta(); } });
             document.getElementById('tarImporteChips').addEventListener('click', e => {
                 const c = e.target.closest('.chip');
                 if (!c) return;
@@ -1656,53 +2165,123 @@
         }
 
         const t = d.tarjeta;
-        const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
+        const movs = movsOrdenados(d.movimientos);
         const vacia = d.saldo <= 0.005;
+        if (nuevo) { tarTipo = 'canje'; tarTab = 'historial'; }
+        if (vacia && tarTipo === 'canje') tarTipo = 'recarga';
         res.innerHTML = `
-            <div class="gcard ${vacia ? 'vacia' : ''}">
-                <div class="gcard-top"><span class="gcard-brand">🐼 Panda · ${esTicket(t) ? '🎟️ Tarjeta en ticket' : 'Tarjeta regalo'}</span>
-                    <span class="gcard-pill ${vacia ? '' : 'ok'}">${vacia ? 'Gastada' : 'Activa'}</span></div>
-                <div class="gcard-saldo">${euros(d.saldo)}</div>
-                <div class="gcard-sub">Activada el ${fecha(t.activada)} con ${euros(t.importe_inicial)}${t.comprador ? ' · ' + esc(t.comprador) : ''}</div>
-                <div class="gcard-code">${esc(t.codigo)}</div>
-            </div>
-            <div style="text-align:center; margin-top:-8px; margin-bottom: 14px">${avisoCaducidad(movs)}</div>
-
-            <div class="tar-acciones">
-                <button class="sbtn sbtn-ko" onclick="abrirFormTarjeta('canje')" ${vacia ? 'disabled' : ''}>🛒 Canjear</button>
-                <button class="sbtn sbtn-ok" onclick="abrirFormTarjeta('recarga')">➕ Recargar</button>
-                <button class="sbtn sbtn-ticket ${recien ? 'recien' : ''}" onclick="imprimirResguardo()" title="Imprimir resguardo con el saldo">🧾 Ticket</button>
-            </div>
-            <div class="qform tar-form" id="tarForm">
-                <h3 id="tarFormTitulo"></h3>
-                <div class="field">
-                    <label>Importe (€)</label>
-                    <input class="inp" type="number" id="tarMonto" min="0" step="0.01" inputmode="decimal" placeholder="0">
-                    <div class="chips" id="tarMontoChips"></div>
+            <div class="fx-cab">
+                ${miniTarjetaHTML(d)}
+                <div class="fx-id">
+                    <div class="fx-nombre codigo"><span>${esc(codigoLegible(t.codigo))}</span></div>
+                    <div class="fx-sub">Activada el ${fecha(t.activada)} con ${euros(t.importe_inicial)}${t.comprador ? ' · ' + esc(t.comprador) : ''}</div>
                 </div>
-                <div class="field">
-                    <label>Concepto (opcional)</label>
-                    <input class="inp" type="text" id="tarConcepto" placeholder="Ej: Caja de sobres">
+                <div class="fx-saldo"><small>Saldo</small><b class="${vacia ? 'cero' : ''}">${euros(d.saldo)}</b></div>
+                ${cerrar}
+            </div>
+            <div class="fx-chips">
+                <span class="fx-chip ${vacia ? 'gris' : 'verde'}">${I(vacia ? 'menos' : 'moneda')} ${vacia ? 'Gastada' : 'Activa'}</span>
+                <span class="fx-chip ${esTicket(t) ? 'morado' : ''}">${I(esTicket(t) ? 'ticket' : 'regalo')} ${esTicket(t) ? 'En ticket' : 'Tarjeta física'}</span>
+                <span class="fx-chip">${I('bolsa')} ${euros(d.gastado)} gastado</span>
+                ${d.caducado > 0 ? `<span class="fx-chip gris">${I('reloj')} ${euros(d.caducado)} caducado</span>` : ''}
+                ${chipCaducidad(proximaCaducidad(movs))}
+            </div>
+            <div class="fx-compra">
+                <div class="fx-tipo-fila">
+                    <div class="fx-tipo" id="tarTipo">
+                        <button type="button" class="menos" data-tipo="canje" ${vacia ? 'disabled title="No le queda saldo"' : ''}>${I('bolsa')} Canjear</button>
+                        <button type="button" class="mas" data-tipo="recarga">${I('mas')} Recargar</button>
+                    </div>
+                    <button class="sbtn sbtn-sm sbtn-ticket ${recien ? 'recien' : ''}" onclick="imprimirResguardo()" title="Imprimir resguardo con el saldo">${I('impresora')} Resguardo</button>
                 </div>
-                <div class="saldo-preview" id="tarPreview" style="margin: 12px 0 4px"></div>
+                <div class="fx-compra-campos">
+                    <div class="field"><label>Importe (€)</label><input class="inp" type="number" id="tarMonto" min="0" step="0.01" inputmode="decimal" placeholder="0"></div>
+                    <div class="field field-concepto"><label>Concepto (opcional)</label><input class="inp" type="text" id="tarConcepto"></div>
+                    <button class="sbtn sbtn-gold" id="btnTarForm" onclick="enviarFormTarjeta()">Guardar</button>
+                </div>
+                <div class="chips" id="tarMontoChips"></div>
+                <div class="fx-prev" id="tarPreview"></div>
                 ${checkTicket()}
-                <div style="height: 10px"></div>
-                <div style="display:flex; gap:8px">
-                    <button class="sbtn sbtn-ghost" onclick="document.getElementById('tarForm').classList.remove('open')">Cancelar</button>
-                    <button class="sbtn sbtn-gold" style="flex:1" id="btnTarForm" onclick="enviarFormTarjeta()">💾 Guardar</button>
-                </div>
             </div>
+            <div class="fx-tabs" id="tarTabs">
+                <button class="fx-tab" data-ftab="historial">Historial <small>${movs.length}</small></button>
+                <button class="fx-tab" data-ftab="mas">Más</button>
+            </div>
+            <div class="fx-panel" id="tarPanel"></div>`;
 
-            <div class="tar-historial">
-                <h2 style="font-size: 0.95rem; margin: 6px 0 6px">📋 Historial</h2>
-                ${movs.map((m, i) => pintarMovTarjeta(m, i, d.esAdmin)).join('')}
-                ${vacia ? '' : '<button class="tar-reimprimir" onclick="imprimirTarjetaTicket()">🎟️ Imprimir tarjeta en ticket (con código de barras)</button>'}
-                ${d.esAdmin ? '<button class="tar-eliminar" onclick="eliminarTarjeta()">🗑️ Eliminar tarjeta (solo para pruebas o errores)</button>' : ''}
+        document.getElementById('tarTipo').onclick = e => {
+            const b = e.target.closest('button');
+            if (!b || b.disabled) return;
+            tarTipo = b.dataset.tipo;
+            pintarTipoTarjeta();
+            document.getElementById('tarMonto').focus();
+        };
+        document.getElementById('tarMontoChips').onclick = e => {
+            const c = e.target.closest('.chip');
+            if (!c) return;
+            document.getElementById('tarMonto').value = c.dataset.v;
+            previewFormTarjeta();
+        };
+        document.getElementById('tarMonto').oninput = previewFormTarjeta;
+        ['tarMonto', 'tarConcepto'].forEach(id => document.getElementById(id).addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); enviarFormTarjeta(); }
+        }));
+        document.getElementById('tarTabs').onclick = e => {
+            const b = e.target.closest('.fx-tab');
+            if (!b) return;
+            tarTab = b.dataset.ftab;
+            pintarPanelTarjeta(movs);
+        };
+        document.getElementById('tarPanel').onclick = e => {
+            const del = e.target.closest('.mv-del'), mas = e.target.closest('[data-mas]');
+            if (del) anularMovTarjeta(movs[Number(del.dataset.i)]);
+            if (mas && mas.dataset.mas === 'resguardo') imprimirResguardo();
+            if (mas && mas.dataset.mas === 'ticket') imprimirTarjetaTicket();
+            if (mas && mas.dataset.mas === 'eliminar') eliminarTarjeta();
+        };
+        pintarTipoTarjeta();
+        pintarPanelTarjeta(movs);
+        if (nuevo) document.getElementById('tarMonto').focus();
+    }
+
+    function pintarTipoTarjeta() {
+        document.querySelectorAll('#tarTipo button').forEach(b => b.classList.toggle('on', b.dataset.tipo === tarTipo));
+        const saldo = tarjetaActual.saldo;
+        document.getElementById('tarMontoChips').innerHTML = tarTipo === 'canje'
+            ? `<button type="button" class="chip" data-v="${saldo}">Todo el saldo (${euros(saldo)})</button>`
+            : ['20', '40', '50'].map(v => `<button type="button" class="chip" data-v="${v}">${v}€</button>`).join('');
+        document.getElementById('tarConcepto').placeholder = tarTipo === 'canje' ? 'Ej: Caja de sobres' : 'Ej: Recarga por cumpleaños';
+        document.getElementById('btnTarForm').textContent = tarTipo === 'canje' ? 'Canjear' : 'Recargar';
+        previewFormTarjeta();
+    }
+
+    function previewFormTarjeta() {
+        const el = document.getElementById('tarPreview');
+        if (!el || !tarjetaActual) return;
+        const monto = parseFloat(document.getElementById('tarMonto').value) || 0;
+        const saldo = tarjetaActual.saldo;
+        const despues = tarTipo === 'canje' ? saldo - monto : saldo + monto;
+        const clase = despues < -0.005 ? 'neg' : tarTipo === 'canje' ? 'down' : 'up';
+        el.innerHTML = !(monto > 0)
+            ? (tarTipo === 'canje' ? 'Gasta saldo de la tarjeta' : 'Carga saldo: recuerda cobrarlo en caja')
+            : `Saldo <b>${euros(saldo)}</b> → <b class="${clase}">${euros(despues)}</b>`
+              + (despues < -0.005 ? ' · <span class="neg">no tiene saldo suficiente</span>' : '')
+              + (tarTipo === 'recarga' ? ' · cóbralo en caja' : '');
+    }
+
+    function pintarPanelTarjeta(movs) {
+        document.querySelectorAll('#tarTabs .fx-tab').forEach(b => b.classList.toggle('on', b.dataset.ftab === tarTab));
+        const d = tarjetaActual;
+        const p = document.getElementById('tarPanel');
+        if (tarTab === 'mas') {
+            p.innerHTML = `<div class="fx-mas">
+                <button class="fx-mas-item" data-mas="resguardo">${I('impresora')}<span><b>Imprimir resguardo</b><small>Ticket con el saldo y el último movimiento</small></span></button>
+                ${d.saldo > 0.005 ? `<button class="fx-mas-item" data-mas="ticket">${I('ticket')}<span><b>Imprimir tarjeta en ticket</b><small>Con código de barras, por si la pierde o no tiene tarjeta física</small></span></button>` : ''}
+                ${d.esAdmin ? `<button class="fx-mas-item peligro" data-mas="eliminar">${I('papelera')}<span><b>Eliminar tarjeta</b><small>Solo para pruebas o tarjetas activadas por error</small></span></button>` : ''}
             </div>`;
-
-        res.querySelectorAll('.mv-del').forEach(btn => {
-            btn.onclick = () => anularMovTarjeta(movs[Number(btn.dataset.i)]);
-        });
+            return;
+        }
+        p.innerHTML = movs.length ? movs.map((m, i) => pintarMovTarjeta(m, i, d.esAdmin)).join('') : '<div class="fx-nada">Sin movimientos</div>';
     }
 
     function pintarMovTarjeta(m, i, esAdmin) {
@@ -1715,95 +2294,67 @@
         }
         return `
             <div class="mv">
-                <div class="mv-icon ${carga ? 'carga' : caducado ? 'caducado' : 'gasto'}">${carga ? '💳' : caducado ? '⏳' : '🛒'}</div>
+                <div class="mv-icon ${carga ? 'carga' : caducado ? 'caducado' : 'gasto'}">${carga ? I('mas') : caducado ? I('reloj') : I('bolsa')}</div>
                 <div class="mv-info">
                     <div class="mv-concepto">${esc(m.concepto || '—')}</div>
                     <div class="mv-fecha">${fecha(m.fecha)}${m.por ? ' · por ' + esc(m.por) : ''}${caduca}</div>
                 </div>
                 <div class="mv-monto ${carga ? 'positivo' : caducado ? 'caducado' : 'negativo'}">${carga ? '+' : '-'}${euros(m.monto)}</div>
-                ${esAdmin && m.fila ? `<button class="mv-del" title="Borrar este movimiento (solo admin)" data-i="${i}">🗑️</button>` : ''}
+                ${esAdmin && m.fila ? `<button class="mv-del" title="Borrar este movimiento (solo admin)" data-i="${i}">${I('papelera')}</button>` : ''}
             </div>`;
     }
 
-    function abrirFormTarjeta(tipo) {
-        const f = document.getElementById('tarForm');
-        f.dataset.tipo = tipo;
-        document.getElementById('tarFormTitulo').textContent = tipo === 'canje' ? '🛒 Canjear' : '➕ Recargar';
-        document.getElementById('tarConcepto').placeholder = tipo === 'canje' ? 'Ej: Caja de sobres' : 'Ej: Recarga por cumpleaños';
-        const saldo = tarjetaActual.saldo;
-        document.getElementById('tarMontoChips').innerHTML = tipo === 'canje'
-            ? `<button type="button" class="chip" data-v="${saldo}">Todo el saldo (${euros(saldo)})</button>`
-            : ['20', '40', '50'].map(v => `<button type="button" class="chip" data-v="${v}">${v}€</button>`).join('');
-        const monto = document.getElementById('tarMonto');
-        monto.value = '';
-        document.getElementById('tarConcepto').value = '';
-        monto.oninput = previewFormTarjeta;
-        document.getElementById('tarMontoChips').onclick = e => {
-            const c = e.target.closest('.chip');
-            if (!c) return;
-            monto.value = c.dataset.v;
-            previewFormTarjeta();
-        };
-        previewFormTarjeta();
-        f.classList.add('open');
-        monto.focus();
-    }
-
-    function previewFormTarjeta() {
-        const tipo = document.getElementById('tarForm').dataset.tipo;
-        const monto = parseFloat(document.getElementById('tarMonto').value) || 0;
-        const saldo = tarjetaActual.saldo;
-        const despues = tipo === 'canje' ? saldo - monto : saldo + monto;
-        const clase = despues < -0.005 ? 'neg' : tipo === 'canje' ? 'down' : 'up';
-        document.getElementById('tarPreview').innerHTML = `Saldo: <b>${euros(saldo)}</b>`
-            + (monto > 0 ? ` <span>→</span> <b class="${clase}">${euros(despues)}</b>` : '')
-            + (despues < -0.005 ? '<br><span class="neg">No tiene saldo suficiente</span>' : '');
-    }
-
+    // Canje o recarga al momento, con "Deshacer" en el aviso
     async function enviarFormTarjeta() {
-        const tipo = document.getElementById('tarForm').dataset.tipo;
-        const importe = parseFloat(document.getElementById('tarMonto').value) || 0;
-        if (!(importe > 0)) { toast('⚠️ Pon un importe', 'warning'); return; }
+        const tipo = tarTipo;
+        const importe = Math.round((parseFloat(document.getElementById('tarMonto').value) || 0) * 100) / 100;
+        if (!(importe > 0)) { toast('⚠️ Pon un importe', 'warning'); document.getElementById('tarMonto').focus(); return; }
         if (tipo === 'canje' && importe > tarjetaActual.saldo + 0.005) {
             toast(`⚠️ La tarjeta solo tiene ${euros(tarjetaActual.saldo)}`, 'warning');
             return;
         }
-        if (tipo === 'recarga') {
-            const ok = await confirmar({
-                titulo: '➕ Recargar tarjeta',
-                html: `Se cargarán <b style="color:#34d399">${euros(importe)}</b> en la tarjeta <b class="mono" style="color:white">${esc(tarjetaActual.tarjeta.codigo)}</b>.<br><br>Recuerda cobrarlo en caja.`,
-                ok: 'Recargar'
-            });
-            if (!ok) return;
-        }
+        const codigo = tarjetaActual.tarjeta.codigo;
         const btn = document.getElementById('btnTarForm');
         cargando(btn, true, 'Guardando...');
         try {
             const data = await api(tipo === 'canje' ? 'tarjeta_canjear' : 'tarjeta_recargar', {
-                codigo: tarjetaActual.tarjeta.codigo, importe,
-                concepto: document.getElementById('tarConcepto').value
+                codigo, importe, concepto: document.getElementById('tarConcepto').value
             });
             if (data.error === 'saldo_insuficiente') throw new Error(`La tarjeta solo tiene ${euros(data.saldo)}`);
             if (data.error) throw new Error(errorDe(data));
-            toast(tipo === 'canje'
+            const texto = tipo === 'canje'
                 ? `🛒 Canjeados ${euros(importe)} · quedan ${euros(data.saldo)}`
-                : `➕ Recargados ${euros(importe)} · saldo ${euros(data.saldo)}`, 'success');
+                : `➕ Recargados ${euros(importe)} · saldo ${euros(data.saldo)} · cóbralo en caja`;
+            if (data.deshacer) toastDeshacer(texto, () => deshacerTarjeta(data.deshacer, codigo));
+            else toast(texto, 'success');
             const imprimir = quiereTicket();
             pintarTarjeta(data, !imprimir);
             if (imprimir) imprimirResguardo();
+            miniRefrescar('tarjeta', codigo, data);
             listoParaEscanear();
             cargarTarjetas();
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
-            cargando(btn, false);
+            if (btn.isConnected) cargando(btn, false);
         }
+    }
+
+    // Borra el canje o la recarga que se acaba de apuntar
+    async function deshacerTarjeta(filas, codigo) {
+        const data = await api('tarjeta_deshacer', { filas, codigo });
+        if (data.error) throw new Error(errorDe(data));
+        toast(`↩️ Deshecho · saldo ${euros(data.saldo)}`, 'warning');
+        if (codigoDe(tarjetaActual) === codigo) pintarTarjeta(data);
+        miniRefrescar('tarjeta', codigo, data);
+        cargarTarjetas();
+        return data;
     }
 
     async function activarTarjeta() {
         const importe = parseFloat(document.getElementById('tarImporte').value) || 0;
         if (!(importe > 0)) { toast('⚠️ Elige el importe de la tarjeta', 'warning'); return; }
         const ok = await confirmar({
-            titulo: '🎁 Activar tarjeta',
+            titulo: 'Activar tarjeta',
             html: `Tarjeta <b class="mono" style="color:white">${esc(tarjetaActual.codigo)}</b> con
                    <b style="color:#34d399">${euros(importe)}</b>.<br><br>Recuerda cobrarla en caja.`,
             ok: 'Activar'
@@ -1821,14 +2372,15 @@
             toast(`🎁 Tarjeta activada con ${euros(importe)}`, 'success');
             const enTicket = tarjetaActual.codigo === tarjetaEnTicket;
             const imprimir = !enTicket && quiereTicket();
-            pintarTarjeta(data, !imprimir && !enTicket);
-            if (enTicket) { tarjetaEnTicket = null; imprimirTarjetaTicket(true); }
+            if (enTicket) tarjetaEnTicket = null;
+            pintarTarjeta(data, !imprimir && !enTicket, true);
+            if (enTicket) imprimirTarjetaTicket(true);
             else if (imprimir) imprimirResguardo();
             listoParaEscanear();
             cargarTarjetas();
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
-            cargando(btn, false);
+            if (btn.isConnected) cargando(btn, false);
         }
     }
 
@@ -1858,8 +2410,8 @@
             🧾 Imprimir resguardo al guardar</label>`;
     }
 
-    function imprimirResguardo() {
-        const d = tarjetaActual;
+    // destino: documento desde el que se imprime (la ventanita mini imprime desde sí misma)
+    function imprimirResguardo(d = tarjetaActual, destino = document) {
         if (!d || !d.existe) return;
         const t = d.tarjeta;
         const movs = [...d.movimientos].sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || (b.fila || 0) - (a.fila || 0));
@@ -1900,7 +2452,7 @@
                 ${caduca}
             </div>
             <div class="sep"></div>
-            <div class="c pie">${TICKET.pie}</div>`);
+            <div class="c pie">${TICKET.pie}</div>`, destino);
     }
 
     function cabeceraTicket() {
@@ -1960,15 +2512,16 @@
     }
 
     // Imprime el ticket desde un marco invisible, sin tocar la página del panel
-    function imprimirTicket(titulo, cuerpo) {
+    // destino: la ventanita mini imprime desde sí misma, para que el diálogo de impresión salga encima del TPV
+    function imprimirTicket(titulo, cuerpo, destino = document) {
         const html = htmlTicket(titulo, cuerpo);
-        let marco = document.getElementById('marcoTicket');
+        let marco = destino.getElementById('marcoTicket');
         if (marco) marco.remove();
-        marco = document.createElement('iframe');
+        marco = destino.createElement('iframe');
         marco.id = 'marcoTicket';
         marco.setAttribute('aria-hidden', 'true');
         marco.style.cssText = 'position:fixed; right:0; bottom:0; width:0; height:0; border:0; opacity:0; pointer-events:none';
-        document.body.appendChild(marco);
+        destino.body.appendChild(marco);
         const doc = marco.contentDocument;
         doc.open();
         doc.write(html);
@@ -1981,8 +2534,10 @@
             doc.head.appendChild(pagina);
             try { marco.contentWindow.focus(); marco.contentWindow.print(); }
             catch { toast('⚠️ No se pudo abrir la impresión', 'danger'); }
-            const btn = document.getElementById('tarCodigo');
-            if (btn) btn.focus();
+            if (destino === document) {
+                const btn = document.getElementById('tarCodigo');
+                if (btn) btn.focus();
+            }
         }, 200);
     }
 
@@ -2118,7 +2673,6 @@
     const MUESTRA_TICKET = { existe: true, saldo: 50, movimientos: [], tarjeta: { codigo: '880000000000', activada: hoyISO() } };
 
     function abrirOpcionesTicket() {
-        ficha = null;
         document.getElementById('sheetBody').innerHTML = `
             <div class="d-head">
                 <div class="avatar">🧾</div>
@@ -2188,8 +2742,7 @@
             const data = await api('tarjeta_eliminar', { codigo: d.tarjeta.codigo });
             if (data.error) throw new Error(errorDe(data));
             toast(`🗑️ Tarjeta ${data.eliminada} eliminada`, 'warning');
-            tarjetaActual = null;
-            document.getElementById('tarResultado').innerHTML = '';
+            vaciarFichaTarjeta();
             listoParaEscanear();
             cargarTarjetas();
         } catch (err) {
@@ -2319,6 +2872,610 @@
     }
 
     // =========================================
+    //  DESHACER: la acción se hace al momento y se puede revertir unos segundos
+    // =========================================
+    function toastDeshacer(msg, deshacer) {
+        const cont = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast success toast-accion';
+        t.innerHTML = `<span>${esc(msg)}</span><button type="button" class="toast-btn">Deshacer</button><i class="toast-barra"></i>`;
+        let usado = false;
+        const cerrar = () => { t.style.transition = '0.3s'; t.style.transform = 'translateX(100%)'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); };
+        t.querySelector('.toast-btn').onclick = async () => {
+            if (usado) return;
+            usado = true;
+            t.querySelector('.toast-btn').textContent = 'Deshaciendo…';
+            try { await deshacer(); } catch (err) { toast('⚠️ No se pudo deshacer: ' + err.message, 'danger'); }
+            cerrar();
+        };
+        cont.appendChild(t);
+        setTimeout(() => { if (!usado) cerrar(); }, 8000);
+    }
+
+    // =========================================
+    //  AJUSTES: toda la configuración en un sitio
+    // =========================================
+    function ticketAuto() {
+        try { return localStorage.getItem('panda_ticket_auto') === 'si'; } catch { return false; }
+    }
+
+    function abrirAjustes() {
+        const item = (ico, color, titulo, desc, que, final = '<span class="aj-flecha">›</span>') => `
+            <button class="aj-item" onclick="desdeAjustes('${que}')">
+                <span class="aj-ico ${color}">${ico}</span>
+                <span class="aj-txt"><b>${titulo}</b><small>${desc}</small></span>
+                ${final}
+            </button>`;
+        const conLink = jugadores.filter(j => j.token).length;
+        document.getElementById('sheetBody').innerHTML = `
+            <div class="d-head">
+                <div class="avatar">${I('ajustes')}</div>
+                <div class="d-name">Ajustes</div>
+                <div class="d-id">Liga, tarjetas regalo e impresión</div>
+            </div>
+            <div class="aj-grupo">Liga</div>
+            ${item(I('reloj'), '', 'Caducidad del saldo de la liga', 'Cuántos meses dura cada premio', 'cad-liga')}
+            ${item(I('enlace'), '', 'Copiar todos los links', `${conLink} jugador${conLink === 1 ? '' : 'es'} · para enviárselos por privado`, 'links')}
+            <div class="aj-grupo">Tarjetas regalo</div>
+            ${item(I('reloj'), 'morado', 'Caducidad de las tarjetas', 'Cuántos meses dura cada carga', 'cad-tarjetas')}
+            <div class="aj-grupo">Impresión</div>
+            ${item(I('ticket'), 'morado', 'Diseño de los tickets', disenoTicket() === 'basico' ? 'Básico (solo texto)' : 'Tarjeta con el panda', 'tickets')}
+            ${item(I('impresora'), 'morado', 'Imprimir resguardo al guardar', 'Deja marcada la casilla en este ordenador', 'auto', `<span class="switch ${ticketAuto() ? 'on' : ''}" id="ajAuto"></span>`)}`;
+        document.getElementById('sheet').classList.add('open');
+    }
+
+    async function desdeAjustes(que) {
+        if (que === 'auto') {
+            const on = !ticketAuto();
+            try { localStorage.setItem('panda_ticket_auto', on ? 'si' : 'no'); } catch {}
+            document.getElementById('ajAuto').classList.toggle('on', on);
+            const c = document.getElementById('tarTicket');
+            if (c) c.checked = on;
+            return;
+        }
+        if (que === 'links') { cerrarFicha(); copiarTodosLosLinks(); return; }
+        if (que === 'cad-liga') await abrirCaducidad('liga');
+        if (que === 'cad-tarjetas') await abrirCaducidad('tarjetas');
+        if (que === 'tickets') abrirOpcionesTicket();
+        const body = document.getElementById('sheetBody');
+        if (document.getElementById('sheet').classList.contains('open') && !body.querySelector('.aj-volver')) {
+            body.insertAdjacentHTML('afterbegin', '<button class="aj-volver" onclick="abrirAjustes()">‹ Ajustes</button>');
+        }
+    }
+
+    // =========================================
+    //  BUSCADOR GLOBAL (Ctrl+K / F2), LECTOR EN CUALQUIER SITIO Y ATAJOS
+    // =========================================
+    let paletaRes = [], paletaSel = 0;
+
+    function modoActual() { return document.body.classList.contains('modo-tarjetas') ? 'tarjetas' : 'liga'; }
+
+    function verTab(nombre) {
+        document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === nombre));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + nombre));
+    }
+
+    function abrirPaleta(texto = '') {
+        document.getElementById('paleta').classList.add('open');
+        const input = document.getElementById('paletaInput');
+        input.value = texto;
+        paletaSel = 0;
+        pintarPaleta();
+        setTimeout(() => input.focus(), 10);
+    }
+    function cerrarPaleta() { document.getElementById('paleta').classList.remove('open'); }
+
+    function pintarPaleta() {
+        const texto = document.getElementById('paletaInput').value;
+        const q = normalizar(texto);
+        const porUso = (a, b) => String(b.ultimo || '').localeCompare(String(a.ultimo || ''));
+        const js = q ? jugadores.filter(j => normalizar(j.nombre + ' ' + j.jugador_id).includes(q)).slice(0, 6) : [...jugadores].sort(porUso).slice(0, 5);
+        const ts = q ? tarjetas.filter(t => normalizar(t.codigo + ' ' + t.comprador).includes(q)).slice(0, 5) : [...tarjetas].sort(porUso).slice(0, 4);
+        const grupos = [
+            { tipo: 'jugador', titulo: q ? 'Jugadores' : 'Jugadores con movimientos recientes', lista: js },
+            { tipo: 'tarjeta', titulo: q ? 'Tarjetas' : 'Tarjetas usadas hace poco', lista: ts }
+        ];
+        if (modoActual() === 'tarjetas') grupos.reverse();
+        paletaRes = [];
+        let html = '';
+        grupos.forEach(g => {
+            if (!g.lista.length) return;
+            html += `<div class="paleta-grupo">${g.titulo}</div>`;
+            g.lista.forEach(x => {
+                const i = paletaRes.length;
+                paletaRes.push({ tipo: g.tipo, x });
+                html += g.tipo === 'jugador' ? `
+                    <div class="paleta-item" data-i="${i}">
+                        <div class="avatar">${esc(inicial(x.nombre))}</div>
+                        <div class="pinfo"><div class="pname">${esc(x.nombre)}</div><div class="pmeta">Liga · ${x.ultimo ? 'último movimiento ' + fecha(x.ultimo) : 'sin movimientos'}</div></div>
+                        <div class="psaldo ${x.saldo > 0.005 ? '' : 'cero'}">${euros(x.saldo)}</div>
+                        <span class="paleta-donde">Abrir en Liga ↵</span>
+                    </div>` : `
+                    <div class="paleta-item tarjeta" data-i="${i}">
+                        <div class="avatar">${I(esTicket(x) ? 'ticket' : 'regalo')}</div>
+                        <div class="pinfo"><div class="pname mono">${esc(x.codigo)}</div><div class="pmeta">${esTicket(x) ? 'En ticket · ' : ''}${x.comprador ? esc(x.comprador) + ' · ' : ''}${euros(x.cargado)} cargados</div></div>
+                        <div class="psaldo ${x.saldo > 0.005 ? '' : 'cero'}">${euros(x.saldo)}</div>
+                        <span class="paleta-donde">Abrir en Tarjetas ↵</span>
+                    </div>`;
+            });
+        });
+        if (paletaSel >= paletaRes.length) paletaSel = Math.max(0, paletaRes.length - 1);
+        if (!paletaRes.length) {
+            const codigo = normalizarCodigo(texto);
+            const pareceCodigo = /^[A-Z0-9]{4,}$/.test(codigo) && /\d/.test(codigo);
+            html = `<div class="fx-nada">${q ? 'Nada coincide' : 'Aún no hay jugadores ni tarjetas'}`
+                + (pareceCodigo ? ` · <button type="button" class="fx-enlace" id="paletaCodigo">Abrir la tarjeta ${esc(codigo)}</button>` : '')
+                + (q.length >= 2 && !pareceCodigo ? ` · <button type="button" class="fx-enlace" id="paletaAlta">Crear el jugador «${esc(nombrePropio(texto))}»</button>` : '')
+                + '</div>';
+        }
+        const lista = document.getElementById('paletaLista');
+        lista.innerHTML = html;
+        lista.querySelectorAll('.paleta-item').forEach(el => el.classList.toggle('sel', Number(el.dataset.i) === paletaSel));
+        const alta = document.getElementById('paletaAlta');
+        if (alta) alta.onclick = () => { cerrarPaleta(); dialogoNuevoJugador(nombrePropio(texto)); };
+        const porCodigo = document.getElementById('paletaCodigo');
+        if (porCodigo) porCodigo.onclick = () => { cerrarPaleta(); abrirTarjeta(normalizarCodigo(texto)); };
+    }
+
+    function elegirPaleta(r) {
+        if (!r) return;
+        cerrarPaleta();
+        if (r.tipo === 'jugador') abrirFicha(r.x.jugador_id);
+        else abrirTarjeta(r.x.codigo);
+    }
+
+    document.getElementById('paletaInput').addEventListener('input', () => { paletaSel = 0; pintarPaleta(); });
+    document.getElementById('paletaInput').addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); paletaSel = Math.min(paletaSel + 1, paletaRes.length - 1); pintarPaleta(); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); paletaSel = Math.max(paletaSel - 1, 0); pintarPaleta(); }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            // Una tarjeta escaneada en el buscador también vale (aunque aún no esté activada)
+            const codigo = normalizarCodigo(e.target.value);
+            const exacta = tarjetas.find(t => t.codigo === codigo);
+            if (exacta) return elegirPaleta({ tipo: 'tarjeta', x: exacta });
+            if (!paletaRes.length && /^[A-Z0-9]{4,}$/.test(codigo) && /\d/.test(codigo)) { cerrarPaleta(); abrirTarjeta(codigo); return; }
+            elegirPaleta(paletaRes[paletaSel]);
+        }
+        if (e.key === 'Escape') { e.preventDefault(); cerrarPaleta(); }
+    });
+    document.getElementById('paletaLista').addEventListener('click', e => {
+        const it = e.target.closest('.paleta-item');
+        if (it) elegirPaleta(paletaRes[Number(it.dataset.i)]);
+    });
+
+    // Lector de códigos: teclea muy rápido y acaba en Enter. Sin ningún campo activo, se reconoce igual y abre la tarjeta.
+    const lector = { txt: '', t: 0 };
+    document.addEventListener('keydown', e => {
+        if (!sesion || document.getElementById('vistaApp').style.display === 'none') return;
+        const paletaAbierta = document.getElementById('paleta').classList.contains('open');
+        if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') || e.key === 'F2') {
+            e.preventDefault();
+            paletaAbierta ? cerrarPaleta() : abrirPaleta();
+            return;
+        }
+        if (e.altKey && ['1', '2'].includes(e.key)) {
+            e.preventDefault();
+            setModo(e.key === '1' ? 'liga' : 'tarjetas');
+            return;
+        }
+        const enCampo = e.target.closest && e.target.closest('input, textarea, select, [contenteditable]');
+        if (enCampo || paletaAbierta || document.getElementById('dialog').classList.contains('open')) return;
+        const ahora = Date.now();
+        if (e.key.length === 1 && /[0-9a-z]/i.test(e.key) && !e.ctrlKey && !e.altKey && !e.metaKey) {
+            if (ahora - lector.t > 80) lector.txt = '';
+            lector.txt += e.key;
+            lector.t = ahora;
+            return;
+        }
+        if (e.key === 'Enter' && lector.txt.length >= 4 && ahora - lector.t < 150) {
+            e.preventDefault();
+            const codigo = lector.txt;
+            lector.txt = '';
+            cerrarFicha();
+            abrirTarjeta(codigo);
+        }
+    });
+
+    // =========================================
+    //  ESQUELETOS DE CARGA E INDICADOR DE SINCRONIZACIÓN
+    // =========================================
+    function esqueletoFicha() {
+        return `<div class="esq">
+            <div class="esq-fila"><i class="esq-circ"></i><div style="flex:1"><i class="esq-l" style="width:45%"></i><i class="esq-l esq-s" style="width:30%"></i></div><i class="esq-l" style="width:70px;height:24px"></i></div>
+            <div class="esq-fila"><i class="esq-l esq-chip"></i><i class="esq-l esq-chip"></i><i class="esq-l esq-chip"></i></div>
+            <i class="esq-l" style="height:44px"></i>
+            <i class="esq-l" style="width:60%"></i><i class="esq-l" style="width:80%"></i><i class="esq-l" style="width:50%"></i>
+        </div>`;
+    }
+    function esqueletoLista(n = 4) {
+        return `<div class="esq">${'<div class="esq-fila"><i class="esq-circ"></i><div style="flex:1"><i class="esq-l" style="width:40%"></i><i class="esq-l esq-s" style="width:25%"></i></div><i class="esq-l" style="width:56px"></i></div>'.repeat(n)}</div>`;
+    }
+
+    let ultimaSync = 0, syncFallo = false;
+    function pintarSync() {
+        const el = document.getElementById('tbSync');
+        if (!el) return;
+        if (syncFallo) { el.className = 'tb-sync mal'; el.textContent = 'Sin conexión'; return; }
+        if (!ultimaSync) { el.textContent = ''; return; }
+        const s = Math.round((Date.now() - ultimaSync) / 1000);
+        el.className = 'tb-sync ok';
+        el.textContent = s < 10 ? 'Sincronizado' : s < 60 ? `Hace ${s} s` : `Hace ${Math.round(s / 60)} min`;
+    }
+    setInterval(pintarSync, 5000);
+
+    // =========================================
+    //  MODO MINI: ventana pequeña siempre encima del TPV
+    // =========================================
+    // En Chrome/Edge se abre como ventana flotante (Picture-in-Picture), que se queda por encima
+    // de cualquier programa. La lógica sigue viviendo en esta página: la ventanita solo pinta y recoge clics.
+    const MINI_VACIO = '<div class="mn-vacio-grande"><span>🐼</span>Escanea una tarjeta o escribe un jugador</div>';
+    let mini = null;        // { win, doc }
+    let miniSel = null;     // { tipo: 'tarjeta' | 'jugador', data }
+
+    async function abrirModoMini() {
+        if (mini && !mini.win.closed) { mini.win.focus(); return; }
+        cargarResumen();
+        cargarTarjetas();
+        if ('documentPictureInPicture' in window) {
+            try {
+                const win = await documentPictureInPicture.requestWindow({ width: 300, height: 200 });
+                montarMini(win, true);
+                return;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        // Navegador sin ventanas flotantes: ventana pequeña normal
+        const w = window.open(location.pathname + '?mini=1', 'pandaWalletMini', 'popup,width=380,height=480');
+        if (!w) toast('⚠️ El navegador ha bloqueado la ventana: permite las ventanas emergentes', 'warning');
+        else toast('ℹ️ Para que flote siempre encima del TPV, abre el panel en Chrome o Edge', 'warning');
+    }
+
+    function montarMini(win, copiarEstilos) {
+        const doc = win.document;
+        if (copiarEstilos) {
+            // La ventana flotante nace vacía: le pasamos las fuentes, los estilos y los iconos de esta página
+            document.querySelectorAll('link[rel="stylesheet"]').forEach(l => doc.head.appendChild(l.cloneNode()));
+            [...document.styleSheets].forEach(hoja => {
+                try {
+                    const st = doc.createElement('style');
+                    st.textContent = [...hoja.cssRules].map(r => r.cssText).join('\n');
+                    doc.head.appendChild(st);
+                } catch {} // hojas externas: ya van con su <link>
+            });
+            doc.title = '🐼 Wallet mini';
+        }
+        doc.body.classList.add('mini-body');
+        const cont = doc.createElement('div');
+        cont.className = 'mn';
+        cont.innerHTML = `
+            <form class="mn-scan" id="mnForm">
+                <input id="mnBuscar" placeholder="🔍 Tarjeta o jugador" autocomplete="off" spellcheck="false">
+                <button class="mn-btn" type="button" data-acc="imprimir" title="Imprimir resguardo de la tarjeta">🖨️</button>
+                <button class="mn-btn" type="button" data-acc="plegar" id="mnPlegar" title="Plegar: se queda en una barra fina y se abre al pasar el ratón">▁</button>
+                <button class="mn-btn" type="button" data-acc="cerrar" title="Limpiar (Esc)">✕</button>
+            </form>
+            <div class="mn-sug" id="mnSug"></div>
+            <div id="mnFicha">${MINI_VACIO}</div>
+            <div class="mn-estado" id="mnEstado"></div>`;
+        doc.body.appendChild(cont);
+        mini = { win, doc };
+
+        const $ = id => doc.getElementById(id);
+        $('mnForm').addEventListener('submit', e => { e.preventDefault(); miniBuscar(); });
+        $('mnBuscar').addEventListener('input', miniSugerencias);
+        cont.addEventListener('click', miniClic);
+        cont.addEventListener('input', e => { if (e.target.id === 'mnImporte') miniPreview(); });
+        cont.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && (e.target.id === 'mnImporte' || e.target.id === 'mnConcepto')) {
+                e.preventDefault();
+                // Enter: la acción principal (canjear en tarjetas, premio en la liga)
+                const principal = mini.doc.querySelector('[data-principal]');
+                if (principal) principal.click();
+            }
+            if (e.key === 'Escape') {
+                if (mnEl('mnSug').innerHTML) mnEl('mnSug').innerHTML = '';
+                else miniLimpiar();
+            }
+        });
+        // Plegado: al salir el ratón se pliega (tras un momento) y al entrar o al escanear se abre
+        doc.documentElement.addEventListener('mouseleave', () => {
+            if (!miniPlegable) return;
+            clearTimeout(miniTimerPlegar);
+            miniTimerPlegar = setTimeout(miniPlegar, 700);
+        });
+        doc.documentElement.addEventListener('mouseenter', () => { if (miniPlegable) miniDesplegar(); });
+        doc.addEventListener('pointerdown', () => { if (miniPlegable) miniDesplegar(); });
+        doc.addEventListener('keydown', () => { if (miniPlegable) miniDesplegar(); });
+        win.addEventListener('pagehide', () => { mini = null; miniSel = null; miniPlegable = false; });
+        if (miniSel) miniPintar(); // al reabrirla, sigue con lo mismo
+        $('mnBuscar').focus();
+    }
+
+    function mnEl(id) { return mini && mini.doc.getElementById(id); }
+
+    // deshacer: si se pasa, el aviso lleva un botón para revertir lo que se acaba de hacer
+    function miniEstado(texto, tipo = 'ok', deshacer = null) {
+        const el = mnEl('mnEstado');
+        if (!el) return;
+        el.className = 'mn-estado ' + tipo;
+        el.innerHTML = `<span>${esc(texto)}</span>` + (deshacer ? '<button class="mn-chip" type="button" data-acc="deshacer">Deshacer</button>' : '');
+        miniEstado.deshacer = deshacer;
+        clearTimeout(miniEstado.t);
+        miniEstado.t = setTimeout(() => {
+            if (el.firstChild && el.firstChild.textContent === texto) { el.innerHTML = ''; miniEstado.deshacer = null; }
+        }, deshacer ? 8000 : 6000);
+    }
+
+    function fechaCorta(s) {
+        const d = new Date(s);
+        return isNaN(d) ? '' : d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+    }
+
+    function miniLimpiar() {
+        miniSel = null;
+        mnEl('mnFicha').innerHTML = MINI_VACIO;
+        mnEl('mnSug').innerHTML = '';
+        miniResumenBarra();
+        const b = mnEl('mnBuscar');
+        b.value = '';
+        b.focus();
+    }
+
+    function miniSugerencias() {
+        const texto = mnEl('mnBuscar').value.trim();
+        const cont = mnEl('mnSug');
+        if (texto.length < 2) { cont.innerHTML = ''; return; }
+        const q = normalizar(texto);
+        const js = jugadores.filter(j => normalizar(j.nombre).includes(q)).slice(0, 3);
+        const ts = tarjetas.filter(t => normalizar(t.codigo + ' ' + t.comprador).includes(q)).slice(0, 4 - Math.min(js.length, 3));
+        cont.innerHTML = js.map(j => `<div class="mn-sug-item" data-jugador="${esc(j.jugador_id)}"><span>🏆 ${esc(j.nombre)}</span><small>${euros(j.saldo)}</small></div>`).join('')
+            + ts.map(t => `<div class="mn-sug-item" data-tarjeta="${esc(t.codigo)}"><span>🎁 ${esc(t.codigo)}</span><small>${euros(t.saldo)}</small></div>`).join('');
+    }
+
+    function miniBuscar() {
+        const texto = mnEl('mnBuscar').value.trim();
+        if (!texto) return;
+        const codigo = normalizarCodigo(texto);
+        if (tarjetas.some(t => t.codigo === codigo)) return miniAbrirTarjeta(codigo);
+        const q = normalizar(texto);
+        const exactos = jugadores.filter(j => normalizar(j.nombre) === q);
+        const parecidos = jugadores.filter(j => normalizar(j.nombre).includes(q));
+        if (exactos.length === 1) return miniAbrirJugador(exactos[0].jugador_id);
+        if (parecidos.length === 1 && !/\d/.test(codigo)) return miniAbrirJugador(parecidos[0].jugador_id);
+        // Un código que no está en la lista (recién activada en otro sitio, o sin activar)
+        if (/^[A-Z0-9]{4,}$/.test(codigo) && /\d/.test(codigo)) return miniAbrirTarjeta(codigo);
+        miniSugerencias();
+        if (!parecidos.length) miniEstado('🔍 No hay ningún jugador ni tarjeta así', 'info');
+    }
+
+    async function miniAbrir(promesa) {
+        miniEstado('Buscando...', 'info');
+        try {
+            const r = await promesa;
+            mnEl('mnBuscar').value = '';
+            mnEl('mnSug').innerHTML = '';
+            miniEstado('');
+            miniSel = r;
+            miniPintar();
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            mnEl('mnBuscar').select();
+        }
+    }
+
+    function miniAbrirTarjeta(codigo) {
+        return miniAbrir(api('tarjeta', { codigo }).then(d => {
+            if (d.error) throw new Error(errorDe(d));
+            return { tipo: 'tarjeta', data: d };
+        }));
+    }
+
+    function miniAbrirJugador(id) {
+        return miniAbrir(api('jugador', { jugador_id: id }).then(d => {
+            if (d.error) throw new Error(errorDe(d));
+            return { tipo: 'jugador', data: d };
+        }));
+    }
+
+    // Cuando el panel o la ventanita cambian algo, la otra parte se pone al día
+    function miniRefrescar(tipo, id, data) {
+        if (!mini || !miniSel || miniSel.tipo !== tipo) return;
+        const actual = tipo === 'tarjeta' ? codigoDe(miniSel.data) : miniSel.data.jugador.jugador_id;
+        if (actual !== id) return;
+        miniSel = { tipo, data };
+        miniPintar();
+    }
+
+    function miniPintar() {
+        const { tipo, data: d } = miniSel;
+        let html;
+        if (tipo === 'tarjeta' && !d.existe) {
+            html = `
+                <div class="mn-card tarjeta">
+                    <div class="mn-f1"><span class="mn-nombre">🎁 ${esc(codigoLegible(d.codigo))}</span><span class="mn-saldo">—</span></div>
+                    <div class="mn-f2">Sin activar: actívala desde el panel (ahí se cobra e imprime)</div>
+                </div>`;
+        } else if (tipo === 'tarjeta') {
+            const t = d.tarjeta, cad = proximaCaducidad(d.movimientos);
+            html = `
+                <div class="mn-card tarjeta">
+                    <div class="mn-f1"><span class="mn-nombre">🎁 •••• ${esc(String(t.codigo).slice(-4))}${t.comprador ? ' · ' + esc(t.comprador) : ''}</span><span class="mn-saldo">${euros(d.saldo)}</span></div>
+                    <div class="mn-f2">${d.saldo > 0.005 ? 'Activa' : 'Gastada'}${esTicket(t) ? ' · en ticket' : ''}${cad ? ` · ${euros(cad.restante)} caducan ${fechaCorta(cad.caduca)}` : ''}</div>
+                    <div class="mn-fila">
+                        <input id="mnImporte" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Importe €">
+                        <button class="mn-btn rojo" data-acc="canje" data-principal ${d.saldo > 0.005 ? '' : 'disabled'} title="Canjear (Enter)">Canjear</button>
+                        <button class="mn-btn verde" data-acc="recarga" title="Recargar (cóbralo en caja)">Recargar</button>
+                    </div>
+                    <div class="mn-prev" id="mnPrev"></div>
+                </div>`;
+        } else {
+            const j = d.jugador;
+            html = `
+                <div class="mn-card">
+                    <div class="mn-f1"><span class="mn-nombre">🏆 ${esc(j.nombre)}</span><span class="mn-saldo">${euros(d.saldo)}</span></div>
+                    <div class="mn-f2">Liga · ${euros(d.ganado)} ganado · ${euros(d.gastado)} gastado</div>
+                    <div class="mn-fila">
+                        <input id="mnImporte" type="number" min="0" step="0.5" inputmode="decimal" placeholder="€">
+                        <button class="mn-btn verde" data-acc="premio" data-principal title="Añadir premio (Enter)">Premio</button>
+                        <button class="mn-btn rojo" data-acc="canje-liga" title="Apuntar canje">Canje</button>
+                    </div>
+                    <div class="mn-fila"><input id="mnConcepto" placeholder="Concepto (opcional)" list="conceptos"></div>
+                    <div class="mn-prev" id="mnPrev"></div>
+                </div>`;
+        }
+        mnEl('mnFicha').innerHTML = html;
+        miniPreview();
+        miniResumenBarra();
+        const imp = mnEl('mnImporte');
+        if (imp) imp.focus();
+    }
+
+    function miniPreview() {
+        const el = mnEl('mnPrev');
+        if (!el || !miniSel) return;
+        const saldo = miniSel.data.saldo;
+        const importe = parseFloat(mnEl('mnImporte').value) || 0;
+        const todo = miniSel.tipo === 'tarjeta' && saldo > 0.005 ? ` · <button class="mn-chip" type="button" data-acc="todo">todo el saldo</button>` : '';
+        if (!(importe > 0)) { el.innerHTML = `Saldo ${euros(saldo)}${todo}`; return; }
+        if (miniSel.tipo === 'tarjeta' && importe > saldo + 0.005) {
+            el.innerHTML = `Canjear: <span class="neg">solo tiene ${euros(saldo)}</span> · recargar → <b>${euros(saldo + importe)}</b>`;
+            return;
+        }
+        el.innerHTML = `${miniSel.tipo === 'tarjeta' ? 'Canjear' : 'Canje'} → <b>${euros(saldo - importe)}</b> · ${miniSel.tipo === 'tarjeta' ? 'recargar' : 'premio'} → <b>${euros(saldo + importe)}</b>`;
+    }
+
+    async function miniClic(e) {
+        const sug = e.target.closest('.mn-sug-item');
+        if (sug) {
+            if (sug.dataset.jugador) return miniAbrirJugador(sug.dataset.jugador);
+            return miniAbrirTarjeta(sug.dataset.tarjeta);
+        }
+        const b = e.target.closest('[data-acc]');
+        if (!b || b.disabled) return;
+        const acc = b.dataset.acc;
+        if (acc === 'imprimir') return miniImprimir();
+        if (acc === 'plegar') return miniCambiarPlegado();
+        if (acc === 'cerrar') return miniLimpiar();
+        if (acc === 'deshacer') {
+            const fn = miniEstado.deshacer;
+            if (!fn) return;
+            miniEstado.deshacer = null;
+            miniEstado('Deshaciendo...', 'info');
+            try { await fn(); miniEstado('↩️ Deshecho', 'ok'); } catch (err) { miniEstado('⚠️ No se pudo deshacer: ' + err.message, 'mal'); }
+            return;
+        }
+        if (acc === 'todo') { mnEl('mnImporte').value = miniSel.data.saldo.toFixed(2); miniPreview(); return; }
+        if (acc === 'canje' || acc === 'recarga') return miniTarjeta(acc, b);
+        if (acc === 'premio' || acc === 'canje-liga') return miniLiga(acc === 'premio' ? 'premio' : 'canje', b);
+    }
+
+    async function miniTarjeta(tipo, btn) {
+        const d = miniSel.data;
+        const importe = Math.round((parseFloat(mnEl('mnImporte').value) || 0) * 100) / 100;
+        if (!(importe > 0)) { miniEstado('⚠️ Pon el importe', 'mal'); mnEl('mnImporte').focus(); return; }
+        if (tipo === 'canje' && importe > d.saldo + 0.005) { miniEstado(`⚠️ Solo tiene ${euros(d.saldo)}`, 'mal'); return; }
+        const codigo = d.tarjeta.codigo;
+        btn.disabled = true;
+        try {
+            const data = await api(tipo === 'canje' ? 'tarjeta_canjear' : 'tarjeta_recargar', { codigo, importe });
+            if (data.error === 'saldo_insuficiente') throw new Error(`Solo tiene ${euros(data.saldo)}`);
+            if (data.error) throw new Error(errorDe(data));
+            miniSel = { tipo: 'tarjeta', data };
+            miniPintar();
+            miniEstado(tipo === 'canje' ? `✅ -${euros(importe)} · quedan ${euros(data.saldo)}` : `✅ +${euros(importe)} · cóbralo en caja`,
+                'ok', data.deshacer ? () => deshacerTarjeta(data.deshacer, codigo) : null);
+            mnEl('mnBuscar').focus();
+            if (codigoDe(tarjetaActual) === codigo) pintarTarjeta(data);
+            cargarTarjetas();
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            btn.disabled = false;
+        }
+    }
+
+    async function miniLiga(tipo, btn) {
+        const j = miniSel.data.jugador;
+        const monto = Math.round((parseFloat(mnEl('mnImporte').value) || 0) * 100) / 100;
+        if (!(monto > 0)) { miniEstado('⚠️ Pon la cantidad', 'mal'); mnEl('mnImporte').focus(); return; }
+        btn.disabled = true;
+        try {
+            const data = await api('movimiento', { jugador_id: j.jugador_id, tipo, monto, concepto: mnEl('mnConcepto').value, fecha: hoyISO() });
+            // Sin ventanas de confirmación (quedarían detrás del TPV): sin saldo, no se apunta
+            if (data.error === 'saldo_insuficiente') throw new Error(`Solo tiene ${euros(data.saldo)} (para dejarlo en negativo, usa el panel)`);
+            if (data.error) throw new Error(errorDe(data));
+            miniSel = { tipo: 'jugador', data };
+            miniPintar();
+            miniEstado(`✅ ${tipo === 'premio' ? '+' : '-'}${euros(monto)} · saldo ${euros(data.saldo)}`,
+                'ok', data.deshacer ? () => deshacerLiga(data.deshacer, j.jugador_id) : null);
+            mnEl('mnBuscar').focus();
+            if (ficha && ficha.jugador.jugador_id === j.jugador_id) pintarFicha(data);
+            cargarResumen();
+        } catch (err) {
+            miniEstado('⚠️ ' + err.message, 'mal');
+            btn.disabled = false;
+        }
+    }
+
+    function miniImprimir() {
+        if (!miniSel || miniSel.tipo !== 'tarjeta' || !miniSel.data.existe) {
+            miniEstado('Abre primero una tarjeta para imprimir su resguardo', 'info');
+            return;
+        }
+        imprimirResguardo(miniSel.data, mini.doc);
+        miniEstado('🖨️ Enviado a la impresora', 'ok');
+    }
+
+    // ---- Plegado: barra fina mientras no se usa ----
+    // Chrome solo deja cambiar el tamaño de la ventana flotante con un clic o una tecla.
+    // Se intenta también al pasar el ratón; si Chrome no lo deja, se abre con un clic o al escanear.
+    const MINI_ALTO_BARRA = 40;
+    let miniPlegable = false;
+    let miniAltoAbierto = 200;
+    let miniTimerPlegar = null;
+
+    function miniPlegada() { return !!mini && mini.win.innerHeight <= MINI_ALTO_BARRA + 30; }
+
+    function miniPlegar() {
+        if (!mini || miniPlegada()) return;
+        miniAltoAbierto = mini.win.innerHeight;
+        try { mini.win.resizeBy(0, MINI_ALTO_BARRA - mini.win.innerHeight); } catch {}
+    }
+
+    function miniDesplegar() {
+        clearTimeout(miniTimerPlegar);
+        if (!mini || !miniPlegada()) return;
+        try { mini.win.resizeBy(0, Math.max(miniAltoAbierto, 180) - mini.win.innerHeight); } catch {}
+    }
+
+    function miniCambiarPlegado() {
+        miniPlegable = !miniPlegable;
+        const b = mnEl('mnPlegar');
+        b.textContent = miniPlegable ? '📌' : '▁';
+        b.title = miniPlegable ? 'Fijar abierta (dejar de plegarse)' : 'Plegar: se queda en una barra fina y se abre al pasar el ratón';
+        if (miniPlegable) {
+            miniPlegar();
+            setTimeout(() => {
+                if (mini && !miniPlegada()) miniEstado('⚠️ Este navegador no deja cambiar el tamaño de la ventana', 'mal');
+            }, 300);
+        } else {
+            miniDesplegar();
+        }
+    }
+
+    // Lo que se ve en la barra plegada: lo que está abierto y su saldo
+    function miniResumenBarra() {
+        const b = mnEl('mnBuscar');
+        if (!b) return;
+        if (!miniSel) { b.placeholder = '🔍 Tarjeta o jugador'; return; }
+        const d = miniSel.data;
+        b.placeholder = miniSel.tipo === 'jugador'
+            ? `🔍 ${d.jugador.nombre} · ${euros(d.saldo)}`
+            : `🔍 Tarjeta ••••${String(codigoDe(d)).slice(-4)} · ${d.existe ? euros(d.saldo) : 'sin activar'}`;
+    }
+
+    // =========================================
     //  DIÁLOGOS
     // =========================================
     let resolverDialogo = null;
@@ -2384,24 +3541,34 @@
     //  ARRANQUE
     // =========================================
     document.querySelectorAll('.shop-tab').forEach(tab => {
-        tab.onclick = () => {
-            document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t === tab));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab.dataset.tab));
-        };
+        tab.onclick = () => verTab(tab.dataset.tab);
     });
+    // Esc: cierra lo que esté encima; si no hay nada, cierra la ficha abierta
     document.addEventListener('keydown', e => {
         if (e.key !== 'Escape') return;
-        if (document.getElementById('dialog').classList.contains('open')) cerrarDialogo(false);
-        else cerrarFicha();
+        const enCampo = e.target.closest && e.target.closest('input, textarea, select');
+        if (document.getElementById('paleta').classList.contains('open')) cerrarPaleta();
+        else if (document.getElementById('dialog').classList.contains('open')) cerrarDialogo(false);
+        else if (document.getElementById('sheet').classList.contains('open')) cerrarFicha();
+        else if (enCampo) e.target.blur();
+        else if (modoActual() === 'liga' && ficha) vaciarFichaLiga();
+        else if (modoActual() === 'tarjetas' && tarjetaActual) vaciarFichaTarjeta();
     });
 
-    document.getElementById('movFecha').value = hoyISO();
+    // Estado inicial: fichas vacías y esqueletos mientras carga
+    vaciarFichaLiga();
+    vaciarFichaTarjeta();
+    document.getElementById('listaJugadores').innerHTML = esqueletoLista(6);
+    document.getElementById('listaTarjetas').innerHTML = esqueletoLista(4);
     document.getElementById('jorFecha').value = hoyISO();
     anadirFilaJornada();
 
+    const esVentanaMini = new URLSearchParams(location.search).get('mini') === '1';
     if (sesion) {
         mostrarApp();
         cargarResumen();
+        // Ventana pequeña normal (navegadores sin ventana flotante): solo la parte mini
+        if (esVentanaMini) montarMini(window, false);
     } else {
         document.getElementById('vistaLogin').style.display = 'block';
     }
