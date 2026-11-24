@@ -883,10 +883,15 @@
         .mn-btn.verde { background: rgba(52, 211, 153, 0.15); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
         .mn-btn.rojo { background: rgba(239, 68, 68, 0.14); border-color: rgba(252, 165, 165, 0.35); color: #fca5a5; }
         .mn-sug {
-            position: absolute; left: 0; right: 0; top: 34px; z-index: 5; padding: 3px; border-radius: 9px;
+            position: absolute; left: 0; right: 0; top: calc(1.75rem + 6px); z-index: 5; padding: 3px; border-radius: 9px;
             background: #15151d; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 12px 30px rgba(0,0,0,0.6);
         }
         .mn-sug:empty { display: none; }
+        /* Opciones de letra de la mini (Aa) */
+        .mn-letra { display: flex; align-items: center; gap: 4px; padding: 4px 6px; font-size: 0.75rem; color: #cbd5e1; }
+        .mn-letra[hidden] { display: none; }
+        .mn-letra > span { flex: 1; font-weight: 700; }
+        .mn-letra b { min-width: 2.6rem; text-align: center; font-variant-numeric: tabular-nums; }
         .mn-sug-item {
             display: flex; justify-content: space-between; gap: 8px; padding: 5px 8px; margin-bottom: 2px; border-radius: 7px;
             background: rgba(255,255,255,0.04); cursor: pointer; font-size: 0.78rem;
@@ -910,17 +915,17 @@
         /* Últimos movimientos: ocupan el hueco libre y se ven tantos como quepan */
         .mn-card > .mn-movs { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 1px;
             border-top: 1px solid rgba(255,255,255,0.07); padding-top: 3px; }
-        .mn-mov { display: flex; gap: 6px; font-size: 0.68rem; line-height: 14px; color: #cbd5e1; flex-shrink: 0; }
-        .mn-mov span:first-child { color: #64748b; width: 40px; flex-shrink: 0; }
+        .mn-mov { display: flex; gap: 6px; font-size: 0.68rem; line-height: 0.875rem; color: #cbd5e1; flex-shrink: 0; }
+        .mn-mov span:first-child { color: #64748b; width: 2.5rem; flex-shrink: 0; }
         .mn-mov .c { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .mn-mov b { font-weight: 700; font-variant-numeric: tabular-nums; color: #94a3b8; }
         .mn-mov b.mas { color: #34d399; } .mn-mov b.menos { color: #fca5a5; }
         .mn-fila { display: flex; gap: 4px; align-items: center; }
         .mn-fila input { flex: 1; width: 0; }
-        .mn-prev { font-size: 0.7rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 14px; min-height: 14px; }
+        .mn-prev { font-size: 0.7rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 0.875rem; min-height: 0.875rem; }
         .mn-prev b { color: white; } .mn-prev .neg { color: #fca5a5; }
         .mn-chip { background: none; border: none; color: #fcd34d; cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: 700; padding: 0; text-decoration: underline; }
-        .mn input, .mn-btn { height: 28px; line-height: 1; }
+        .mn input, .mn-btn { height: 1.75rem; line-height: 1; }
         .mn-estado { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; min-height: 1.1em; white-space: nowrap; overflow: hidden; }
         .mn-estado span { overflow: hidden; text-overflow: ellipsis; }
         .mn-estado.ok { color: #34d399; } .mn-estado.mal { color: #fca5a5; } .mn-estado.info { color: #fbbf24; }
@@ -3166,11 +3171,18 @@
         cont.innerHTML = `
             <form class="mn-scan" id="mnForm">
                 <input id="mnBuscar" placeholder="🔍 Tarjeta o jugador" autocomplete="off" spellcheck="false">
+                <button class="mn-btn" type="button" data-acc="letra" title="Tamaño de la letra">Aa</button>
                 <button class="mn-btn" type="button" data-acc="imprimir" title="Imprimir resguardo de la tarjeta">🖨️</button>
                 <button class="mn-btn" type="button" data-acc="plegar" id="mnPlegar" title="Plegar: se queda en una barra fina y se abre al pasar el ratón">▁</button>
                 <button class="mn-btn" type="button" data-acc="cerrar" title="Limpiar (Esc)">✕</button>
             </form>
-            <div class="mn-sug" id="mnSug"></div>
+            <div class="mn-sug mn-letra" id="mnLetra" hidden>
+                <span>Letra</span>
+                <button class="mn-btn" type="button" data-acc="letra-menos" title="Más pequeña">A−</button>
+                <b id="mnLetraValor">100%</b>
+                <button class="mn-btn" type="button" data-acc="letra-mas" title="Más grande">A+</button>
+                <button class="mn-btn" type="button" data-acc="letra-normal" title="Tamaño normal">Normal</button>
+            </div>            <div class="mn-sug" id="mnSug"></div>
             <div id="mnFicha">${MINI_VACIO}</div>
             <div class="mn-estado" id="mnEstado"></div>`;
         doc.body.appendChild(cont);
@@ -3189,7 +3201,8 @@
                 if (principal) principal.click();
             }
             if (e.key === 'Escape') {
-                if (mnEl('mnSug').innerHTML) mnEl('mnSug').innerHTML = '';
+                if (!mnEl('mnLetra').hidden) mnEl('mnLetra').hidden = true;
+                else if (mnEl('mnSug').innerHTML) mnEl('mnSug').innerHTML = '';
                 else miniLimpiar();
             }
         });
@@ -3204,6 +3217,7 @@
         doc.addEventListener('keydown', () => { if (miniPlegable) miniDesplegar(); });
         win.addEventListener('pagehide', () => { mini = null; miniSel = null; miniPlegable = false; });
         vigilarTamanoMini(win, copiarEstilos);
+        aplicarLetraMini();
         if (miniSel) miniPintar(); // al reabrirla, sigue con lo mismo
         $('mnBuscar').focus();
     }
@@ -3379,6 +3393,11 @@
         const b = e.target.closest('[data-acc]');
         if (!b || b.disabled) return;
         const acc = b.dataset.acc;
+        if (acc !== 'letra' && !acc.startsWith('letra-')) mnEl('mnLetra').hidden = true;
+        if (acc === 'letra') { mnEl('mnSug').innerHTML = ''; mnEl('mnLetra').hidden = !mnEl('mnLetra').hidden; return; }
+        if (acc === 'letra-menos') return cambiarLetraMini(-1);
+        if (acc === 'letra-mas') return cambiarLetraMini(1);
+        if (acc === 'letra-normal') return cambiarLetraMini(0);
         if (acc === 'imprimir') return miniImprimir();
         if (acc === 'plegar') return miniCambiarPlegado();
         if (acc === 'cerrar') return miniLimpiar();
@@ -3456,9 +3475,32 @@
     // Se intenta también al pasar el ratón; si Chrome no lo deja, se abre con un clic o al escanear.
     const MINI_ALTO_BARRA = 40;
     let miniPlegable = false;
-    // ---- La mini se abre con el tamaÃ±o de la Ãºltima vez ----
-    // Ventana flotante: Chrome no deja colocarla por cÃ³digo, asÃ­ que se guarda el tamaÃ±o (la posiciÃ³n la recuerda Chrome).
-    // Ventana normal (navegadores sin ventana flotante): se guardan tamaÃ±o y posiciÃ³n.
+    const MINI_LETRA_KEY = 'panda_wallet_mini_letra';
+    // ---- Tamaño de la letra de la mini (botón Aa) ----
+    // Toda la mini está medida en rem: al cambiar la letra de la raíz crecen también campos y botones.
+    const MINI_LETRAS = [0.85, 1, 1.15, 1.3, 1.5];
+    let miniLetraActual = null;   // por si el navegador no deja guardar (ventana privada)
+    function miniLetra() {
+        const v = miniLetraActual != null ? miniLetraActual : getData(MINI_LETRA_KEY, 1);
+        return MINI_LETRAS.includes(v) ? v : 1;
+    }
+    function aplicarLetraMini() {
+        if (!mini) return;
+        mini.doc.documentElement.style.fontSize = (16 * miniLetra()) + 'px';
+        const el = mnEl('mnLetraValor');
+        if (el) el.textContent = Math.round(miniLetra() * 100) + '%';
+    }
+    // paso: -1 más pequeña, +1 más grande, 0 tamaño normal
+    function cambiarLetraMini(paso) {
+        const i = MINI_LETRAS.indexOf(miniLetra());
+        const nueva = paso === 0 ? 1 : MINI_LETRAS[Math.max(0, Math.min(MINI_LETRAS.length - 1, i + paso))];
+        miniLetraActual = nueva;
+        setData(MINI_LETRA_KEY, nueva);
+        aplicarLetraMini();
+    }
+    // ---- La mini se abre con el tamaño de la última vez ----
+    // Ventana flotante: Chrome no deja colocarla por código, así que se guarda el tamaño (la posición la recuerda Chrome).
+    // Ventana normal (navegadores sin ventana flotante): se guardan tamaño y posición.
     const MINI_TAM_KEY = 'panda_wallet_mini_tam';
     function miniTamano() {
         const t = getData(MINI_TAM_KEY, null);
@@ -3473,7 +3515,7 @@
         win.addEventListener('resize', () => {
             clearTimeout(espera);
             espera = setTimeout(() => {
-                // El plegado (barra fina) no cuenta como tamaÃ±o elegido
+                // El plegado (barra fina) no cuenta como tamaño elegido
                 if (!mini || mini.win !== win || miniPlegada()) return;
                 miniAltoAbierto = win.innerHeight;
                 if (flotante) setData(MINI_TAM_KEY, { w: win.innerWidth, h: win.innerHeight });
