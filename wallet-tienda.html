@@ -904,6 +904,17 @@
         .mn-saldo { font-size: 1.1rem; font-weight: 900; color: #fcd34d; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
         .mn-card.tarjeta .mn-saldo { color: #e9d5ff; }
         .mn-f2 { font-size: 0.72rem; color: #94a3b8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mn-estado-tj.ok { color: #6ee7b7; } .mn-estado-tj.off { color: #94a3b8; }
+        .mn-cad { font-size: 0.7rem; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mn-cad.pronto { color: #fbbf24; }
+        /* Últimos movimientos: ocupan el hueco libre y se ven tantos como quepan */
+        .mn-card > .mn-movs { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 1px;
+            border-top: 1px solid rgba(255,255,255,0.07); padding-top: 3px; }
+        .mn-mov { display: flex; gap: 6px; font-size: 0.68rem; line-height: 14px; color: #cbd5e1; flex-shrink: 0; }
+        .mn-mov span:first-child { color: #64748b; width: 40px; flex-shrink: 0; }
+        .mn-mov .c { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mn-mov b { font-weight: 700; font-variant-numeric: tabular-nums; color: #94a3b8; }
+        .mn-mov b.mas { color: #34d399; } .mn-mov b.menos { color: #fca5a5; }
         .mn-fila { display: flex; gap: 4px; align-items: center; }
         .mn-fila input { flex: 1; width: 0; }
         .mn-prev { font-size: 0.7rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 14px; min-height: 14px; }
@@ -3119,7 +3130,7 @@
         cargarTarjetas();
         if ('documentPictureInPicture' in window) {
             try {
-                const win = await documentPictureInPicture.requestWindow({ width: 300, height: 200 });
+                const win = await documentPictureInPicture.requestWindow({ width: 300, height: 250 });
                 montarMini(win, true);
                 return;
             } catch (err) {
@@ -3299,10 +3310,19 @@
                 </div>`;
         } else if (tipo === 'tarjeta') {
             const t = d.tarjeta, cad = proximaCaducidad(d.movimientos);
+            const activa = d.saldo > 0.005;
+            const movs = movsOrdenados(d.movimientos);
             html = `
                 <div class="mn-card tarjeta">
-                    <div class="mn-f1"><span class="mn-nombre">🎁 •••• ${esc(String(t.codigo).slice(-4))}${t.comprador ? ' · ' + esc(t.comprador) : ''}</span><span class="mn-saldo">${euros(d.saldo)}</span></div>
-                    <div class="mn-f2">${d.saldo > 0.005 ? 'Activa' : 'Gastada'}${esTicket(t) ? ' · en ticket' : ''}${cad ? ` · ${euros(cad.restante)} caducan ${fechaCorta(cad.caduca)}` : ''}</div>
+                    <div class="mn-f1"><span class="mn-nombre" title="${esc(t.codigo)}">🎁 •••• ${esc(String(t.codigo).slice(-4))}${t.comprador ? ' · ' + esc(t.comprador) : ''}</span><span class="mn-saldo">${euros(d.saldo)}</span></div>
+                    <div class="mn-f2"><span class="mn-estado-tj ${activa ? 'ok' : 'off'}">${activa ? 'Activa' : 'Gastada'}</span> · ${esTicket(t) ? 'en ticket' : 'física'} · activada ${fechaCorta(t.activada)} con ${euros(t.importe_inicial)}</div>
+                    ${cad ? `<div class="mn-cad ${diasHasta(cad.caduca) <= 30 ? 'pronto' : ''}">⏳ ${cad.restante >= d.saldo - 0.005 ? 'Caduca' : euros(cad.restante) + ' caducan'} el ${fecha(cad.caduca)}${diasHasta(cad.caduca) <= 30 ? ` (en ${Math.max(0, diasHasta(cad.caduca))} días)` : ''}</div>` : ''}
+                    <div class="mn-movs" title="Últimos movimientos">
+                        ${movs.map(m => {
+                            const mas = m.tipo === 'carga';
+                            return `<div class="mn-mov"><span>${fechaCorta(m.fecha)}</span><span class="c">${esc(m.concepto || '—')}</span><b class="${mas ? 'mas' : m.tipo === 'caducado' ? '' : 'menos'}">${mas ? '+' : '-'}${euros(m.monto)}</b></div>`;
+                        }).join('')}
+                    </div>
                     <div class="mn-fila">
                         <input id="mnImporte" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Importe €">
                         <button class="mn-btn rojo" data-acc="canje" data-principal ${d.saldo > 0.005 ? '' : 'disabled'} title="Canjear (Enter)">Canjear</button>
@@ -3432,7 +3452,7 @@
     // Se intenta también al pasar el ratón; si Chrome no lo deja, se abre con un clic o al escanear.
     const MINI_ALTO_BARRA = 40;
     let miniPlegable = false;
-    let miniAltoAbierto = 200;
+    let miniAltoAbierto = 250;
     let miniTimerPlegar = null;
 
     function miniPlegada() { return !!mini && mini.win.innerHeight <= MINI_ALTO_BARRA + 30; }
@@ -3446,7 +3466,7 @@
     function miniDesplegar() {
         clearTimeout(miniTimerPlegar);
         if (!mini || !miniPlegada()) return;
-        try { mini.win.resizeBy(0, Math.max(miniAltoAbierto, 180) - mini.win.innerHeight); } catch {}
+        try { mini.win.resizeBy(0, Math.max(miniAltoAbierto, 230) - mini.win.innerHeight); } catch {}
     }
 
     function miniCambiarPlegado() {
@@ -3472,7 +3492,7 @@
         const d = miniSel.data;
         b.placeholder = miniSel.tipo === 'jugador'
             ? `🔍 ${d.jugador.nombre} · ${euros(d.saldo)}`
-            : `🔍 Tarjeta ••••${String(codigoDe(d)).slice(-4)} · ${d.existe ? euros(d.saldo) : 'sin activar'}`;
+            : `🔍 🎁 ••${String(codigoDe(d)).slice(-4)} · ${d.existe ? euros(d.saldo) : 'sin activar'}`;
     }
 
     // =========================================
