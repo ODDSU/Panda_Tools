@@ -910,6 +910,10 @@
         .mn-card.tarjeta .mn-saldo { color: #e9d5ff; }
         .mn-f2 { font-size: 0.72rem; color: #94a3b8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mn-estado-tj.ok { color: #6ee7b7; } .mn-estado-tj.off { color: #94a3b8; }
+        .mn-uso { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; line-height: 0.875rem; }
+        .mn-uso > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+        .mn-barra { flex: 0 0 3.2rem; height: 0.35rem; border-radius: 1rem; background: rgba(255,255,255,0.1); overflow: hidden; }
+        .mn-barra i { display: block; height: 100%; border-radius: 1rem; background: linear-gradient(90deg, #c084fc, #e9d5ff); }
         .mn-cad { font-size: 0.7rem; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mn-cad.pronto { color: #fbbf24; }
         /* Últimos movimientos: ocupan el hueco libre y se ven tantos como quepan */
@@ -1250,9 +1254,24 @@
         }
     }
 
+    // =========================================
+    //  LISTAS GUARDADAS: al abrir se enseña al instante lo último que se leyó y se actualiza por detrás
+    // =========================================
+    const LISTA_KEY = 'panda_wallet_lista_';
+    const LISTA_MAX_DIAS = 7;
+    function guardarLista(nombre, data) { setData(LISTA_KEY + nombre, { t: Date.now(), data }); }
+    function listaGuardada(nombre) {
+        const c = getData(LISTA_KEY + nombre, null);
+        return c && c.data && Date.now() - c.t < LISTA_MAX_DIAS * 86400000 ? c.data : null;
+    }
+    function borrarListas() {
+        ['resumen', 'tarjetas'].forEach(n => { try { localStorage.removeItem(LISTA_KEY + n); } catch {} });
+    }
+
     function cerrarSesion() {
         sesion = null;
         try { localStorage.removeItem('panda_tienda_sesion'); } catch {}
+        borrarListas();
         document.getElementById('vistaApp').style.display = 'none';
         document.getElementById('barraApp').style.display = 'none';
         document.getElementById('hero').style.display = '';
@@ -1267,6 +1286,10 @@
         document.getElementById('barraApp').style.display = '';
         document.getElementById('vistaApp').style.display = 'block';
         document.getElementById('staffName').textContent = sesion.por;
+        // Lo último guardado se ve al momento; mientras, se piden las dos listas a la vez
+        const r = listaGuardada('resumen'), t = listaGuardada('tarjetas');
+        if (r && !jugadores.length) aplicarResumen(r);
+        if (t && !tarjetas.length) aplicarTarjetas(t);
         const modo = getData('panda_tienda_modo', 'liga');
         setModo(modo);
         if (modo !== 'tarjetas') cargarTarjetas(); // para el resumen del botón de tarjetas
@@ -1283,7 +1306,8 @@
         document.getElementById('modoTarjetas').style.display = modo === 'tarjetas' ? '' : 'none';
         setData('panda_tienda_modo', modo);
         if (modo === 'tarjetas') {
-            cargarTarjetas();
+            // Al cambiar de pestaña solo se vuelve a pedir si la lista tiene más de medio minuto
+            if (Date.now() - tarjetasLeidas > 30000) cargarTarjetas();
             setTimeout(() => document.getElementById('tarCodigo').focus(), 50);
         }
     }
@@ -1305,10 +1329,26 @@
         try {
             const data = await api('resumen');
             if (data.error) throw new Error(errorDe(data));
+            guardarLista('resumen', data);
             aplicarResumen(data);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
         }
+    }
+
+    // Tras un premio, un canje o un borrado: se actualiza ese jugador con la respuesta que ya llegó,
+    // sin volver a pedir la lista entera. Si no está en la lista (raro), se pide entera.
+    function actualizarJugadorEnLista(data) {
+        const j = data && data.jugador && jugadores.find(x => x.jugador_id === data.jugador.jugador_id);
+        if (!j) { cargarResumen(); return; }
+        const movs = (data.movimientos || []).filter(m => m.fila);
+        Object.assign(j, {
+            saldo: data.saldo, ganado: data.ganado, gastado: data.gastado, caducado: data.caducado,
+            movimientos: movs.length,
+            ultimo: movs.reduce((max, m) => (m.fecha && String(m.fecha) > max ? String(m.fecha) : max), '')
+        });
+        guardarLista('resumen', { jugadores });
+        aplicarResumen({ jugadores });
     }
 
     function aplicarResumen(data) {
@@ -1660,7 +1700,7 @@
             if (data.error) throw new Error(errorDe(data));
             pintarFicha(data);
             toast('🗑️ Movimiento borrado', 'warning');
-            cargarResumen();
+            actualizarJugadorEnLista(data);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
         }
@@ -1687,7 +1727,7 @@
             if (data.deshacer) toastDeshacer(texto, () => deshacerLiga(data.deshacer, datos.jugador_id));
             else toast(texto, 'success');
             miniRefrescar('jugador', datos.jugador_id, data);
-            cargarResumen();
+            actualizarJugadorEnLista(data);
             return data;
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
@@ -1703,10 +1743,11 @@
         if (jugadorId) {
             if (ficha && ficha.jugador.jugador_id === jugadorId) pintarFicha(data);
             miniRefrescar('jugador', jugadorId, data);
+            actualizarJugadorEnLista(data);
         } else {
             refrescarFichaLiga();
+            cargarResumen();   // una jornada toca a varios jugadores: se pide la lista entera
         }
-        cargarResumen();
         return data;
     }
 
@@ -2023,21 +2064,42 @@
     function codigoLegible(c) { return String(c).replace(/(.{4})(?=.)/g, '$1 '); }
     function codigoDe(d) { return d ? (d.existe ? d.tarjeta.codigo : d.codigo) : null; }
 
+    let tarjetasLeidas = 0;   // cuándo se pidió la lista por última vez
+
     async function cargarTarjetas() {
         try {
             const data = await api('tarjetas');
             if (data.error) throw new Error(errorDe(data));
-            tarjetas = data.tarjetas || [];
-            const conSaldo = tarjetas.filter(t => t.saldo > 0.005);
-            document.getElementById('tarActivas').textContent = conSaldo.length;
-            const pendiente = conSaldo.reduce((s, t) => s + t.saldo, 0);
-            document.getElementById('tarPendiente').textContent = euros(pendiente);
-            document.getElementById('modoTarInfo').textContent = `${conSaldo.length} con saldo · ${euros(pendiente)}`;
-            document.getElementById('tarVendido').textContent = euros(tarjetas.reduce((s, t) => s + t.cargado, 0));
-            pintarListaTarjetas();
+            tarjetasLeidas = Date.now();
+            guardarLista('tarjetas', data);
+            aplicarTarjetas(data);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
         }
+    }
+
+    // Tras canjear, recargar o borrar un movimiento: se actualiza esa tarjeta con la respuesta, sin pedir la lista
+    function actualizarTarjetaEnLista(d) {
+        const t = d && d.existe && tarjetas.find(x => x.codigo === d.tarjeta.codigo);
+        if (!t) { cargarTarjetas(); return; }
+        const movs = (d.movimientos || []).filter(m => m.fila);
+        Object.assign(t, {
+            saldo: d.saldo, cargado: d.cargado,
+            ultimo: movs.reduce((max, m) => (m.fecha && String(m.fecha) > max ? String(m.fecha) : max), '')
+        });
+        guardarLista('tarjetas', { tarjetas });
+        aplicarTarjetas({ tarjetas });
+    }
+
+    function aplicarTarjetas(data) {
+        tarjetas = data.tarjetas || [];
+        const conSaldo = tarjetas.filter(t => t.saldo > 0.005);
+        document.getElementById('tarActivas').textContent = conSaldo.length;
+        const pendiente = conSaldo.reduce((s, t) => s + t.saldo, 0);
+        document.getElementById('tarPendiente').textContent = euros(pendiente);
+        document.getElementById('modoTarInfo').textContent = `${conSaldo.length} con saldo · ${euros(pendiente)}`;
+        document.getElementById('tarVendido').textContent = euros(tarjetas.reduce((s, t) => s + t.cargado, 0));
+        pintarListaTarjetas();
     }
 
     function pintarListaTarjetas() {
@@ -2348,7 +2410,7 @@
             if (imprimir) imprimirResguardo();
             miniRefrescar('tarjeta', codigo, data);
             listoParaEscanear();
-            cargarTarjetas();
+            actualizarTarjetaEnLista(data);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
             if (btn.isConnected) cargando(btn, false);
@@ -2362,7 +2424,7 @@
         toast(`↩️ Deshecho · saldo ${euros(data.saldo)}`, 'warning');
         if (codigoDe(tarjetaActual) === codigo) pintarTarjeta(data);
         miniRefrescar('tarjeta', codigo, data);
-        cargarTarjetas();
+        actualizarTarjetaEnLista(data);
         return data;
     }
 
@@ -2779,7 +2841,7 @@
             if (data.error) throw new Error(errorDe(data));
             pintarTarjeta(data);
             toast('🗑️ Movimiento borrado', 'warning');
-            cargarTarjetas();
+            actualizarTarjetaEnLista(data);
         } catch (err) {
             toast('⚠️ ' + err.message, 'danger');
         }
@@ -3334,6 +3396,7 @@
                 <div class="mn-card tarjeta">
                     <div class="mn-f1"><span class="mn-nombre" title="${esc(t.codigo)}">🎁 •••• ${esc(String(t.codigo).slice(-4))}${t.comprador ? ' · ' + esc(t.comprador) : ''}</span><span class="mn-saldo">${euros(d.saldo)}</span></div>
                     <div class="mn-f2"><span class="mn-estado-tj ${activa ? 'ok' : 'off'}">${activa ? 'Activa' : 'Gastada'}</span> · ${esTicket(t) ? 'en ticket' : 'física'} · activada ${fechaCorta(t.activada)} con ${euros(t.importe_inicial)}</div>
+                    ${miniUsoTarjeta(d, movs)}
                     ${cad ? `<div class="mn-cad ${diasHasta(cad.caduca) <= 30 ? 'pronto' : ''}">⏳ ${cad.restante >= d.saldo - 0.005 ? 'Caduca' : euros(cad.restante) + ' caducan'} el ${fecha(cad.caduca)}${diasHasta(cad.caduca) <= 30 ? ` (en ${Math.max(0, diasHasta(cad.caduca))} días)` : ''}</div>` : ''}
                     <div class="mn-movs" title="Últimos movimientos">
                         ${movs.map(m => {
@@ -3368,6 +3431,26 @@
         miniResumenBarra();
         const imp = mnEl('mnImporte');
         if (imp) imp.focus();
+    }
+
+    // Una línea con lo que queda de lo cargado (barrita), cuántas veces se ha usado y cuándo fue la última
+    function miniUsoTarjeta(d, movs) {
+        const cargado = Number(d.cargado) || 0;
+        if (!(cargado > 0)) return '';
+        const pct = Math.max(0, Math.min(100, Math.round(d.saldo / cargado * 100)));
+        const usos = movs.filter(m => m.tipo === 'canje');
+        let ultimo = 'sin usar';
+        if (usos.length) {
+            const dias = -diasHasta(usos[0].fecha);
+            ultimo = 'último: ' + (dias <= 0 ? 'hoy' : dias === 1 ? 'ayer' : `hace ${dias} días`);
+        }
+        const recargas = movs.filter(m => m.tipo === 'carga').length - 1;   // la primera carga es la activación
+        const titulo = `Quedan ${euros(d.saldo)} de ${euros(cargado)} cargados · ${euros(d.gastado)} gastados`
+            + (recargas > 0 ? ` · ${recargas} recarga${recargas === 1 ? '' : 's'}` : '');
+        return `<div class="mn-uso" title="${esc(titulo)}">
+                <span class="mn-barra"><i style="width:${pct}%"></i></span>
+                <span>${pct}% queda · ${usos.length} uso${usos.length === 1 ? '' : 's'} · ${ultimo}</span>
+            </div>`;
     }
 
     function miniPreview() {
@@ -3431,7 +3514,7 @@
                 'ok', data.deshacer ? () => deshacerTarjeta(data.deshacer, codigo) : null);
             mnEl('mnBuscar').focus();
             if (codigoDe(tarjetaActual) === codigo) pintarTarjeta(data);
-            cargarTarjetas();
+            actualizarTarjetaEnLista(data);
         } catch (err) {
             miniEstado('⚠️ ' + err.message, 'mal');
             btn.disabled = false;
@@ -3454,7 +3537,7 @@
                 'ok', data.deshacer ? () => deshacerLiga(data.deshacer, j.jugador_id) : null);
             mnEl('mnBuscar').focus();
             if (ficha && ficha.jugador.jugador_id === j.jugador_id) pintarFicha(data);
-            cargarResumen();
+            actualizarJugadorEnLista(data);
         } catch (err) {
             miniEstado('⚠️ ' + err.message, 'mal');
             btn.disabled = false;

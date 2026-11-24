@@ -1389,9 +1389,24 @@
         }
     }
 
+    // =========================================
+    //  LISTAS GUARDADAS: al abrir se enseña al instante lo último que se leyó y se actualiza por detrás
+    // =========================================
+    const LISTA_KEY = 'panda_fide_lista_';
+    const LISTA_MAX_DIAS = 7;
+    function guardarLista(nombre, data) { setData(LISTA_KEY + nombre, { t: Date.now(), data }); }
+    function listaGuardada(nombre) {
+        const c = getData(LISTA_KEY + nombre, null);
+        return c && c.data && Date.now() - c.t < LISTA_MAX_DIAS * 86400000 ? c.data : null;
+    }
+    function borrarListas() {
+        ['clientes', 'torneos'].forEach(n => { try { localStorage.removeItem(LISTA_KEY + n); } catch {} });
+    }
+
     function cerrarSesion() {
         sesion = null;
         try { localStorage.removeItem('panda_tienda_sesion'); } catch {}
+        borrarListas();
         document.getElementById('vistaApp').style.display = 'none';
         document.getElementById('barraApp').style.display = 'none';
         document.getElementById('hero').style.display = '';
@@ -1406,6 +1421,10 @@
         document.getElementById('barraApp').style.display = '';
         document.getElementById('vistaApp').style.display = 'block';
         document.getElementById('staffName').textContent = sesion.por;
+        // Lo último guardado se ve al momento; mientras, se piden las listas
+        const c = listaGuardada('clientes'), t = listaGuardada('torneos');
+        if (c && !clientesLeidos) aplicarClientes(c);
+        if (t && !torneosLeidos) aplicarTorneos(t);
         const modo = getData('panda_fidelizacion_modo', 'cashback');
         setModo(modo);
         // para el resumen de los botones y los precios de jugador en la ficha
@@ -1422,11 +1441,12 @@
         document.getElementById('modoTorneos').style.display = modo === 'torneos' ? '' : 'none';
         document.getElementById('modoSocios').style.display = modo === 'socios' ? '' : 'none';
         setData('panda_fidelizacion_modo', modo);
-        // Los clientes hacen falta en todos los modos (el carné y el nombre se buscan en esa lista)
-        cargarClientes(modo === 'torneos');
+        // Los clientes hacen falta en todos los modos (el carné y el nombre se buscan en esa lista).
+        // Al cambiar de pestaña solo se vuelven a pedir si tienen más de medio minuto.
+        if (Date.now() - clientesLeidos > 30000) cargarClientes(modo === 'torneos');
         if (modo === 'cashback') setTimeout(() => document.getElementById('cliBuscar').focus(), 50);
         if (modo === 'torneos') {
-            cargarTorneos();
+            if (Date.now() - torneosLeidos > 30000) cargarTorneos();
             setTimeout(() => document.getElementById('torBuscar').focus(), 50);
         }
     }
@@ -1792,20 +1812,28 @@
     let cashbackAdmin = false;
 
     // silencioso: al entrar al panel se carga de fondo y no debe dar la lata si algo falla
+    let clientesLeidos = 0;   // cuándo se pidió la lista por última vez
+
     async function cargarClientes(silencioso = false) {
         try {
             const data = await api('clientes');
             if (data.error) throw new Error(errorDe(data));
-            clientes = data.clientes || [];
-            cashbackCfg = data.config || cashbackCfg;
-            cashbackAdmin = !!data.esAdmin;
-            document.getElementById('modoCliInfo').textContent = `${clientes.length} cliente${clientes.length === 1 ? '' : 's'} · ${pct(cashbackCfg.porcentaje)}`;
-            sociosStats = data.stats || null;
-            pintarSocios();
-            if (document.getElementById('paleta').classList.contains('open')) pintarPaleta();
+            clientesLeidos = Date.now();
+            guardarLista('clientes', data);
+            aplicarClientes(data);
         } catch (err) {
             if (!silencioso && !document.body.classList.contains('modo-torneos')) toast('⚠️ ' + err.message, 'danger');
         }
+    }
+
+    function aplicarClientes(data) {
+        clientes = data.clientes || [];
+        cashbackCfg = data.config || cashbackCfg;
+        cashbackAdmin = !!data.esAdmin;
+        document.getElementById('modoCliInfo').textContent = `${clientes.length} cliente${clientes.length === 1 ? '' : 's'} · ${pct(cashbackCfg.porcentaje)}`;
+        sociosStats = data.stats || null;
+        pintarSocios();
+        if (document.getElementById('paleta').classList.contains('open')) pintarPaleta();
     }
 
     function pct(n) { return String(Number(n) || 0).replace('.', ',') + '%'; }
@@ -2285,16 +2313,24 @@
     let torHistorial = [];      // fichajes del cliente que se está viendo (para borrar)
     let jugadorVisto = null;    // último cliente mostrado en la pestaña de torneos
 
+    let torneosLeidos = 0;   // cuándo se pidió el resumen por última vez
+
     async function cargarTorneos(silencioso = false) {
         try {
             const data = await api('torneos_resumen');
             if (data.error) throw new Error(errorDe(data));
-            torneosData = data;
-            torneosAdmin = !!data.esAdmin;
-            pintarTorneos();
+            torneosLeidos = Date.now();
+            guardarLista('torneos', data);
+            aplicarTorneos(data);
         } catch (err) {
             if (!silencioso && document.body.classList.contains('modo-torneos')) toast('⚠️ ' + err.message, 'danger');
         }
+    }
+
+    function aplicarTorneos(data) {
+        torneosData = data;
+        torneosAdmin = !!data.esAdmin;
+        pintarTorneos();
     }
 
     function pintarTorneos() {
