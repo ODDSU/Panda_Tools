@@ -3255,7 +3255,8 @@
         cargarTorneos(true);
         if ('documentPictureInPicture' in window) {
             try {
-                const win = await documentPictureInPicture.requestWindow({ width: 300, height: 220 });
+                const tam = miniTamano();
+                const win = await documentPictureInPicture.requestWindow({ width: tam.w, height: tam.h });
                 montarMini(win, true);
                 return;
             } catch (err) {
@@ -3263,7 +3264,9 @@
             }
         }
         // Navegador sin ventanas flotantes: ventana pequeña normal
-        const w = window.open(location.pathname + '?mini=1', 'pandaMini', 'popup,width=380,height=560');
+        const pv = miniPosicionVentana();
+        const w = window.open(location.pathname + '?mini=1', 'pandaMini',
+            pv ? `popup,width=${pv.w},height=${pv.h},left=${pv.x},top=${pv.y}` : 'popup,width=380,height=560');
         if (!w) toast('⚠️ El navegador ha bloqueado la ventana: permite las ventanas emergentes', 'warning');
         else toast('ℹ️ Para que flote siempre encima del TPV, abre el panel en Chrome o Edge', 'warning');
     }
@@ -3333,6 +3336,7 @@
         doc.addEventListener('pointerdown', () => { if (miniPlegable) miniDesplegar(); });
         doc.addEventListener('keydown', () => { if (miniPlegable) miniDesplegar(); });
         win.addEventListener('pagehide', () => { mini = null; miniCliente = null; miniPlegable = false; });
+        vigilarTamanoMini(win, copiarEstilos);
         if (miniCliente) miniPintar(); // al reabrirla, sigue con el mismo cliente
         $('mnBuscar').focus();
     }
@@ -3611,7 +3615,39 @@
     // Se intenta también al pasar el ratón; si Chrome no lo deja, se abre con un clic o al escanear.
     const MINI_ALTO_BARRA = 40;
     let miniPlegable = false;
-    let miniAltoAbierto = 220;
+    // ---- La mini se abre con el tamaÃ±o de la Ãºltima vez ----
+    // Ventana flotante: Chrome no deja colocarla por cÃ³digo, asÃ­ que se guarda el tamaÃ±o (la posiciÃ³n la recuerda Chrome).
+    // Ventana normal (navegadores sin ventana flotante): se guardan tamaÃ±o y posiciÃ³n.
+    const MINI_TAM_KEY = 'panda_fide_mini_tam';
+    function miniTamano() {
+        const t = getData(MINI_TAM_KEY, null);
+        return t && t.w >= 220 && t.w <= 1200 && t.h >= 150 && t.h <= 1200 ? t : { w: 300, h: 220 };
+    }
+    function miniPosicionVentana() {
+        const p = getData(MINI_TAM_KEY + '_ventana', null);
+        return p && p.w >= 260 && p.h >= 200 && Number.isFinite(p.x) && Number.isFinite(p.y) ? p : null;
+    }
+    function vigilarTamanoMini(win, flotante) {
+        let espera = null;
+        win.addEventListener('resize', () => {
+            clearTimeout(espera);
+            espera = setTimeout(() => {
+                // El plegado (barra fina) no cuenta como tamaÃ±o elegido
+                if (!mini || mini.win !== win || miniPlegada()) return;
+                miniAltoAbierto = win.innerHeight;
+                if (flotante) setData(MINI_TAM_KEY, { w: win.innerWidth, h: win.innerHeight });
+            }, 400);
+        });
+        if (!flotante) {
+            const guardar = () => {
+                if (miniPlegada()) return;
+                setData(MINI_TAM_KEY + '_ventana', { x: win.screenX, y: win.screenY, w: win.innerWidth, h: win.innerHeight });
+            };
+            win.setInterval(guardar, 1500);
+            win.addEventListener('pagehide', guardar);
+        }
+    }
+    let miniAltoAbierto = miniTamano().h;
     let miniTimerPlegar = null;
 
     function miniPlegada() { return !!mini && mini.win.innerHeight <= MINI_ALTO_BARRA + 30; }
